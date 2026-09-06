@@ -181,9 +181,8 @@ body {
 /* Fluid Paper Element */
 .paper {
   background: var(--paper-bg);
-  width: 100%;
-  max-width: 800px;
-  min-height: 1000px;
+  width: 794px;
+  min-height: 1123px;
   padding: clamp(15px, 2vw, 20px);
   border-radius: 4px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -308,11 +307,7 @@ body {
 
   .form-container {
     max-height: none;
-  }
-
-  .paper {
-    min-height: auto;
-  }
+  }
 }
 
 /* Dedicated Print Layout */
