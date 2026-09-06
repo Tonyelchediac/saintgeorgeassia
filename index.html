@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نشرة الرعية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@200..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+    <div class="app-wrapper">
+        <div class="form-container">
+            <h2>إدخال البيانات</h2>
+
+            <div class="form-group">
+                <label for="input-title">عنوان الأحد</label>
+                <input type="text" id="input-title" placeholder="أدخل عنوان الأحد...">
+            </div>
+
+            <div class="form-group">
+                <label for="input-bible">رسالة الأحد (إنجيل / قراءة)</label>
+                <textarea id="input-bible" placeholder="أدخل نص إنجيل أو رسالة الأحد..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="input-recommendations">توصيات عامة</label>
+                <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
+            </div>
+
+            <h2>برنامج الأسبوع (من الإثنين إلى الأحد)</h2>
+
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-mon">الإثنين</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-mon"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('mon')">
+                </div>
+                <div class="day-events-container" id="container-mon"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('mon')">+ إضافة نشاط</button>
+            </div>
+
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-tue">الثلاثاء</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-tue"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('tue')">
+                </div>
+                <div class="day-events-container" id="container-tue"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('tue')">+ إضافة نشاط</button>
+            </div>
+
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-wed">الأربعاء</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-wed"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('wed')">
+                </div>
+                <div class="day-events-container" id="container-wed"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('wed')">+ إضافة نشاط</button>
+            </div>
+
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-thu">الخميس</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-thu"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('thu')">
+                </div>
+                <div class="day-events-container" id="container-thu"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('thu')">+ إضافة نشاط</button>
+            </div>
+
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-fri">الجمعة</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-fri"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('fri')">
+                </div>
+                <div class="day-events-container" id="container-fri"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('fri')">+ إضافة نشاط</button>
+            </div>
+
+            <!-- form -->
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-sat">السبت</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-sat"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('sat')">
+                </div>
+                <div class="day-events-container" id="container-sat"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('sat')">+ إضافة نشاط</button>
+            </div>
+
+            <div class="form-group">
+                <div class="day-title">
+                    <label id="label-sun">الأحد</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-sun"
+                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('sun')">
+                </div>
+                <div class="day-events-container" id="container-sun"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('sun')">+ إضافة نشاط</button>
+            </div>
+
+            <button class="print-btn" onclick="downloadAsImage()">تحميل كصورة (PNG)</button>
+        </div>
+
+        <!-- paper content -->
+        <div class="paper-container">
+            <div class="paper" id="paper-to-print">
+
+                <div class="title" id="display-title">empty</div>
+                <div class="paper-header">
+                    <div class="risele">رسالة الأحد</div>
+                </div>
+                <div class="logo">
+                    <img src="saint_george_assia.png" alt="saint george">
+                </div>
+
+                <div id="wrapper-bible">
+                    <div class="content-box" id="display-bible"></div>
+                </div>
+
+                <div id="wrapper-recommendations" class="is-hidden">
+                    <div class="section-title">توصيات عامة</div>
+                    <div class="content-box" id="display-recommendations"></div>
+                </div>
+
+                <div id="wrapper-days" class="is-hidden">
+                    <div class="section-title">توصيات</div>
+                    <div class="days-grid">
+                        <div class="day-row is-hidden" id="row-mon">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-mon">الإثنين:</span>
+                                <span class="day-subtitle" id="display-subtitle-mon"></span>
+                            </div>
+                            <span class="day-content" id="display-mon"></span>
+                        </div>
+                        <div class="day-row is-hidden" id="row-tue">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-tue">الثلاثاء:</span>
+                                <span class="day-subtitle" id="display-subtitle-tue"></span>
+                            </div>
+                            <span class="day-content" id="display-tue"></span>
+                        </div>
+                        <div class="day-row is-hidden" id="row-wed">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-wed">الأربعاء:</span>
+                                <span class="day-subtitle" id="display-subtitle-wed"></span>
+                            </div>
+                            <span class="day-content" id="display-wed"></span>
+                        </div>
+                        <div class="day-row is-hidden" id="row-thu">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-thu">الخميس:</span>
+                                <span class="day-subtitle" id="display-subtitle-thu"></span>
+                            </div>
+                            <span class="day-content" id="display-thu"></span>
+                        </div>
+                        <div class="day-row is-hidden" id="row-fri">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-fri">الجمعة:</span>
+                                <span class="day-subtitle" id="display-subtitle-fri"></span>
+                            </div>
+                            <span class="day-content" id="display-fri"></span>
+                        </div>
+                        <div class="day-row is-hidden" id="row-sat">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-sat">السبت:</span>
+                                <span class="day-subtitle" id="display-subtitle-sat"></span>
+                            </div>
+                            <span class="day-content" id="display-sat"></span>
+                        </div>
+                        <div class="day-row is-hidden" id="row-sun">
+                            <div class="day-header-line">
+                                <span class="day-name" id="name-sun">الأحد:</span>
+                                <span class="day-subtitle" id="display-subtitle-sun"></span>
+                            </div>
+                            <span class="day-content" id="display-sun"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const levantMonths = [
+            "كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران",
+            "تموز", "آب", "إيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"
+        ];
+
+        const dayNames = {
+            mon: "✸ الإثنين",
+            tue: "✸ الثلاثاء",
+            wed: "✸ الأربعاء",
+            thu: "✸ الخميس",
+            fri: "✸ الجمعة",
+            sat: "✸ السبت",
+            sun: "✸ الأحد"
+        };
+
+        const dayOffsets = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
+
+        function getWeekMonday() {
+            const now = new Date();
+            const currentDay = now.getDay();
+            const diffToMonday = currentDay === 0 ? 1 : 1 - currentDay;
+
+            const monday = new Date(now);
+            monday.setDate(now.getDate() + diffToMonday);
+            return monday;
+        }
+
+        function initDates() {
+            const monday = getWeekMonday();
+
+            Object.keys(dayOffsets).forEach(dayKey => {
+                const targetDate = new Date(monday);
+                targetDate.setDate(monday.getDate() + dayOffsets[dayKey]);
+
+                const dayNum = targetDate.getDate();
+                const monthName = levantMonths[targetDate.getMonth()];
+                const yearNum = targetDate.getFullYear();
+
+                const formattedLabel = `${dayNames[dayKey]} ${dayNum} ${monthName} ${yearNum}`;
+
+                const labelEl = document.getElementById(`label-${dayKey}`);
+                const nameEl = document.getElementById(`name-${dayKey}`);
+
+                if (labelEl) labelEl.textContent = formattedLabel;
+                if (nameEl) nameEl.textContent = `${formattedLabel}:`;
+            });
+        }
+
+        // Add dynamic event row for a day
+        function addEventRow(dayKey) {
+            const container = document.getElementById(`container-${dayKey}`);
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event-row-input';
+
+            eventDiv.innerHTML = `
+                <input type="time" class="day-time-input">
+                <textarea class="day-input" placeholder="أدخل النشاط..."></textarea>
+                <button type="button" class="btn-remove-event" onclick="removeEventRow(this, '${dayKey}')">✕</button>
+            `;
+
+            container.appendChild(eventDiv);
+
+            // Add listener to new inputs
+            const inputs = eventDiv.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => updateDayOutput(dayKey));
+            });
+
+            updateDayOutput(dayKey);
+        }
+
+        // Remove dynamic event row
+        function removeEventRow(btn, dayKey) {
+            btn.parentElement.remove();
+            updateDayOutput(dayKey);
+        }
+
+        // Check overall state of days to show/hide the main "توصيات" header
+        function checkDaysHeaderVisibility() {
+            const wrapperDays = document.getElementById('wrapper-days');
+            const visibleRows = document.querySelectorAll('.day-row:not(.is-hidden)');
+
+            if (visibleRows.length > 0) {
+                wrapperDays.classList.remove('is-hidden');
+            } else {
+                wrapperDays.classList.add('is-hidden');
+            }
+        }
+
+        // Update day output section
+        function updateDayOutput(dayKey) {
+            const container = document.getElementById(`container-${dayKey}`);
+            const eventRows = container.querySelectorAll('.event-row-input');
+            const targetRow = document.getElementById(`row-${dayKey}`);
+            const targetDisplay = document.getElementById(`display-${dayKey}`);
+
+            // Subtitle elements
+            const subtitleInput = document.getElementById(`subtitle-${dayKey}`);
+            const subtitleDisplay = document.getElementById(`display-subtitle-${dayKey}`);
+            const subtitleVal = subtitleInput ? subtitleInput.value.trim() : '';
+
+            if (subtitleDisplay) {
+                subtitleDisplay.textContent = subtitleVal;
+            }
+
+            let combinedHtml = '';
+            let hasValidEvents = false;
+
+            eventRows.forEach(row => {
+                const timeInput = row.querySelector('.day-time-input');
+                const textInput = row.querySelector('.day-input');
+
+                const timeValue = timeInput ? timeInput.value : '';
+                const textValue = textInput ? textInput.value.trim() : '';
+
+                if (timeValue || textValue) {
+                    hasValidEvents = true;
+                    let formattedTime = '';
+                    if (timeValue) {
+                        const [hours, minutes] = timeValue.split(':');
+                        const hourNum = parseInt(hours, 10);
+                        const period = hourNum >= 12 ? 'م' : 'ص';
+                        const displayHour = hourNum % 12 || 12;
+                        formattedTime = `${displayHour}:${minutes} ${period} `;
+                    }
+
+                    combinedHtml += `<div class="event-item-display"><span class="day-time-tag">${formattedTime}</span>${textValue}</div>`;
+                }
+            });
+
+            // Day row is shown if it has event content OR a subtitle entered
+            if (hasValidEvents || subtitleVal.length > 0) {
+                targetDisplay.innerHTML = combinedHtml;
+                targetRow.classList.remove('is-hidden');
+            } else {
+                targetDisplay.innerHTML = '';
+                targetRow.classList.add('is-hidden');
+            }
+
+            checkDaysHeaderVisibility();
+        }
+
+        // General Form Logic
+        const titleInput = document.getElementById('input-title');
+        const bibleInput = document.getElementById('input-bible');
+        const recInput = document.getElementById('input-recommendations');
+
+        const titleDisplay = document.getElementById('display-title');
+        const bibleDisplay = document.getElementById('display-bible');
+        const recDisplay = document.getElementById('display-recommendations');
+        const wrapperRecs = document.getElementById('wrapper-recommendations');
+
+        titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value; });
+        bibleInput.addEventListener('input', (e) => { bibleDisplay.textContent = e.target.value; });
+
+        // Show/hide "توصيات عامة" section header based on content
+        recInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            recDisplay.textContent = val;
+            if (val.length > 0) {
+                wrapperRecs.classList.remove('is-hidden');
+            } else {
+                wrapperRecs.classList.add('is-hidden');
+            }
+        });
+
+        // Image Download Function
+        function downloadAsImage() {
+            const paperElement = document.getElementById('paper-to-print');
+
+            html2canvas(paperElement, {
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'bulletin.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Initial setup
+        initDates();
+        Object.keys(dayOffsets).forEach(dayKey => addEventRow(dayKey));
+    </script>
+
+</body>
+
+</html>
