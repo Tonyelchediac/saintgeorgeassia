@@ -5,11 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نشرة الرعية</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@200..1000&display=swap"
-        rel="stylesheet">
+    <link rel="shortcut icon" href="saint_george_assia.png" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -17,12 +13,18 @@
 <body>
 
     <div class="app-wrapper">
+        <!-- form code -->
         <div class="form-container">
             <h2>إدخال البيانات</h2>
 
             <div class="form-group">
                 <label for="input-title">عنوان الأحد</label>
                 <input type="text" id="input-title" placeholder="أدخل عنوان الأحد...">
+            </div>
+
+            <div class="form-group">
+                <label for="input-date">تاريخ الأحد</label>
+                <input type="date" id="input-date" placeholder="أدخل تاريخ الأحد...">
             </div>
 
             <div class="form-group">
@@ -33,6 +35,12 @@
             <div class="form-group">
                 <label for="input-recommendations">توصيات عامة</label>
                 <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
+            </div>
+
+            <h2>أخبار الرعية</h2>
+            <div class="form-group">
+                <div class="day-events-container" id="container-news"></div>
+                <button type="button" class="btn-add-event" onclick="addNewsRow()">+ إضافة خبر جديد</button>
             </div>
 
             <h2>برنامج الأسبوع (من الإثنين إلى الأحد)</h2>
@@ -87,7 +95,6 @@
                 <button type="button" class="btn-add-event" onclick="addEventRow('fri')">+ إضافة نشاط</button>
             </div>
 
-            <!-- form -->
             <div class="form-group">
                 <div class="day-title">
                     <label id="label-sat">السبت</label>
@@ -116,12 +123,19 @@
             <div class="paper" id="paper-to-print">
 
                 <div class="title" id="display-title">empty</div>
+                <div class="date" id="display-date">empty date</div>
                 <div class="paper-header">
                     <div class="risele">رسالة الأحد</div>
                 </div>
                 <div class="logo">
                     <img src="saint_george_assia.png" alt="saint george">
                 </div>
+                <div class="ra3awe">
+                    <p class="details">رعية مار جرجس أسيا - المجلس الرعوي</p>
+                    <p class="details">رقم كاهن الرعية الخوري يوسف الرامي فاضل: 71/371853</p>
+                </div>
+
+                <hr>
 
                 <div id="wrapper-bible">
                     <div class="content-box" id="display-bible"></div>
@@ -132,8 +146,14 @@
                     <div class="content-box" id="display-recommendations"></div>
                 </div>
 
+                <!-- Parish News Section -->
+                <div id="wrapper-news" class="is-hidden">
+                    <div class="section-title">أخبار الرعية</div>
+                    <div class="news-grid" id="display-news-grid"></div>
+                </div>
+
                 <div id="wrapper-days" class="is-hidden">
-                    <div class="section-title">توصيات</div>
+                    <div class="section-title">برنامج الأسبوع</div>
                     <div class="days-grid">
                         <div class="day-row is-hidden" id="row-mon">
                             <div class="day-header-line">
@@ -194,7 +214,7 @@
     <script>
         const levantMonths = [
             "كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران",
-            "تموز", "آب", "إيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"
+            "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"
         ];
 
         const dayNames = {
@@ -240,6 +260,16 @@
             });
         }
 
+        // Helper function to format input date string (YYYY-MM-DD) into Levant month string
+        function formatInputDate(dateStr) {
+            if (!dateStr) return 'empty';
+            const [year, month, day] = dateStr.split('-');
+            if (!year || !month || !day) return dateStr;
+            const monthIdx = parseInt(month, 10) - 1;
+            const monthName = levantMonths[monthIdx] || month;
+            return `${parseInt(day, 10)} ${monthName} ${year}`;
+        }
+
         // Add dynamic event row for a day
         function addEventRow(dayKey) {
             const container = document.getElementById(`container-${dayKey}`);
@@ -254,7 +284,6 @@
 
             container.appendChild(eventDiv);
 
-            // Add listener to new inputs
             const inputs = eventDiv.querySelectorAll('input, textarea');
             inputs.forEach(input => {
                 input.addEventListener('input', () => updateDayOutput(dayKey));
@@ -263,13 +292,92 @@
             updateDayOutput(dayKey);
         }
 
-        // Remove dynamic event row
         function removeEventRow(btn, dayKey) {
             btn.parentElement.remove();
             updateDayOutput(dayKey);
         }
 
-        // Check overall state of days to show/hide the main "توصيات" header
+        // Parish News Handlers
+        function addNewsRow() {
+            const container = document.getElementById('container-news');
+            const newsDiv = document.createElement('div');
+            newsDiv.className = 'news-row-input';
+
+            newsDiv.innerHTML = `
+                <div class="news-input-fields">
+                    <input type="file" accept="image/*" class="news-img-input" onchange="updateNewsOutput()">
+                    <textarea class="news-title-input" placeholder="عنوان الخبر / المحتوى..." oninput="updateNewsOutput()"></textarea>
+                </div>
+                <button type="button" class="btn-remove-event" onclick="removeNewsRow(this)">✕</button>
+            `;
+
+            container.appendChild(newsDiv);
+            updateNewsOutput();
+        }
+
+        function removeNewsRow(btn) {
+            btn.closest('.news-row-input').remove();
+            updateNewsOutput();
+        }
+
+        function updateNewsOutput() {
+            const container = document.getElementById('container-news');
+            const rows = container.querySelectorAll('.news-row-input');
+            const gridDisplay = document.getElementById('display-news-grid');
+            const wrapperNews = document.getElementById('wrapper-news');
+
+            gridDisplay.innerHTML = '';
+            let validCount = 0;
+
+            rows.forEach(row => {
+                const imgInput = row.querySelector('.news-img-input');
+                const titleInput = row.querySelector('.news-title-input');
+
+                const titleVal = titleInput ? titleInput.value.trim() : '';
+                const file = imgInput && imgInput.files ? imgInput.files[0] : null;
+
+                if (titleVal || file) {
+                    validCount++;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'news-item';
+
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'news-item-text';
+                    textDiv.textContent = titleVal;
+
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'news-item-img';
+
+                    const img = document.createElement('img');
+
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // Default image when no custom file is selected
+                        img.src = 'saint_george_assia.png';
+                    }
+
+                    imgContainer.appendChild(img);
+
+                    // Text on the left, Image on the right (RTL layout)
+                    itemDiv.appendChild(imgContainer);
+                    itemDiv.appendChild(textDiv);
+
+                    gridDisplay.appendChild(itemDiv);
+                }
+            });
+
+            if (validCount > 0) {
+                wrapperNews.classList.remove('is-hidden');
+            } else {
+                wrapperNews.classList.add('is-hidden');
+            }
+        }
+
         function checkDaysHeaderVisibility() {
             const wrapperDays = document.getElementById('wrapper-days');
             const visibleRows = document.querySelectorAll('.day-row:not(.is-hidden)');
@@ -281,14 +389,12 @@
             }
         }
 
-        // Update day output section
         function updateDayOutput(dayKey) {
             const container = document.getElementById(`container-${dayKey}`);
             const eventRows = container.querySelectorAll('.event-row-input');
             const targetRow = document.getElementById(`row-${dayKey}`);
             const targetDisplay = document.getElementById(`display-${dayKey}`);
 
-            // Subtitle elements
             const subtitleInput = document.getElementById(`subtitle-${dayKey}`);
             const subtitleDisplay = document.getElementById(`display-subtitle-${dayKey}`);
             const subtitleVal = subtitleInput ? subtitleInput.value.trim() : '';
@@ -322,7 +428,6 @@
                 }
             });
 
-            // Day row is shown if it has event content OR a subtitle entered
             if (hasValidEvents || subtitleVal.length > 0) {
                 targetDisplay.innerHTML = combinedHtml;
                 targetRow.classList.remove('is-hidden');
@@ -336,18 +441,25 @@
 
         // General Form Logic
         const titleInput = document.getElementById('input-title');
+        const dateInput = document.getElementById('input-date');
         const bibleInput = document.getElementById('input-bible');
         const recInput = document.getElementById('input-recommendations');
 
         const titleDisplay = document.getElementById('display-title');
+        const titleDate = document.getElementById('display-date');
         const bibleDisplay = document.getElementById('display-bible');
         const recDisplay = document.getElementById('display-recommendations');
         const wrapperRecs = document.getElementById('wrapper-recommendations');
 
-        titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value; });
+        titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value || 'empty'; });
+
+        // Updated event listener to convert YYYY-MM-DD input into day + Arabic month name + year
+        dateInput.addEventListener('input', (e) => {
+            titleDate.textContent = formatInputDate(e.target.value);
+        });
+
         bibleInput.addEventListener('input', (e) => { bibleDisplay.textContent = e.target.value; });
 
-        // Show/hide "توصيات عامة" section header based on content
         recInput.addEventListener('input', (e) => {
             const val = e.target.value.trim();
             recDisplay.textContent = val;
@@ -358,7 +470,6 @@
             }
         });
 
-        // Image Download Function
         function downloadAsImage() {
             const paperElement = document.getElementById('paper-to-print');
 
@@ -367,7 +478,7 @@
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'bulletin.png';
+                link.download = 'saint_george_assia.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
@@ -375,6 +486,7 @@
 
         // Initial setup
         initDates();
+        addNewsRow();
         Object.keys(dayOffsets).forEach(dayKey => addEventRow(dayKey));
     </script>
 

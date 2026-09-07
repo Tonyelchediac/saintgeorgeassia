@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Audiowide&family=Cairo:wght@200..1000&family=Dancing+Script:wght@400..700&family=Dynalight&family=Lateef:wght@200;300;400;500;600;700;800&family=Manufacturing+Consent&family=Noto+Sans+Syriac+Western:wght@100..900&family=Oleo+Script:wght@400;700&family=Orbitron:wght@400..900&family=Press+Start+2P&family=Rubik+Mono+One&display=swap");
+
 :root {
   --bg-color: #f3f4f6;
   --paper-bg: #ffffff;
@@ -70,6 +72,7 @@ body {
 }
 
 .form-group input[type="text"],
+.form-group input[type="date"],
 .form-group textarea {
   padding: 8px;
   border: 1px solid var(--border-color);
@@ -83,7 +86,7 @@ body {
   min-height: 50px;
 }
 
-/* Dynamic Dynamic Event Inputs in Form */
+/* Dynamic Event Inputs in Form */
 .day-events-container {
   display: flex;
   flex-direction: column;
@@ -118,6 +121,26 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* News Form Section */
+.news-row-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.news-input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.news-img-input {
+  font-size: 0.8rem;
 }
 
 /* Form Action Buttons */
@@ -174,22 +197,27 @@ body {
 .paper-container {
   flex: 1 1 600px;
   display: flex;
-  justify-content: center;
   width: 100%;
+  overflow-x: auto;
+  padding-bottom: 20px;
 }
 
-/* Fluid Paper Element */
 .paper {
   background: var(--paper-bg);
-  width: 794px;
-  min-height: 1123px;
-  padding: clamp(15px, 2vw, 20px);
+  width: 210mm;
+  height: 297mm;
+  min-height: 297mm;
+  max-height: 297mm;
+  padding: 10mm;
+  box-sizing: border-box;
   border-radius: 4px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   position: relative;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 /* Header Design */
@@ -209,21 +237,39 @@ body {
 }
 
 .risele {
-  font-family: "Amiri", sans-serif;
-  font-size: 35px;
+  font-family: "Aref Ruqaa", sans-serif;
+  font-size: 50px;
   font-weight: 900;
   text-align: center;
-  margin-top: -10px;
+  width: 100%;
+  margin-top: -50px;
 }
 
 .logo {
   position: absolute;
-  left: 10px;
-  top: 10px;
+  left: 20px;
+  top: 20px;
 }
 
 .logo img {
   width: 100px;
+}
+
+.ra3awe {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.details {
+  width: max-content;
+}
+
+.date {
+  margin-top: -10px;
+  font-size: 12px;
+  font-weight: bold;
+  word-break: break-word;
 }
 
 /* Paper Content Section Titles */
@@ -243,6 +289,50 @@ body {
   line-height: 1.6;
   color: #111827;
   padding: 5px;
+}
+
+/* News Section Display Layout */
+.news-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.news-item {
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px dashed var(--border-color);
+  padding-bottom: 10px;
+  gap: 15px;
+}
+
+.news-item-text {
+  flex: 1;
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.news-item-img {
+  width: 100px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.news-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .days-grid {
@@ -307,11 +397,16 @@ body {
 
   .form-container {
     max-height: none;
-  }
+  }
 }
 
 /* Dedicated Print Layout */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
   body {
     background: none;
     padding: 0;
@@ -328,12 +423,17 @@ body {
 
   .paper-container {
     width: 100%;
+    overflow: visible;
+    padding: 0;
   }
 
   .paper {
     box-shadow: none;
-    padding: 0;
-    width: 100%;
-    max-width: 100%;
+    padding: 15mm;
+    width: 210mm;
+    height: 297mm;
+    max-height: 297mm;
+    overflow: hidden;
+    page-break-after: avoid;
   }
 }
