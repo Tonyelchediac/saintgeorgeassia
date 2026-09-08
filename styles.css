@@ -4,7 +4,7 @@
   --bg-color: #f3f4f6;
   --paper-bg: #ffffff;
   --border-color: #d1d5db;
-  --primary-color: #1f2937;
+  --primary-color: #0e2040;
   --accent-color: #000000;
   --success-color: #10b981;
   --success-hover: #059669;
@@ -17,7 +17,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Cairo", sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 body {
@@ -223,7 +223,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #000;
+  border-bottom: 1px solid #000;
   padding-bottom: 15px;
   gap: 10px;
 }
@@ -236,21 +236,24 @@ body {
 
 .risele {
   font-family: "Aref Ruqaa", sans-serif;
-  font-size: 50px;
   font-weight: 900;
   text-align: center;
   width: 100%;
   margin-top: -50px;
 }
 
+.risele img {
+  height: 70px;
+}
+
 .logo {
   position: absolute;
-  left: 20px;
-  top: 20px;
+  left: 15px;
+  top: 7px;
 }
 
 .logo img {
-  width: 100px;
+  width: 120px;
 }
 
 .ra3awe {
@@ -261,7 +264,7 @@ body {
 
 .details {
   width: max-content;
-  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .date {
@@ -277,6 +280,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
   background-color: #f8fafc;
+  color: var(--accent-color);
   padding: 4px 8px;
   border-right: 4px solid var(--accent-color);
 }
@@ -284,9 +288,9 @@ body {
 .content-box {
   white-space: pre-wrap;
   word-break: break-word;
-  font-size: 0.8rem;
+  font-weight: 600;
   line-height: 1.6;
-  color: #111827;
+  color: var(--primary-color);
   padding: 5px;
 }
 
@@ -295,7 +299,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 30px;
 }
 
 .news-item {
@@ -309,8 +312,8 @@ body {
 }
 
 .news-item-text {
+  color: var(--primary-color);
   flex: 1;
-  font-size: 0.8rem;
   line-height: 1.6;
   word-break: break-word;
   white-space: pre-wrap;
@@ -358,21 +361,21 @@ body {
   font-weight: bold;
   width: 100%;
   flex-shrink: 0;
-  font-size: 0.8rem;
   line-height: 1.6;
 }
 
 .day-subtitle {
   font-weight: bold;
-  font-size: 0.8rem;
 }
 
 .day-content {
   flex-grow: 1;
   white-space: pre-wrap;
   word-break: break-word;
-  font-size: 0.8rem;
   line-height: 1.6;
+  font-size: 16px;
+  font-weight: 550;
+  color: var(--primary-color);
 }
 
 .day-time-tag {
