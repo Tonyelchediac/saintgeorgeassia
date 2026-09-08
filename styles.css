@@ -4,7 +4,7 @@
   --bg-color: #f3f4f6;
   --paper-bg: #ffffff;
   --border-color: #d1d5db;
-  --primary-color: #0e2040;
+  --primary-color: #122a53;
   --accent-color: #000000;
   --success-color: #10b981;
   --success-hover: #059669;
@@ -195,17 +195,17 @@ body {
 .paper-container {
   flex: 1 1 600px;
   display: flex;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  overflow-x: auto;
   padding-bottom: 20px;
+  overflow: hidden;
 }
 
 .paper {
   background: var(--paper-bg);
   width: 210mm;
-  height: 297mm;
-  min-height: 297mm;
-  max-height: 297mm;
+  height: calc(297mm * 1.1);
   padding: 10mm;
   box-sizing: border-box;
   border-radius: 4px;
@@ -216,6 +216,8 @@ body {
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  transform-origin: top center;
+  transition: transform 0.2s ease-in-out;
 }
 
 /* Header Design */
@@ -399,7 +401,16 @@ body {
 @media (max-width: 900px) {
   .app-wrapper {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+  }
+
+  .paper-container {
+    width: 100%;
+    height: calc(297mm * 0.42);
+  }
+
+  .paper {
+    transform: scale(0.42);
   }
 }
 
@@ -426,6 +437,7 @@ body {
 
   .paper-container {
     width: 100%;
+    height: auto !important;
     overflow: visible;
     padding: 0;
   }
@@ -436,6 +448,7 @@ body {
     width: 210mm;
     height: 297mm;
     max-height: 297mm;
+    transform: scale(1) !important;
     overflow: hidden;
     page-break-after: avoid;
   }
