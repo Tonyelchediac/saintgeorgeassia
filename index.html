@@ -125,8 +125,8 @@
         <div class="paper-container">
             <div class="paper" id="paper-to-print">
 
-                <div class="title" id="display-title">empty</div>
-                <div class="date" id="display-date">empty date</div>
+                <div class="title" id="display-title">‎‏‏ ‎‏‏‎</div>
+                <div class="date" id="display-date">‎‏‏ ‎‏‏‎</div>
                 <div class="paper-header">
                     <div class="risele">
                         <img src="title.png" alt="title">
@@ -266,7 +266,6 @@
             });
         }
 
-        // Helper function to format input date string (YYYY-MM-DD) into Levant month string
         function formatInputDate(dateStr) {
             if (!dateStr) return 'empty';
             const [year, month, day] = dateStr.split('-');
@@ -276,7 +275,6 @@
             return `${parseInt(day, 10)} ${monthName} ${year}`;
         }
 
-        // Add dynamic event row for a day
         function addEventRow(dayKey) {
             const container = document.getElementById(`container-${dayKey}`);
             const eventDiv = document.createElement('div');
@@ -303,7 +301,6 @@
             updateDayOutput(dayKey);
         }
 
-        // Parish News Handlers
         function addNewsRow() {
             const container = document.getElementById('container-news');
             const newsDiv = document.createElement('div');
@@ -363,13 +360,10 @@
                         };
                         reader.readAsDataURL(file);
                     } else {
-                        // Default image when no custom file is selected
                         img.src = 'saint_george_assia.png';
                     }
 
                     imgContainer.appendChild(img);
-
-                    // Text on the left, Image on the right (RTL layout)
                     itemDiv.appendChild(imgContainer);
                     itemDiv.appendChild(textDiv);
 
@@ -457,9 +451,8 @@
         const recDisplay = document.getElementById('display-recommendations');
         const wrapperRecs = document.getElementById('wrapper-recommendations');
 
-        titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value || 'empty'; });
+        titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value || '‎‏‏ ‎‏‏‎'; });
 
-        // Updated event listener to convert YYYY-MM-DD input into day + Arabic month name + year
         dateInput.addEventListener('input', (e) => {
             titleDate.textContent = formatInputDate(e.target.value);
         });
@@ -476,18 +469,46 @@
             }
         });
 
-        function downloadAsImage() {
+        async function downloadAsImage() {
             const paperElement = document.getElementById('paper-to-print');
+            const btn = document.querySelector('.print-btn');
 
-            html2canvas(paperElement, {
-                scale: 2,
-                useCORS: true
-            }).then(canvas => {
+            if (btn) btn.disabled = true;
+
+            // Save original inline transform/zoom styles
+            const origTransform = paperElement.style.transform;
+            const origZoom = paperElement.style.zoom;
+
+            // Reset mobile scaling for 1:1 pixel rendering
+            paperElement.style.transform = 'none';
+            paperElement.style.zoom = '1';
+
+            try {
+                // High-resolution render (Scale 4 = Ultra HD ~300-400 DPI)
+                const canvas = await html2canvas(paperElement, {
+                    scale: 4,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    windowWidth: 794,
+                    windowHeight: 1123
+                });
+
                 const link = document.createElement('a');
-                link.download = 'saint_george_assia.png';
-                link.href = canvas.toDataURL('image/png');
+                link.download = 'saint_george_assia_highres.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                document.body.appendChild(link);
                 link.click();
-            });
+                document.body.removeChild(link);
+
+            } catch (err) {
+                console.error("Export Error:", err);
+            } finally {
+                // Restore mobile screen scaling
+                paperElement.style.transform = origTransform;
+                paperElement.style.zoom = origZoom;
+                if (btn) btn.disabled = false;
+            }
         }
 
         // Initial setup

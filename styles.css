@@ -38,7 +38,6 @@ body {
 
 .head-title {
   margin-bottom: 30px;
-  width: 100%;
 }
 
 /* Input Form Panel */
@@ -199,11 +198,10 @@ body {
 .paper-container {
   flex: 1 1 600px;
   display: flex;
-  justify-content: center;
   align-items: flex-start;
   width: 100%;
   padding-bottom: 20px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .paper {
@@ -235,9 +233,9 @@ body {
 }
 
 .title {
-  font-size: 12px;
   font-weight: bold;
   word-break: break-word;
+  font-size: 15px;
 }
 
 .risele {
@@ -245,7 +243,7 @@ body {
   font-weight: 900;
   text-align: center;
   width: 100%;
-  margin-top: -50px;
+  margin-top: -60px;
 }
 
 .risele img {
@@ -259,7 +257,7 @@ body {
 }
 
 .logo img {
-  width: 120px;
+  width: 130px;
 }
 
 .ra3awe {
@@ -274,8 +272,8 @@ body {
 }
 
 .date {
-  margin-top: -10px;
-  font-size: 12px;
+  margin-top: -15px;
+  font-size: 13px;
   font-weight: bold;
   word-break: break-word;
 }
@@ -408,9 +406,14 @@ body {
     align-items: center;
   }
 
+  .head-title {
+    width: 100%;
+  }
+
   .paper-container {
     width: 100%;
     height: calc(297mm * 0.42);
+    overflow: hidden;
   }
 
   .paper {
