@@ -26,6 +26,11 @@
             </div>
 
             <div class="form-group">
+                <label for="input-3adad">عدد الأحد</label>
+                <input type="text" id="input-3adad" placeholder="أدخل عدد الأحد..." value="العدد ">
+            </div>
+
+            <div class="form-group">
                 <label for="input-date">تاريخ الأحد</label>
                 <input type="date" id="input-date" placeholder="أدخل تاريخ الأحد...">
             </div>
@@ -33,17 +38,6 @@
             <div class="form-group">
                 <label for="input-bible">رسالة الأحد (إنجيل / قراءة)</label>
                 <textarea id="input-bible" placeholder="أدخل نص إنجيل أو رسالة الأحد..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="input-recommendations">توصيات عامة</label>
-                <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
-            </div>
-
-            <h2>أخبار الرعية</h2>
-            <div class="form-group">
-                <div class="day-events-container" id="container-news"></div>
-                <button type="button" class="btn-add-event" onclick="addNewsRow()">+ إضافة خبر جديد</button>
             </div>
 
             <h2>برنامج الأسبوع (من الإثنين إلى الأحد)</h2>
@@ -118,6 +112,17 @@
                 <button type="button" class="btn-add-event" onclick="addEventRow('sun')">+ إضافة نشاط</button>
             </div>
 
+            <h2>أخبار الرعية</h2>
+            <div class="form-group">
+                <div class="day-events-container" id="container-news"></div>
+                <button type="button" class="btn-add-event" onclick="addNewsRow()">+ إضافة خبر جديد</button>
+            </div>
+
+            <div class="form-group">
+                <label for="input-recommendations">توصيات عامة</label>
+                <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
+            </div>
+
             <button class="print-btn" onclick="downloadAsImage()">تحميل كصورة (PNG)</button>
         </div>
 
@@ -125,8 +130,13 @@
         <div class="paper-container">
             <div class="paper" id="paper-to-print">
 
-                <div class="title" id="display-title">‎‏‏ ‎‏‏‎</div>
-                <div class="date" id="display-date">‎‏‏ ‎‏‏‎</div>
+
+                <div class="sundaydetails">
+                    <div class="title" id="display-title"> ‎‏‏‎</div>
+                    <div class="date" id="display-3adad"></div>
+                    <div class="date" id="display-date"> ‎‏‏‎</div>
+                </div>
+
                 <div class="paper-header">
                     <div class="risele">
                         <img src="title.png" alt="title">
@@ -140,26 +150,17 @@
 
                 <div class="ra3awe">
                     <p class="details">رعية مار جرجس أسيا</p>
-                    <p class="details">رقم الخوري يوسف الرامي فاضل: 71/371853</p>
+                    <p class="details">الخوري يوسف الرامي فاضل: 71/371853</p>
                 </div>
 
                 <hr>
 
+                <!-- 1. Bible section -->
                 <div id="wrapper-bible">
                     <div class="content-box" id="display-bible"></div>
                 </div>
 
-                <div id="wrapper-recommendations" class="is-hidden">
-                    <div class="section-title">توصيات عامة</div>
-                    <div class="content-box" id="display-recommendations"></div>
-                </div>
-
-                <!-- Parish News Section -->
-                <div id="wrapper-news" class="is-hidden">
-                    <div class="section-title">أخبار الرعية</div>
-                    <div class="news-grid" id="display-news-grid"></div>
-                </div>
-
+                <!-- 2. Event / Weekly Program section -->
                 <div id="wrapper-days" class="is-hidden">
                     <div class="section-title">برنامج الأسبوع</div>
                     <div class="days-grid">
@@ -213,6 +214,18 @@
                             <span class="day-content" id="display-sun"></span>
                         </div>
                     </div>
+                </div>
+
+                <!-- 3. Parish News Section -->
+                <div id="wrapper-news" class="is-hidden">
+                    <div class="section-title">أخبار الرعية</div>
+                    <div class="news-grid" id="display-news-grid"></div>
+                </div>
+
+                <!-- 4. Tawsiyet / Recommendations Section -->
+                <div id="wrapper-recommendations" class="is-hidden">
+                    <div class="section-title">توصيات عامة</div>
+                    <div class="content-box" id="display-recommendations"></div>
                 </div>
 
             </div>
@@ -444,17 +457,21 @@
 
         // General Form Logic
         const titleInput = document.getElementById('input-title');
+        const aadadInput = document.getElementById('input-3adad');
         const dateInput = document.getElementById('input-date');
         const bibleInput = document.getElementById('input-bible');
         const recInput = document.getElementById('input-recommendations');
 
         const titleDisplay = document.getElementById('display-title');
+        const aadadDisplay = document.getElementById('display-3adad');
         const titleDate = document.getElementById('display-date');
         const bibleDisplay = document.getElementById('display-bible');
         const recDisplay = document.getElementById('display-recommendations');
         const wrapperRecs = document.getElementById('wrapper-recommendations');
 
         titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value || '‎‏‏ ‎‏‏‎'; });
+
+        aadadInput.addEventListener('input', (e) => { aadadDisplay.textContent = e.target.value || '‎‏‏ ‎‏‏‎'; });
 
         dateInput.addEventListener('input', (e) => {
             titleDate.textContent = formatInputDate(e.target.value);

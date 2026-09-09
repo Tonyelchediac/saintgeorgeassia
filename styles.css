@@ -84,7 +84,7 @@ body {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 50px;
+  min-height: 70px;
 }
 
 /* Dynamic Event Inputs in Form */
@@ -230,6 +230,12 @@ body {
   gap: 10px;
 }
 
+.sundaydetails {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .title {
   font-weight: bold;
   word-break: break-word;
@@ -270,7 +276,6 @@ body {
 }
 
 .date {
-  margin-top: -15px;
   font-size: 13px;
   font-weight: bold;
   word-break: break-word;
