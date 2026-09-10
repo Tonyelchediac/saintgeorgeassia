@@ -123,6 +123,11 @@
                 <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
             </div>
 
+            <div class="form-group">
+                <label for="input-paperfooter">تذييل الصفحة (Paper Footer)</label>
+                <input type="text" id="input-paperfooter" placeholder="أدخل رقم الصفحة أو التذييل..." value="1/1">
+            </div>
+
             <button class="print-btn" onclick="downloadAsImage()">تحميل كصورة (PNG)</button>
         </div>
 
@@ -130,20 +135,19 @@
         <div class="paper-container">
             <div class="paper" id="paper-to-print">
 
-
-                <div class="sundaydetails">
-                    <div class="title" id="display-title"> ‎‏‏‎</div>
-                    <div class="date" id="display-3adad"></div>
-                    <div class="date" id="display-date"> ‎‏‏‎</div>
-                </div>
-
                 <div class="paper-header">
+                    <div class="sundaydetails">
+                        <div class="title" id="display-title"> ‎‏‏‎</div>
+                        <div class="date" id="display-3adad"></div>
+                        <div class="date" id="display-date"> ‎‏‏‎</div>
+                    </div>
+
                     <div class="risele">
                         <img src="title.png" alt="title">
                     </div>
-                </div>
-                <div class="logo">
-                    <img src="saint_george_assia.png" alt="saint george">
+                    <div class="logo">
+                        <img src="saint_george_assia.png" alt="saint george">
+                    </div>
                 </div>
 
                 <hr>
@@ -228,6 +232,7 @@
                     <div class="content-box" id="display-recommendations"></div>
                 </div>
 
+                <div class="paperfooter">1/1</div>
             </div>
         </div>
 
@@ -461,6 +466,7 @@
         const dateInput = document.getElementById('input-date');
         const bibleInput = document.getElementById('input-bible');
         const recInput = document.getElementById('input-recommendations');
+        const footerInput = document.getElementById('input-paperfooter');
 
         const titleDisplay = document.getElementById('display-title');
         const aadadDisplay = document.getElementById('display-3adad');
@@ -468,6 +474,7 @@
         const bibleDisplay = document.getElementById('display-bible');
         const recDisplay = document.getElementById('display-recommendations');
         const wrapperRecs = document.getElementById('wrapper-recommendations');
+        const footerDisplay = document.querySelector('.paperfooter');
 
         titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value || '‎‏‏ ‎‏‏‎'; });
 
@@ -487,6 +494,10 @@
             } else {
                 wrapperRecs.classList.add('is-hidden');
             }
+        });
+
+        footerInput.addEventListener('input', (e) => {
+            footerDisplay.textContent = e.target.value || '1/1';
         });
 
         async function downloadAsImage() {
