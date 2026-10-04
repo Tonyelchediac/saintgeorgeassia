@@ -4,9 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>نشرة الرعية</title>
-    <link rel="shortcut icon" href="saint_george_assia.png" type="image/x-icon">
+
+    <link rel="shortcut icon"
+        href="saint_george_assia.png"
+        type="image/x-icon">
+
     <link rel="stylesheet" href="styles.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
@@ -16,536 +22,2737 @@
 
     <div class="app-wrapper">
 
-        <!-- form code -->
+        <!-- =====================================================
+             FORM
+        ====================================================== -->
+
         <div class="form-container">
+
             <h2>إدخال البيانات</h2>
 
+            <!-- Sunday Title -->
+
             <div class="form-group">
-                <label for="input-title">عنوان الأحد</label>
-                <input type="text" id="input-title" placeholder="أدخل عنوان الأحد...">
+                <label for="input-title">
+                    عنوان الأحد
+                </label>
+
+                <input
+                    type="text"
+                    id="input-title"
+                    placeholder="أدخل عنوان الأحد..."
+                >
             </div>
 
+            <!-- Number -->
+
             <div class="form-group">
-                <label for="input-3adad">عدد الأحد</label>
-                <input type="text" id="input-3adad" placeholder="أدخل عدد الأحد..." value="العدد ">
+                <label for="input-3adad">
+                    عدد الأحد
+                </label>
+
+                <input
+                    type="text"
+                    id="input-3adad"
+                    placeholder="أدخل عدد الأحد..."
+                    value="العدد "
+                >
             </div>
 
+            <!-- Date -->
+
             <div class="form-group">
-                <label for="input-date">تاريخ الأحد</label>
-                <input type="date" id="input-date" placeholder="أدخل تاريخ الأحد...">
+                <label for="input-date">
+                    تاريخ الأحد
+                </label>
+
+                <input
+                    type="date"
+                    id="input-date"
+                >
             </div>
 
+            <!-- Bible -->
+
             <div class="form-group">
-                <label for="input-bible">رسالة الأحد (إنجيل / قراءة)</label>
-                <textarea id="input-bible" placeholder="أدخل نص إنجيل أو رسالة الأحد..."></textarea>
+                <label for="input-bible">
+                    رسالة الأحد (إنجيل / قراءة)
+                </label>
+
+                <textarea
+                    id="input-bible"
+                    placeholder="أدخل نص إنجيل أو رسالة الأحد..."
+                ></textarea>
             </div>
 
-            <h2>برنامج الأسبوع (من الإثنين إلى الأحد)</h2>
+
+            <!-- =================================================
+                 WEEKLY PROGRAM
+            ================================================== -->
+
+            <h2>
+                برنامج الأسبوع (من الإثنين إلى الأحد)
+            </h2>
+
+
+            <!-- MONDAY -->
 
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-mon">الإثنين</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-mon"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('mon')">
+
+                    <label id="label-mon">
+                        الإثنين
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-mon"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-mon"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('mon')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-mon">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('mon')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
+
+            <!-- TUESDAY -->
+
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-tue">الثلاثاء</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-tue"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('tue')">
+
+                    <label id="label-tue">
+                        الثلاثاء
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-tue"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-tue"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('tue')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-tue">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('tue')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
+
+            <!-- WEDNESDAY -->
+
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-wed">الأربعاء</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-wed"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('wed')">
+
+                    <label id="label-wed">
+                        الأربعاء
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-wed"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-wed"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('wed')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-wed">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('wed')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
+
+            <!-- THURSDAY -->
+
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-thu">الخميس</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-thu"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('thu')">
+
+                    <label id="label-thu">
+                        الخميس
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-thu"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-thu"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('thu')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-thu">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('thu')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
+
+            <!-- FRIDAY -->
+
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-fri">الجمعة</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-fri"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('fri')">
+
+                    <label id="label-fri">
+                        الجمعة
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-fri"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-fri"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('fri')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-fri">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('fri')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
+
+            <!-- SATURDAY -->
+
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-sat">السبت</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-sat"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('sat')">
+
+                    <label id="label-sat">
+                        السبت
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-sat"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-sat"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('sat')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-sat">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('sat')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
+
+            <!-- SUNDAY -->
+
             <div class="form-group">
+
                 <div class="day-title">
-                    <label id="label-sun">الأحد</label>
-                    <input type="text" class="day-subtitle-input" id="subtitle-sun"
-                        placeholder="ملاحظة / عنوان اليوم..." oninput="updateDayOutput('sun')">
+
+                    <label id="label-sun">
+                        الأحد
+                    </label>
+
+                    <input
+                        type="text"
+                        class="day-subtitle-input"
+                        id="subtitle-sun"
+                        placeholder="ملاحظة / عنوان اليوم..."
+                    >
+
                 </div>
-                <div class="day-events-container" id="container-sun"></div>
-                <button type="button" class="btn-add-event" onclick="addEventRow('sun')">+ إضافة نشاط</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-sun">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addEventRow('sun')">
+                    + إضافة نشاط
+                </button>
+
             </div>
 
-            <h2>أخبار الرعية</h2>
+
+            <!-- =================================================
+                 PARISH NEWS
+            ================================================== -->
+
+            <h2>
+                أخبار الرعية
+            </h2>
+
             <div class="form-group">
-                <div class="day-events-container" id="container-news"></div>
-                <button type="button" class="btn-add-event" onclick="addNewsRow()">+ إضافة خبر جديد</button>
+
+                <div
+                    class="day-events-container"
+                    id="container-news">
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-add-event"
+                    onclick="addNewsRow()">
+                    + إضافة خبر جديد
+                </button>
+
             </div>
+
+
+            <!-- =================================================
+                 RECOMMENDATIONS
+            ================================================== -->
 
             <div class="form-group">
-                <label for="input-recommendations">توصيات عامة</label>
-                <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
+
+                <label for="input-recommendations">
+                    توصيات عامة
+                </label>
+
+                <textarea
+                    id="input-recommendations"
+                    placeholder="أدخل التوصيات..."
+                ></textarea>
+
             </div>
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
 
             <div class="form-group">
-                <label for="input-paperfooter">تذييل الصفحة (Paper Footer)</label>
-                <input type="text" id="input-paperfooter" placeholder="أدخل رقم الصفحة أو التذييل..." value="1/1">
+
+                <label for="input-paperfooter">
+                    تذييل الصفحة
+                </label>
+
+                <input
+                    type="text"
+                    id="input-paperfooter"
+                    placeholder="أدخل رقم الصفحة أو التذييل..."
+                    value="1/1"
+                >
+
             </div>
 
-            <button class="print-btn" onclick="downloadAsImage()">تحميل كصورة (PNG)</button>
+
+            <!-- =================================================
+                 ACTION BUTTONS
+            ================================================== -->
+
+            <div class="action-buttons">
+
+                <button
+                    type="button"
+                    class="print-btn"
+                    onclick="downloadAsImage()">
+                    تحميل كصورة (PNG)
+                </button>
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    onclick="resetNewsletter()">
+                    إعادة ضبط البيانات
+                </button>
+
+            </div>
+
         </div>
 
-        <!-- paper content -->
+
+        <!-- =====================================================
+             PAPER
+        ====================================================== -->
+
         <div class="paper-container">
-            <div class="paper" id="paper-to-print">
+
+            <div
+                class="paper"
+                id="paper-to-print">
+
+
+                <!-- =================================================
+                     PAPER HEADER
+                ================================================== -->
 
                 <div class="paper-header">
+
                     <div class="sundaydetails">
-                        <div class="title" id="display-title"> ‎‏‏‎</div>
-                        <div class="date" id="display-3adad"></div>
-                        <div class="date" id="display-date"> ‎‏‏‎</div>
+
+                        <div
+                            class="title"
+                            id="display-title">
+                            ‎‏‏‎
+                        </div>
+
+                        <div
+                            class="date"
+                            id="display-3adad">
+                        </div>
+
+                        <div
+                            class="date"
+                            id="display-date">
+                            ‎‏‏‎
+                        </div>
+
                     </div>
+
 
                     <div class="risele">
-                        <img src="title.png" alt="title">
+
+                        <img
+                            src="title.png"
+                            alt="title">
+
                     </div>
+
+
                     <div class="logo">
-                        <img src="saint_george_assia.png" alt="saint george">
+
+                        <img
+                            src="saint_george_assia.png"
+                            alt="saint george">
+
                     </div>
+
                 </div>
 
+
                 <hr>
+
+
+                <!-- =================================================
+                     PARISH INFORMATION
+                ================================================== -->
 
                 <div class="ra3awe">
-                    <p class="details">رعية مار جرجس أسيا</p>
-                    <p class="details">الخوري يوسف الرامي فاضل: 71/371853</p>
+
+                    <p class="details">
+                        رعية مار جرجس أسيا
+                    </p>
+
+                    <p class="details">
+                        الخوري يوسف الرامي فاضل: 71/371853
+                    </p>
+
                 </div>
+
 
                 <hr>
 
-                <!-- 1. Bible section -->
+
+                <!-- =================================================
+                     BIBLE
+                ================================================== -->
+
                 <div id="wrapper-bible">
-                    <div class="content-box" id="display-bible"></div>
-                </div>
 
-                <!-- 2. Event / Weekly Program section -->
-                <div id="wrapper-days" class="is-hidden">
-                    <div class="section-title">برنامج الأسبوع</div>
-                    <div class="days-grid">
-                        <div class="day-row is-hidden" id="row-mon">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-mon">الإثنين:</span>
-                                <span class="day-subtitle" id="display-subtitle-mon"></span>
-                            </div>
-                            <span class="day-content" id="display-mon"></span>
-                        </div>
-                        <div class="day-row is-hidden" id="row-tue">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-tue">الثلاثاء:</span>
-                                <span class="day-subtitle" id="display-subtitle-tue"></span>
-                            </div>
-                            <span class="day-content" id="display-tue"></span>
-                        </div>
-                        <div class="day-row is-hidden" id="row-wed">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-wed">الأربعاء:</span>
-                                <span class="day-subtitle" id="display-subtitle-wed"></span>
-                            </div>
-                            <span class="day-content" id="display-wed"></span>
-                        </div>
-                        <div class="day-row is-hidden" id="row-thu">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-thu">الخميس:</span>
-                                <span class="day-subtitle" id="display-subtitle-thu"></span>
-                            </div>
-                            <span class="day-content" id="display-thu"></span>
-                        </div>
-                        <div class="day-row is-hidden" id="row-fri">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-fri">الجمعة:</span>
-                                <span class="day-subtitle" id="display-subtitle-fri"></span>
-                            </div>
-                            <span class="day-content" id="display-fri"></span>
-                        </div>
-                        <div class="day-row is-hidden" id="row-sat">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-sat">السبت:</span>
-                                <span class="day-subtitle" id="display-subtitle-sat"></span>
-                            </div>
-                            <span class="day-content" id="display-sat"></span>
-                        </div>
-                        <div class="day-row is-hidden" id="row-sun">
-                            <div class="day-header-line">
-                                <span class="day-name" id="name-sun">الأحد:</span>
-                                <span class="day-subtitle" id="display-subtitle-sun"></span>
-                            </div>
-                            <span class="day-content" id="display-sun"></span>
-                        </div>
+                    <div
+                        class="content-box"
+                        id="display-bible">
                     </div>
+
                 </div>
 
-                <!-- 3. Parish News Section -->
-                <div id="wrapper-news" class="is-hidden">
-                    <div class="section-title">أخبار الرعية</div>
-                    <div class="news-grid" id="display-news-grid"></div>
+
+                <!-- =================================================
+                     WEEKLY PROGRAM
+                ================================================== -->
+
+                <div
+                    id="wrapper-days"
+                    class="is-hidden">
+
+                    <div class="section-title">
+                        برنامج الأسبوع
+                    </div>
+
+
+                    <div class="days-grid">
+
+
+                        <!-- MONDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-mon">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-mon">
+                                    الإثنين:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-mon">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-mon">
+                            </span>
+
+                        </div>
+
+
+                        <!-- TUESDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-tue">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-tue">
+                                    الثلاثاء:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-tue">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-tue">
+                            </span>
+
+                        </div>
+
+
+                        <!-- WEDNESDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-wed">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-wed">
+                                    الأربعاء:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-wed">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-wed">
+                            </span>
+
+                        </div>
+
+
+                        <!-- THURSDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-thu">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-thu">
+                                    الخميس:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-thu">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-thu">
+                            </span>
+
+                        </div>
+
+
+                        <!-- FRIDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-fri">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-fri">
+                                    الجمعة:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-fri">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-fri">
+                            </span>
+
+                        </div>
+
+
+                        <!-- SATURDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-sat">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-sat">
+                                    السبت:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-sat">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-sat">
+                            </span>
+
+                        </div>
+
+
+                        <!-- SUNDAY -->
+
+                        <div
+                            class="day-row is-hidden"
+                            id="row-sun">
+
+                            <div class="day-header-line">
+
+                                <span
+                                    class="day-name"
+                                    id="name-sun">
+                                    الأحد:
+                                </span>
+
+                                <span
+                                    class="day-subtitle"
+                                    id="display-subtitle-sun">
+                                </span>
+
+                            </div>
+
+                            <span
+                                class="day-content"
+                                id="display-sun">
+                            </span>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <!-- 4. Tawsiyet / Recommendations Section -->
-                <div id="wrapper-recommendations" class="is-hidden">
-                    <div class="section-title">توصيات عامة</div>
-                    <div class="content-box" id="display-recommendations"></div>
+
+                <!-- =================================================
+                     NEWS
+                ================================================== -->
+
+                <div
+                    id="wrapper-news"
+                    class="is-hidden">
+
+                    <div class="section-title">
+                        أخبار الرعية
+                    </div>
+
+                    <div
+                        class="news-grid"
+                        id="display-news-grid">
+                    </div>
+
                 </div>
 
-                <div class="paperfooter">1/1</div>
+
+                <!-- =================================================
+                     RECOMMENDATIONS
+                ================================================== -->
+
+                <div
+                    id="wrapper-recommendations"
+                    class="is-hidden">
+
+                    <div class="section-title">
+                        توصيات عامة
+                    </div>
+
+                    <div
+                        class="content-box"
+                        id="display-recommendations">
+                    </div>
+
+                </div>
+
+
+                <!-- PAPER FOOTER -->
+
+                <div class="paperfooter">
+                    1/1
+                </div>
+
             </div>
+
         </div>
 
     </div>
 
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
     <script>
+
+        const STORAGE_KEY =
+            'saintGeorgeAssiaParishNewsletter';
+
+
+        /* =====================================================
+           MONTHS
+        ====================================================== */
+
         const levantMonths = [
-            "كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران",
-            "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"
+            "كانون الثاني",
+            "شباط",
+            "آذار",
+            "نيسان",
+            "أيار",
+            "حزيران",
+            "تموز",
+            "آب",
+            "أيلول",
+            "تشرين الأول",
+            "تشرين الثاني",
+            "كانون الأول"
         ];
 
+
+        /* =====================================================
+           DAYS
+        ====================================================== */
+
         const dayNames = {
+
             mon: "✸ الإثنين",
+
             tue: "✸ الثلاثاء",
+
             wed: "✸ الأربعاء",
+
             thu: "✸ الخميس",
+
             fri: "✸ الجمعة",
+
             sat: "✸ السبت",
+
             sun: "✸ الأحد"
+
         };
 
-        const dayOffsets = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
+
+        const dayOffsets = {
+
+            mon: 0,
+
+            tue: 1,
+
+            wed: 2,
+
+            thu: 3,
+
+            fri: 4,
+
+            sat: 5,
+
+            sun: 6
+
+        };
+
+
+        /* =====================================================
+           GET MONDAY
+        ====================================================== */
 
         function getWeekMonday() {
-            const now = new Date();
-            const currentDay = now.getDay();
-            const diffToMonday = currentDay === 0 ? 1 : 1 - currentDay;
 
-            const monday = new Date(now);
-            monday.setDate(now.getDate() + diffToMonday);
+            const now =
+                new Date();
+
+            const currentDay =
+                now.getDay();
+
+            const diffToMonday =
+                currentDay === 0
+                    ? 1
+                    : 1 - currentDay;
+
+            const monday =
+                new Date(now);
+
+            monday.setDate(
+                now.getDate() +
+                diffToMonday
+            );
+
             return monday;
         }
 
+
+        /* =====================================================
+           INITIALIZE DAY DATES
+        ====================================================== */
+
         function initDates() {
-            const monday = getWeekMonday();
 
-            Object.keys(dayOffsets).forEach(dayKey => {
-                const targetDate = new Date(monday);
-                targetDate.setDate(monday.getDate() + dayOffsets[dayKey]);
+            const monday =
+                getWeekMonday();
 
-                const dayNum = targetDate.getDate();
-                const monthName = levantMonths[targetDate.getMonth()];
-                const yearNum = targetDate.getFullYear();
+            Object.keys(dayOffsets)
+                .forEach(dayKey => {
 
-                const formattedLabel = `${dayNames[dayKey]} ${dayNum} ${monthName} ${yearNum}`;
+                    const targetDate =
+                        new Date(monday);
 
-                const labelEl = document.getElementById(`label-${dayKey}`);
-                const nameEl = document.getElementById(`name-${dayKey}`);
+                    targetDate.setDate(
+                        monday.getDate() +
+                        dayOffsets[dayKey]
+                    );
 
-                if (labelEl) labelEl.textContent = formattedLabel;
-                if (nameEl) nameEl.textContent = `${formattedLabel}:`;
-            });
+                    const dayNum =
+                        targetDate.getDate();
+
+                    const monthName =
+                        levantMonths[
+                            targetDate.getMonth()
+                        ];
+
+                    const yearNum =
+                        targetDate.getFullYear();
+
+                    const formattedLabel =
+                        `${dayNames[dayKey]} ${dayNum} ${monthName} ${yearNum}`;
+
+                    const labelEl =
+                        document.getElementById(
+                            `label-${dayKey}`
+                        );
+
+                    const nameEl =
+                        document.getElementById(
+                            `name-${dayKey}`
+                        );
+
+                    if (labelEl) {
+
+                        labelEl.textContent =
+                            formattedLabel;
+
+                    }
+
+                    if (nameEl) {
+
+                        nameEl.textContent =
+                            `${formattedLabel}:`;
+
+                    }
+
+                });
         }
 
+
+        /* =====================================================
+           FORMAT DATE
+        ====================================================== */
+
         function formatInputDate(dateStr) {
-            if (!dateStr) return 'empty';
-            const [year, month, day] = dateStr.split('-');
-            if (!year || !month || !day) return dateStr;
-            const monthIdx = parseInt(month, 10) - 1;
-            const monthName = levantMonths[monthIdx] || month;
+
+            if (!dateStr) {
+
+                return '';
+
+            }
+
+            const [
+                year,
+                month,
+                day
+            ] =
+                dateStr.split('-');
+
+            if (
+                !year ||
+                !month ||
+                !day
+            ) {
+
+                return dateStr;
+
+            }
+
+            const monthIdx =
+                parseInt(
+                    month,
+                    10
+                ) - 1;
+
+            const monthName =
+                levantMonths[
+                    monthIdx
+                ] || month;
+
             return `${parseInt(day, 10)} ${monthName} ${year}`;
         }
 
-        function addEventRow(dayKey) {
-            const container = document.getElementById(`container-${dayKey}`);
-            const eventDiv = document.createElement('div');
-            eventDiv.className = 'event-row-input';
 
-            eventDiv.innerHTML = `
-                <input type="time" class="day-time-input">
-                <textarea class="day-input" placeholder="أدخل النشاط..."></textarea>
-                <button type="button" class="btn-remove-event" onclick="removeEventRow(this, '${dayKey}')">✕</button>
-            `;
+        /* =====================================================
+           ESCAPE HTML
+        ====================================================== */
 
-            container.appendChild(eventDiv);
+        function escapeHtml(value) {
 
-            const inputs = eventDiv.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => updateDayOutput(dayKey));
-            });
+            return String(value)
 
-            updateDayOutput(dayKey);
+                .replace(
+                    /&/g,
+                    '&amp;'
+                )
+
+                .replace(
+                    /</g,
+                    '&lt;'
+                )
+
+                .replace(
+                    />/g,
+                    '&gt;'
+                )
+
+                .replace(
+                    /"/g,
+                    '&quot;'
+                )
+
+                .replace(
+                    /'/g,
+                    '&#039;'
+                );
         }
 
-        function removeEventRow(btn, dayKey) {
-            btn.parentElement.remove();
-            updateDayOutput(dayKey);
-        }
 
-        function addNewsRow() {
-            const container = document.getElementById('container-news');
-            const newsDiv = document.createElement('div');
-            newsDiv.className = 'news-row-input';
+        /* =====================================================
+           FILE TO BASE64
+        ====================================================== */
 
-            newsDiv.innerHTML = `
-                <div class="news-input-fields">
-                    <input type="file" accept="image/*" class="news-img-input" onchange="updateNewsOutput()">
-                    <textarea class="news-title-input" placeholder="عنوان الخبر / المحتوى..." oninput="updateNewsOutput()"></textarea>
-                </div>
-                <button type="button" class="btn-remove-event" onclick="removeNewsRow(this)">✕</button>
-            `;
+        function fileToBase64(file) {
 
-            container.appendChild(newsDiv);
-            updateNewsOutput();
-        }
+            return new Promise(
+                (resolve, reject) => {
 
-        function removeNewsRow(btn) {
-            btn.closest('.news-row-input').remove();
-            updateNewsOutput();
-        }
+                    const reader =
+                        new FileReader();
 
-        function updateNewsOutput() {
-            const container = document.getElementById('container-news');
-            const rows = container.querySelectorAll('.news-row-input');
-            const gridDisplay = document.getElementById('display-news-grid');
-            const wrapperNews = document.getElementById('wrapper-news');
+                    reader.onload =
+                        () =>
+                            resolve(
+                                reader.result
+                            );
 
-            gridDisplay.innerHTML = '';
-            let validCount = 0;
+                    reader.onerror =
+                        reject;
 
-            rows.forEach(row => {
-                const imgInput = row.querySelector('.news-img-input');
-                const titleInput = row.querySelector('.news-title-input');
+                    reader.readAsDataURL(
+                        file
+                    );
 
-                const titleVal = titleInput ? titleInput.value.trim() : '';
-                const file = imgInput && imgInput.files ? imgInput.files[0] : null;
-
-                if (titleVal || file) {
-                    validCount++;
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'news-item';
-
-                    const textDiv = document.createElement('div');
-                    textDiv.className = 'news-item-text';
-                    textDiv.textContent = titleVal;
-
-                    const imgContainer = document.createElement('div');
-                    imgContainer.className = 'news-item-img';
-
-                    const img = document.createElement('img');
-
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            img.src = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        img.src = 'saint_george_assia.png';
-                    }
-
-                    imgContainer.appendChild(img);
-                    itemDiv.appendChild(imgContainer);
-                    itemDiv.appendChild(textDiv);
-
-                    gridDisplay.appendChild(itemDiv);
                 }
-            });
-
-            if (validCount > 0) {
-                wrapperNews.classList.remove('is-hidden');
-            } else {
-                wrapperNews.classList.add('is-hidden');
-            }
+            );
         }
 
-        function checkDaysHeaderVisibility() {
-            const wrapperDays = document.getElementById('wrapper-days');
-            const visibleRows = document.querySelectorAll('.day-row:not(.is-hidden)');
 
-            if (visibleRows.length > 0) {
-                wrapperDays.classList.remove('is-hidden');
-            } else {
-                wrapperDays.classList.add('is-hidden');
-            }
-        }
+        /* =====================================================
+           SAVE DATA
+        ====================================================== */
 
-        function updateDayOutput(dayKey) {
-            const container = document.getElementById(`container-${dayKey}`);
-            const eventRows = container.querySelectorAll('.event-row-input');
-            const targetRow = document.getElementById(`row-${dayKey}`);
-            const targetDisplay = document.getElementById(`display-${dayKey}`);
+        function saveData() {
 
-            const subtitleInput = document.getElementById(`subtitle-${dayKey}`);
-            const subtitleDisplay = document.getElementById(`display-subtitle-${dayKey}`);
-            const subtitleVal = subtitleInput ? subtitleInput.value.trim() : '';
+            const data = {
 
-            if (subtitleDisplay) {
-                subtitleDisplay.textContent = subtitleVal;
-            }
+                title:
+                    document.getElementById(
+                        'input-title'
+                    ).value,
 
-            let combinedHtml = '';
-            let hasValidEvents = false;
+                aadad:
+                    document.getElementById(
+                        'input-3adad'
+                    ).value,
 
-            eventRows.forEach(row => {
-                const timeInput = row.querySelector('.day-time-input');
-                const textInput = row.querySelector('.day-input');
+                date:
+                    document.getElementById(
+                        'input-date'
+                    ).value,
 
-                const timeValue = timeInput ? timeInput.value : '';
-                const textValue = textInput ? textInput.value.trim() : '';
+                bible:
+                    document.getElementById(
+                        'input-bible'
+                    ).value,
 
-                if (timeValue || textValue) {
-                    hasValidEvents = true;
-                    let formattedTime = '';
-                    if (timeValue) {
-                        const [hours, minutes] = timeValue.split(':');
-                        const hourNum = parseInt(hours, 10);
-                        const period = hourNum >= 12 ? 'م' : 'ص';
-                        const displayHour = hourNum % 12 || 12;
-                        formattedTime = `${displayHour}:${minutes} ${period} `;
-                    }
+                recommendations:
+                    document.getElementById(
+                        'input-recommendations'
+                    ).value,
 
-                    combinedHtml += `<div class="event-item-display"><span class="day-time-tag">${formattedTime}</span>${textValue}</div>`;
-                }
-            });
+                footer:
+                    document.getElementById(
+                        'input-paperfooter'
+                    ).value,
 
-            if (hasValidEvents || subtitleVal.length > 0) {
-                targetDisplay.innerHTML = combinedHtml;
-                targetRow.classList.remove('is-hidden');
-            } else {
-                targetDisplay.innerHTML = '';
-                targetRow.classList.add('is-hidden');
-            }
+                days: {},
 
-            checkDaysHeaderVisibility();
-        }
+                news: []
 
-        // General Form Logic
-        const titleInput = document.getElementById('input-title');
-        const aadadInput = document.getElementById('input-3adad');
-        const dateInput = document.getElementById('input-date');
-        const bibleInput = document.getElementById('input-bible');
-        const recInput = document.getElementById('input-recommendations');
-        const footerInput = document.getElementById('input-paperfooter');
+            };
 
-        const titleDisplay = document.getElementById('display-title');
-        const aadadDisplay = document.getElementById('display-3adad');
-        const titleDate = document.getElementById('display-date');
-        const bibleDisplay = document.getElementById('display-bible');
-        const recDisplay = document.getElementById('display-recommendations');
-        const wrapperRecs = document.getElementById('wrapper-recommendations');
-        const footerDisplay = document.querySelector('.paperfooter');
 
-        titleInput.addEventListener('input', (e) => { titleDisplay.textContent = e.target.value || '‎‏‏ ‎‏‏‎'; });
+            /* ===============================================
+               SAVE DAYS
+            ================================================ */
 
-        aadadInput.addEventListener('input', (e) => { aadadDisplay.textContent = e.target.value || '‎‏‏ ‎‏‏‎'; });
+            Object.keys(dayOffsets)
+                .forEach(dayKey => {
 
-        dateInput.addEventListener('input', (e) => {
-            titleDate.textContent = formatInputDate(e.target.value);
-        });
+                    const container =
+                        document.getElementById(
+                            `container-${dayKey}`
+                        );
 
-        bibleInput.addEventListener('input', (e) => { bibleDisplay.textContent = e.target.value; });
+                    const subtitle =
+                        document.getElementById(
+                            `subtitle-${dayKey}`
+                        );
 
-        recInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            recDisplay.textContent = val;
-            if (val.length > 0) {
-                wrapperRecs.classList.remove('is-hidden');
-            } else {
-                wrapperRecs.classList.add('is-hidden');
-            }
-        });
+                    const events = [];
 
-        footerInput.addEventListener('input', (e) => {
-            footerDisplay.textContent = e.target.value || '1/1';
-        });
+                    container
+                        .querySelectorAll(
+                            '.event-row-input'
+                        )
+                        .forEach(row => {
 
-        async function downloadAsImage() {
-            const paperElement = document.getElementById('paper-to-print');
-            const btn = document.querySelector('.print-btn');
+                            const time =
+                                row.querySelector(
+                                    '.day-time-input'
+                                )?.value || '';
 
-            if (btn) btn.disabled = true;
+                            const text =
+                                row.querySelector(
+                                    '.day-input'
+                                )?.value || '';
 
-            // Save original inline transform/zoom styles
-            const origTransform = paperElement.style.transform;
-            const origZoom = paperElement.style.zoom;
+                            events.push({
 
-            // Reset mobile scaling for 1:1 pixel rendering
-            paperElement.style.transform = 'none';
-            paperElement.style.zoom = '1';
+                                time: time,
 
-            try {
-                // High-resolution render (Scale 4 = Ultra HD ~300-400 DPI)
-                const canvas = await html2canvas(paperElement, {
-                    scale: 4,
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    windowWidth: 794,
-                    windowHeight: 1123
+                                text: text
+
+                            });
+
+                        });
+
+
+                    data.days[dayKey] = {
+
+                        subtitle:
+                            subtitle
+                                ? subtitle.value
+                                : '',
+
+                        events:
+                            events
+
+                    };
+
                 });
 
-                const link = document.createElement('a');
-                link.download = 'saint_george_assia_highres.png';
-                link.href = canvas.toDataURL('image/png', 1.0);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
 
-            } catch (err) {
-                console.error("Export Error:", err);
-            } finally {
-                // Restore mobile screen scaling
-                paperElement.style.transform = origTransform;
-                paperElement.style.zoom = origZoom;
-                if (btn) btn.disabled = false;
+            /* ===============================================
+               SAVE NEWS
+            ================================================ */
+
+            document
+                .querySelectorAll(
+                    '.news-row-input'
+                )
+                .forEach(row => {
+
+                    const titleInput =
+                        row.querySelector(
+                            '.news-title-input'
+                        );
+
+                    const preview =
+                        row.querySelector(
+                            '.news-preview'
+                        );
+
+                    data.news.push({
+
+                        title:
+                            titleInput
+                                ? titleInput.value
+                                : '',
+
+                        image:
+                            preview?.src || ''
+
+                    });
+
+                });
+
+
+            try {
+
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(data)
+                );
+
+            } catch (error) {
+
+                console.error(
+                    'Could not save data:',
+                    error
+                );
+
+                alert(
+                    'تعذّر حفظ البيانات. قد تكون صور الأخبار كبيرة جدًا بالنسبة لمساحة التخزين المحلية للمتصفح.'
+                );
             }
         }
 
-        // Initial setup
+
+        /* =====================================================
+           LOAD DATA
+        ====================================================== */
+
+        function loadData() {
+
+            const saved =
+                localStorage.getItem(
+                    STORAGE_KEY
+                );
+
+            if (!saved) {
+
+                return false;
+
+            }
+
+
+            try {
+
+                const data =
+                    JSON.parse(saved);
+
+
+                /* ===========================================
+                   GENERAL INPUTS
+                ============================================ */
+
+                document.getElementById(
+                    'input-title'
+                ).value =
+                    data.title || '';
+
+
+                document.getElementById(
+                    'input-3adad'
+                ).value =
+                    data.aadad ||
+                    'العدد ';
+
+
+                document.getElementById(
+                    'input-date'
+                ).value =
+                    data.date || '';
+
+
+                document.getElementById(
+                    'input-bible'
+                ).value =
+                    data.bible || '';
+
+
+                document.getElementById(
+                    'input-recommendations'
+                ).value =
+                    data.recommendations || '';
+
+
+                document.getElementById(
+                    'input-paperfooter'
+                ).value =
+                    data.footer ||
+                    '1/1';
+
+
+                /* ===========================================
+                   DAYS
+                ============================================ */
+
+                Object.keys(dayOffsets)
+                    .forEach(dayKey => {
+
+                        const container =
+                            document.getElementById(
+                                `container-${dayKey}`
+                            );
+
+                        const subtitle =
+                            document.getElementById(
+                                `subtitle-${dayKey}`
+                            );
+
+                        container.innerHTML = '';
+
+
+                        const dayData =
+                            data.days?.[dayKey];
+
+
+                        if (!dayData) {
+
+                            createEventRow(
+                                dayKey
+                            );
+
+                            return;
+
+                        }
+
+
+                        if (subtitle) {
+
+                            subtitle.value =
+                                dayData.subtitle ||
+                                '';
+
+                        }
+
+
+                        (
+                            dayData.events ||
+                            []
+                        )
+                            .forEach(event => {
+
+                                createEventRow(
+                                    dayKey,
+                                    event.time || '',
+                                    event.text || ''
+                                );
+
+                            });
+
+
+                        if (
+                            !dayData.events ||
+                            dayData.events.length === 0
+                        ) {
+
+                            createEventRow(
+                                dayKey
+                            );
+
+                        }
+
+
+                        updateDayOutput(
+                            dayKey
+                        );
+
+                    });
+
+
+                /* ===========================================
+                   NEWS
+                ============================================ */
+
+                const newsContainer =
+                    document.getElementById(
+                        'container-news'
+                    );
+
+                newsContainer.innerHTML =
+                    '';
+
+
+                (
+                    data.news || []
+                )
+                    .forEach(news => {
+
+                        createNewsRow(
+                            news.title || '',
+                            news.image || ''
+                        );
+
+                    });
+
+
+                if (
+                    !data.news ||
+                    data.news.length === 0
+                ) {
+
+                    createNewsRow();
+
+                }
+
+
+                updateNewsOutput();
+
+                updateGeneralDisplay();
+
+                return true;
+
+
+            } catch (error) {
+
+                console.error(
+                    'Could not load saved data:',
+                    error
+                );
+
+                return false;
+
+            }
+        }
+
+
+        /* =====================================================
+           CREATE EVENT ROW
+        ====================================================== */
+
+        function createEventRow(
+            dayKey,
+            timeValue = '',
+            textValue = ''
+        ) {
+
+            const container =
+                document.getElementById(
+                    `container-${dayKey}`
+                );
+
+            const eventDiv =
+                document.createElement(
+                    'div'
+                );
+
+            eventDiv.className =
+                'event-row-input';
+
+
+            const timeInput =
+                document.createElement(
+                    'input'
+                );
+
+            timeInput.type =
+                'time';
+
+            timeInput.className =
+                'day-time-input';
+
+            timeInput.value =
+                timeValue;
+
+
+            const textInput =
+                document.createElement(
+                    'textarea'
+                );
+
+            textInput.className =
+                'day-input';
+
+            textInput.placeholder =
+                'أدخل النشاط...';
+
+            textInput.value =
+                textValue;
+
+
+            const removeButton =
+                document.createElement(
+                    'button'
+                );
+
+            removeButton.type =
+                'button';
+
+            removeButton.className =
+                'btn-remove-event';
+
+            removeButton.textContent =
+                '✕';
+
+
+            eventDiv.appendChild(
+                timeInput
+            );
+
+            eventDiv.appendChild(
+                textInput
+            );
+
+            eventDiv.appendChild(
+                removeButton
+            );
+
+            container.appendChild(
+                eventDiv
+            );
+
+
+            timeInput.addEventListener(
+                'input',
+                () => {
+
+                    updateDayOutput(
+                        dayKey
+                    );
+
+                    saveData();
+
+                }
+            );
+
+
+            textInput.addEventListener(
+                'input',
+                () => {
+
+                    updateDayOutput(
+                        dayKey
+                    );
+
+                    saveData();
+
+                }
+            );
+
+
+            removeButton.addEventListener(
+                'click',
+                () => {
+
+                    eventDiv.remove();
+
+                    updateDayOutput(
+                        dayKey
+                    );
+
+                    saveData();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ADD EVENT
+        ====================================================== */
+
+        function addEventRow(dayKey) {
+
+            createEventRow(
+                dayKey
+            );
+
+            updateDayOutput(
+                dayKey
+            );
+
+            saveData();
+
+        }
+
+
+        /* =====================================================
+           CREATE NEWS ROW
+        ====================================================== */
+
+        function createNewsRow(
+            titleValue = '',
+            imageValue = ''
+        ) {
+
+            const container =
+                document.getElementById(
+                    'container-news'
+                );
+
+            const newsDiv =
+                document.createElement(
+                    'div'
+                );
+
+            newsDiv.className =
+                'news-row-input';
+
+
+            const fields =
+                document.createElement(
+                    'div'
+                );
+
+            fields.className =
+                'news-input-fields';
+
+
+            const imageInput =
+                document.createElement(
+                    'input'
+                );
+
+            imageInput.type =
+                'file';
+
+            imageInput.accept =
+                'image/*';
+
+            imageInput.className =
+                'news-img-input';
+
+
+            const titleInput =
+                document.createElement(
+                    'textarea'
+                );
+
+            titleInput.className =
+                'news-title-input';
+
+            titleInput.placeholder =
+                'عنوان الخبر / المحتوى...';
+
+            titleInput.value =
+                titleValue;
+
+
+            fields.appendChild(
+                imageInput
+            );
+
+            fields.appendChild(
+                titleInput
+            );
+
+
+            const removeButton =
+                document.createElement(
+                    'button'
+                );
+
+            removeButton.type =
+                'button';
+
+            removeButton.className =
+                'btn-remove-event';
+
+            removeButton.textContent =
+                '✕';
+
+
+            const preview =
+                document.createElement(
+                    'img'
+                );
+
+            preview.className =
+                'news-preview';
+
+            preview.style.display =
+                'none';
+
+
+            if (imageValue) {
+
+                preview.src =
+                    imageValue;
+
+            }
+
+
+            newsDiv.appendChild(
+                fields
+            );
+
+            newsDiv.appendChild(
+                removeButton
+            );
+
+            newsDiv.appendChild(
+                preview
+            );
+
+            container.appendChild(
+                newsDiv
+            );
+
+
+            /* ===============================================
+               NEWS TITLE
+            ================================================ */
+
+            titleInput.addEventListener(
+                'input',
+                () => {
+
+                    updateNewsOutput();
+
+                    saveData();
+
+                }
+            );
+
+
+            /* ===============================================
+               NEWS IMAGE
+            ================================================ */
+
+            imageInput.addEventListener(
+                'change',
+                async () => {
+
+                    const file =
+                        imageInput.files?.[0];
+
+                    if (!file) {
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        const base64 =
+                            await fileToBase64(
+                                file
+                            );
+
+                        preview.src =
+                            base64;
+
+                        updateNewsOutput();
+
+                        saveData();
+
+                    } catch (error) {
+
+                        console.error(
+                            'Image error:',
+                            error
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /* ===============================================
+               REMOVE NEWS
+            ================================================ */
+
+            removeButton.addEventListener(
+                'click',
+                () => {
+
+                    newsDiv.remove();
+
+                    updateNewsOutput();
+
+                    saveData();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ADD NEWS
+        ====================================================== */
+
+        function addNewsRow() {
+
+            createNewsRow();
+
+            updateNewsOutput();
+
+            saveData();
+
+        }
+
+
+        /* =====================================================
+           NEWS OUTPUT
+        ====================================================== */
+
+        function updateNewsOutput() {
+
+            const container =
+                document.getElementById(
+                    'container-news'
+                );
+
+            const rows =
+                container.querySelectorAll(
+                    '.news-row-input'
+                );
+
+            const gridDisplay =
+                document.getElementById(
+                    'display-news-grid'
+                );
+
+            const wrapperNews =
+                document.getElementById(
+                    'wrapper-news'
+                );
+
+
+            gridDisplay.innerHTML =
+                '';
+
+
+            let validCount =
+                0;
+
+
+            rows.forEach(row => {
+
+                const titleInput =
+                    row.querySelector(
+                        '.news-title-input'
+                    );
+
+                const preview =
+                    row.querySelector(
+                        '.news-preview'
+                    );
+
+
+                const titleVal =
+                    titleInput
+                        ? titleInput.value.trim()
+                        : '';
+
+
+                const imageValue =
+                    preview?.src || '';
+
+
+                const file =
+                    row.querySelector(
+                        '.news-img-input'
+                    )?.files?.[0] || null;
+
+
+                if (
+                    titleVal ||
+                    file ||
+                    imageValue
+                ) {
+
+                    validCount++;
+
+
+                    const itemDiv =
+                        document.createElement(
+                            'div'
+                        );
+
+                    itemDiv.className =
+                        'news-item';
+
+
+                    const textDiv =
+                        document.createElement(
+                            'div'
+                        );
+
+                    textDiv.className =
+                        'news-item-text';
+
+                    textDiv.textContent =
+                        titleVal;
+
+
+                    const imgContainer =
+                        document.createElement(
+                            'div'
+                        );
+
+                    imgContainer.className =
+                        'news-item-img';
+
+
+                    const img =
+                        document.createElement(
+                            'img'
+                        );
+
+
+                    if (imageValue) {
+
+                        img.src =
+                            imageValue;
+
+                    } else {
+
+                        img.src =
+                            'saint_george_assia.png';
+
+                    }
+
+
+                    imgContainer.appendChild(
+                        img
+                    );
+
+
+                    itemDiv.appendChild(
+                        imgContainer
+                    );
+
+                    itemDiv.appendChild(
+                        textDiv
+                    );
+
+
+                    gridDisplay.appendChild(
+                        itemDiv
+                    );
+
+                }
+
+            });
+
+
+            if (validCount > 0) {
+
+                wrapperNews.classList.remove(
+                    'is-hidden'
+                );
+
+            } else {
+
+                wrapperNews.classList.add(
+                    'is-hidden'
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           CHECK DAYS
+        ====================================================== */
+
+        function checkDaysHeaderVisibility() {
+
+            const wrapperDays =
+                document.getElementById(
+                    'wrapper-days'
+                );
+
+
+            const visibleRows =
+                document.querySelectorAll(
+                    '.day-row:not(.is-hidden)'
+                );
+
+
+            if (
+                visibleRows.length > 0
+            ) {
+
+                wrapperDays.classList.remove(
+                    'is-hidden'
+                );
+
+            } else {
+
+                wrapperDays.classList.add(
+                    'is-hidden'
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           UPDATE DAY OUTPUT
+        ====================================================== */
+
+        function updateDayOutput(
+            dayKey
+        ) {
+
+            const container =
+                document.getElementById(
+                    `container-${dayKey}`
+                );
+
+
+            const eventRows =
+                container.querySelectorAll(
+                    '.event-row-input'
+                );
+
+
+            const targetRow =
+                document.getElementById(
+                    `row-${dayKey}`
+                );
+
+
+            const targetDisplay =
+                document.getElementById(
+                    `display-${dayKey}`
+                );
+
+
+            const subtitleInput =
+                document.getElementById(
+                    `subtitle-${dayKey}`
+                );
+
+
+            const subtitleDisplay =
+                document.getElementById(
+                    `display-subtitle-${dayKey}`
+                );
+
+
+            const subtitleVal =
+                subtitleInput
+                    ? subtitleInput.value.trim()
+                    : '';
+
+
+            if (subtitleDisplay) {
+
+                subtitleDisplay.textContent =
+                    subtitleVal;
+
+            }
+
+
+            let combinedHtml =
+                '';
+
+            let hasValidEvents =
+                false;
+
+
+            eventRows.forEach(row => {
+
+                const timeInput =
+                    row.querySelector(
+                        '.day-time-input'
+                    );
+
+
+                const textInput =
+                    row.querySelector(
+                        '.day-input'
+                    );
+
+
+                const timeValue =
+                    timeInput
+                        ? timeInput.value
+                        : '';
+
+
+                const textValue =
+                    textInput
+                        ? textInput.value.trim()
+                        : '';
+
+
+                if (
+                    timeValue ||
+                    textValue
+                ) {
+
+                    hasValidEvents =
+                        true;
+
+
+                    let formattedTime =
+                        '';
+
+
+                    if (timeValue) {
+
+                        const [
+                            hours,
+                            minutes
+                        ] =
+                            timeValue.split(':');
+
+
+                        const hourNum =
+                            parseInt(
+                                hours,
+                                10
+                            );
+
+
+                        const period =
+                            hourNum >= 12
+                                ? 'م'
+                                : 'ص';
+
+
+                        const displayHour =
+                            hourNum % 12 || 12;
+
+
+                        formattedTime =
+                            `${displayHour}:${minutes} ${period} `;
+
+                    }
+
+
+                    combinedHtml += `
+
+                        <div class="event-item-display">
+
+                            <span class="day-time-tag">
+                                ${formattedTime}
+                            </span>
+
+                            ${escapeHtml(
+                                textValue
+                            )}
+
+                        </div>
+
+                    `;
+
+                }
+
+            });
+
+
+            if (
+                hasValidEvents ||
+                subtitleVal.length > 0
+            ) {
+
+                targetDisplay.innerHTML =
+                    combinedHtml;
+
+
+                targetRow.classList.remove(
+                    'is-hidden'
+                );
+
+            } else {
+
+                targetDisplay.innerHTML =
+                    '';
+
+
+                targetRow.classList.add(
+                    'is-hidden'
+                );
+
+            }
+
+
+            checkDaysHeaderVisibility();
+
+        }
+
+
+        /* =====================================================
+           UPDATE GENERAL DISPLAY
+        ====================================================== */
+
+        function updateGeneralDisplay() {
+
+            const titleInput =
+                document.getElementById(
+                    'input-title'
+                );
+
+
+            const aadadInput =
+                document.getElementById(
+                    'input-3adad'
+                );
+
+
+            const dateInput =
+                document.getElementById(
+                    'input-date'
+                );
+
+
+            const bibleInput =
+                document.getElementById(
+                    'input-bible'
+                );
+
+
+            const recInput =
+                document.getElementById(
+                    'input-recommendations'
+                );
+
+
+            const footerInput =
+                document.getElementById(
+                    'input-paperfooter'
+                );
+
+
+            const titleDisplay =
+                document.getElementById(
+                    'display-title'
+                );
+
+
+            const aadadDisplay =
+                document.getElementById(
+                    'display-3adad'
+                );
+
+
+            const titleDate =
+                document.getElementById(
+                    'display-date'
+                );
+
+
+            const bibleDisplay =
+                document.getElementById(
+                    'display-bible'
+                );
+
+
+            const recDisplay =
+                document.getElementById(
+                    'display-recommendations'
+                );
+
+
+            const wrapperRecs =
+                document.getElementById(
+                    'wrapper-recommendations'
+                );
+
+
+            const footerDisplay =
+                document.querySelector(
+                    '.paperfooter'
+                );
+
+
+            titleDisplay.textContent =
+                titleInput.value ||
+                '‎‏‏ ‎‏‏‎';
+
+
+            aadadDisplay.textContent =
+                aadadInput.value ||
+                '‎‏‏ ‎‏‏‎';
+
+
+            titleDate.textContent =
+                formatInputDate(
+                    dateInput.value
+                );
+
+
+            bibleDisplay.textContent =
+                bibleInput.value;
+
+
+            const recValue =
+                recInput.value.trim();
+
+
+            recDisplay.textContent =
+                recValue;
+
+
+            if (
+                recValue.length > 0
+            ) {
+
+                wrapperRecs.classList.remove(
+                    'is-hidden'
+                );
+
+            } else {
+
+                wrapperRecs.classList.add(
+                    'is-hidden'
+                );
+
+            }
+
+
+            footerDisplay.textContent =
+                footerInput.value ||
+                '1/1';
+
+        }
+
+
+        /* =====================================================
+           INPUT LISTENERS
+        ====================================================== */
+
+        const titleInput =
+            document.getElementById(
+                'input-title'
+            );
+
+
+        const aadadInput =
+            document.getElementById(
+                'input-3adad'
+            );
+
+
+        const dateInput =
+            document.getElementById(
+                'input-date'
+            );
+
+
+        const bibleInput =
+            document.getElementById(
+                'input-bible'
+            );
+
+
+        const recInput =
+            document.getElementById(
+                'input-recommendations'
+            );
+
+
+        const footerInput =
+            document.getElementById(
+                'input-paperfooter'
+            );
+
+
+        [
+            titleInput,
+            aadadInput,
+            dateInput,
+            bibleInput,
+            recInput,
+            footerInput
+        ]
+            .forEach(input => {
+
+                input.addEventListener(
+                    'input',
+                    () => {
+
+                        updateGeneralDisplay();
+
+                        saveData();
+
+                    }
+                );
+
+
+                input.addEventListener(
+                    'change',
+                    () => {
+
+                        updateGeneralDisplay();
+
+                        saveData();
+
+                    }
+                );
+
+            });
+
+
+        /* =====================================================
+           SUBTITLE LISTENERS
+        ====================================================== */
+
+        Object.keys(dayOffsets)
+            .forEach(dayKey => {
+
+                const subtitle =
+                    document.getElementById(
+                        `subtitle-${dayKey}`
+                    );
+
+
+                if (subtitle) {
+
+                    subtitle.addEventListener(
+                        'input',
+                        () => {
+
+                            updateDayOutput(
+                                dayKey
+                            );
+
+                            saveData();
+
+                        }
+                    );
+
+                }
+
+            });
+
+
+        /* =====================================================
+           RESET NEWSLETTER
+        ====================================================== */
+
+        function resetNewsletter() {
+
+            const confirmed =
+                confirm(
+                    'هل أنت متأكد أنك تريد حذف جميع البيانات المحفوظة؟\n\nلا يمكن التراجع عن هذه العملية.'
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            /* Remove LocalStorage */
+
+            localStorage.removeItem(
+                STORAGE_KEY
+            );
+
+
+            /* ===============================================
+               CLEAR GENERAL INPUTS
+            ================================================ */
+
+            document.getElementById(
+                'input-title'
+            ).value = '';
+
+
+            document.getElementById(
+                'input-3adad'
+            ).value =
+                'العدد ';
+
+
+            document.getElementById(
+                'input-date'
+            ).value = '';
+
+
+            document.getElementById(
+                'input-bible'
+            ).value = '';
+
+
+            document.getElementById(
+                'input-recommendations'
+            ).value = '';
+
+
+            document.getElementById(
+                'input-paperfooter'
+            ).value =
+                '1/1';
+
+
+            /* ===============================================
+               CLEAR DAYS
+            ================================================ */
+
+            Object.keys(dayOffsets)
+                .forEach(dayKey => {
+
+                    const container =
+                        document.getElementById(
+                            `container-${dayKey}`
+                        );
+
+
+                    const subtitle =
+                        document.getElementById(
+                            `subtitle-${dayKey}`
+                        );
+
+
+                    container.innerHTML =
+                        '';
+
+
+                    if (subtitle) {
+
+                        subtitle.value =
+                            '';
+
+                    }
+
+
+                    updateDayOutput(
+                        dayKey
+                    );
+
+                });
+
+
+            /* ===============================================
+               RECREATE ONE EMPTY EVENT
+               FOR EVERY DAY
+            ================================================ */
+
+            Object.keys(dayOffsets)
+                .forEach(dayKey => {
+
+                    createEventRow(
+                        dayKey
+                    );
+
+                });
+
+
+            /* ===============================================
+               CLEAR NEWS
+            ================================================ */
+
+            document.getElementById(
+                'container-news'
+            ).innerHTML =
+                '';
+
+
+            /* ===============================================
+               CREATE ONE EMPTY NEWS ROW
+            ================================================ */
+
+            createNewsRow();
+
+
+            updateNewsOutput();
+
+            updateGeneralDisplay();
+
+
+            alert(
+                'تم حذف جميع البيانات بنجاح.'
+            );
+
+        }
+
+
+        /* =====================================================
+           DOWNLOAD AS HIGH RESOLUTION PNG
+        ====================================================== */
+
+        async function downloadAsImage() {
+
+            const paperElement =
+                document.getElementById(
+                    'paper-to-print'
+                );
+
+
+            const btn =
+                document.querySelector(
+                    '.print-btn'
+                );
+
+
+            if (btn) {
+
+                btn.disabled =
+                    true;
+
+            }
+
+
+            const origTransform =
+                paperElement.style.transform;
+
+
+            const origZoom =
+                paperElement.style.zoom;
+
+
+            paperElement.style.transform =
+                'none';
+
+
+            paperElement.style.zoom =
+                '1';
+
+
+            try {
+
+                const canvas =
+                    await html2canvas(
+                        paperElement,
+                        {
+
+                            scale: 4,
+
+                            useCORS: true,
+
+                            allowTaint: true,
+
+                            logging: false,
+
+                            windowWidth: 794,
+
+                            windowHeight: 1123
+
+                        }
+                    );
+
+
+                const link =
+                    document.createElement(
+                        'a'
+                    );
+
+
+                link.download =
+                    'saint_george_assia_highres.png';
+
+
+                link.href =
+                    canvas.toDataURL(
+                        'image/png',
+                        1.0
+                    );
+
+
+                document.body.appendChild(
+                    link
+                );
+
+
+                link.click();
+
+
+                document.body.removeChild(
+                    link
+                );
+
+
+            } catch (err) {
+
+                console.error(
+                    'Export Error:',
+                    err
+                );
+
+
+                alert(
+                    'حدث خطأ أثناء تحميل الصورة.'
+                );
+
+            } finally {
+
+                paperElement.style.transform =
+                    origTransform;
+
+
+                paperElement.style.zoom =
+                    origZoom;
+
+
+                if (btn) {
+
+                    btn.disabled =
+                        false;
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           INITIALIZATION
+        ====================================================== */
+
         initDates();
-        addNewsRow();
-        Object.keys(dayOffsets).forEach(dayKey => addEventRow(dayKey));
+
+
+        const hasSavedData =
+            loadData();
+
+
+        if (!hasSavedData) {
+
+            /* Create one event row
+               for each day */
+
+            Object.keys(dayOffsets)
+                .forEach(dayKey => {
+
+                    createEventRow(
+                        dayKey
+                    );
+
+                });
+
+
+            /* Create one empty
+               news row */
+
+            createNewsRow();
+
+        }
+
+
+        /* Final display refresh */
+
+        updateGeneralDisplay();
+
+
+        Object.keys(dayOffsets)
+            .forEach(dayKey => {
+
+                updateDayOutput(
+                    dayKey
+                );
+
+            });
+
+
+        updateNewsOutput();
+
     </script>
 
 </body>
