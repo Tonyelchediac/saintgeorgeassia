@@ -194,6 +194,24 @@ body {
   background-color: #1d4ed8;
 }
 
+.reset-btn {
+  background-color: #b91c1c;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.reset-btn:hover {
+  background-color: #991b1b;
+}
+
 /* Paper Display Panel Wrapper */
 .paper-container {
   flex: 1 1 600px;

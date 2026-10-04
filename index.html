@@ -4,16 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>نشرة الرعية</title>
-
-    <link rel="shortcut icon"
-        href="saint_george_assia.png"
-        type="image/x-icon">
-
+    <title>نشرة الرعية - حفظ تلقائي</title>
+    <link rel="shortcut icon" href="saint_george_assia.png" type="image/x-icon">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Audiowide&family=Cairo:wght@200..1000&family=Dancing+Script:wght@400..700&family=Dynalight&family=Lateef:wght@200;300;400;500;600;700;800&family=Manufacturing+Consent&family=Noto+Sans+Syriac+Western:wght@100..900&family=Oleo+Script:wght@400;700&family=Orbitron:wght@400..900&family=Press+Start+2P&family=Rubik+Mono+One&display=swap">
     <link rel="stylesheet" href="styles.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
@@ -22,2738 +17,941 @@
 
     <div class="app-wrapper">
 
-        <!-- =====================================================
-             FORM
-        ====================================================== -->
-
+        <!-- ===== FORM ===== -->
         <div class="form-container">
-
             <h2>إدخال البيانات</h2>
 
-            <!-- Sunday Title -->
-
             <div class="form-group">
-                <label for="input-title">
-                    عنوان الأحد
-                </label>
-
-                <input
-                    type="text"
-                    id="input-title"
-                    placeholder="أدخل عنوان الأحد..."
-                >
+                <label for="input-title">عنوان الأحد</label>
+                <input type="text" id="input-title" placeholder="أدخل عنوان الأحد...">
             </div>
 
-            <!-- Number -->
-
             <div class="form-group">
-                <label for="input-3adad">
-                    عدد الأحد
-                </label>
-
-                <input
-                    type="text"
-                    id="input-3adad"
-                    placeholder="أدخل عدد الأحد..."
-                    value="العدد "
-                >
+                <label for="input-3adad">عدد الأحد</label>
+                <input type="text" id="input-3adad" placeholder="أدخل عدد الأحد..." value="العدد ">
             </div>
 
-            <!-- Date -->
-
             <div class="form-group">
-                <label for="input-date">
-                    تاريخ الأحد
-                </label>
-
-                <input
-                    type="date"
-                    id="input-date"
-                >
+                <label for="input-date">تاريخ الأحد</label>
+                <input type="date" id="input-date" placeholder="أدخل تاريخ الأحد...">
             </div>
 
-            <!-- Bible -->
-
             <div class="form-group">
-                <label for="input-bible">
-                    رسالة الأحد (إنجيل / قراءة)
-                </label>
-
-                <textarea
-                    id="input-bible"
-                    placeholder="أدخل نص إنجيل أو رسالة الأحد..."
-                ></textarea>
+                <label for="input-bible">رسالة الأحد (إنجيل / قراءة)</label>
+                <textarea id="input-bible" placeholder="أدخل نص إنجيل أو رسالة الأحد..."></textarea>
             </div>
 
+            <h2>برنامج الأسبوع (من الإثنين إلى الأحد)</h2>
 
-            <!-- =================================================
-                 WEEKLY PROGRAM
-            ================================================== -->
-
-            <h2>
-                برنامج الأسبوع (من الإثنين إلى الأحد)
-            </h2>
-
-
-            <!-- MONDAY -->
-
+            <!-- MON -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-mon">
-                        الإثنين
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-mon"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-mon">الإثنين</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-mon"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-mon">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('mon')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-mon"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('mon')">+ إضافة نشاط</button>
             </div>
-
-
-            <!-- TUESDAY -->
-
+            <!-- TUE -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-tue">
-                        الثلاثاء
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-tue"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-tue">الثلاثاء</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-tue"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-tue">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('tue')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-tue"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('tue')">+ إضافة نشاط</button>
             </div>
-
-
-            <!-- WEDNESDAY -->
-
+            <!-- WED -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-wed">
-                        الأربعاء
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-wed"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-wed">الأربعاء</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-wed"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-wed">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('wed')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-wed"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('wed')">+ إضافة نشاط</button>
             </div>
-
-
-            <!-- THURSDAY -->
-
+            <!-- THU -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-thu">
-                        الخميس
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-thu"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-thu">الخميس</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-thu"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-thu">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('thu')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-thu"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('thu')">+ إضافة نشاط</button>
             </div>
-
-
-            <!-- FRIDAY -->
-
+            <!-- FRI -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-fri">
-                        الجمعة
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-fri"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-fri">الجمعة</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-fri"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-fri">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('fri')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-fri"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('fri')">+ إضافة نشاط</button>
             </div>
-
-
-            <!-- SATURDAY -->
-
+            <!-- SAT -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-sat">
-                        السبت
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-sat"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-sat">السبت</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-sat"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-sat">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('sat')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-sat"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('sat')">+ إضافة نشاط</button>
             </div>
-
-
-            <!-- SUNDAY -->
-
+            <!-- SUN -->
             <div class="form-group">
-
                 <div class="day-title">
-
-                    <label id="label-sun">
-                        الأحد
-                    </label>
-
-                    <input
-                        type="text"
-                        class="day-subtitle-input"
-                        id="subtitle-sun"
-                        placeholder="ملاحظة / عنوان اليوم..."
-                    >
-
+                    <label id="label-sun">الأحد</label>
+                    <input type="text" class="day-subtitle-input" id="subtitle-sun"
+                        placeholder="ملاحظة / عنوان اليوم...">
                 </div>
-
-                <div
-                    class="day-events-container"
-                    id="container-sun">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addEventRow('sun')">
-                    + إضافة نشاط
-                </button>
-
+                <div class="day-events-container" id="container-sun"></div>
+                <button type="button" class="btn-add-event" onclick="addEventRow('sun')">+ إضافة نشاط</button>
             </div>
 
-
-            <!-- =================================================
-                 PARISH NEWS
-            ================================================== -->
-
-            <h2>
-                أخبار الرعية
-            </h2>
+            <h2>أخبار الرعية</h2>
+            <div class="form-group">
+                <div class="day-events-container" id="container-news"></div>
+                <button type="button" class="btn-add-event" onclick="addNewsRow()">+ إضافة خبر جديد</button>
+            </div>
 
             <div class="form-group">
-
-                <div
-                    class="day-events-container"
-                    id="container-news">
-                </div>
-
-                <button
-                    type="button"
-                    class="btn-add-event"
-                    onclick="addNewsRow()">
-                    + إضافة خبر جديد
-                </button>
-
+                <label for="input-recommendations">توصيات عامة</label>
+                <textarea id="input-recommendations" placeholder="أدخل التوصيات..."></textarea>
             </div>
-
-
-            <!-- =================================================
-                 RECOMMENDATIONS
-            ================================================== -->
 
             <div class="form-group">
-
-                <label for="input-recommendations">
-                    توصيات عامة
-                </label>
-
-                <textarea
-                    id="input-recommendations"
-                    placeholder="أدخل التوصيات..."
-                ></textarea>
-
+                <label for="input-paperfooter">تذييل الصفحة (Paper Footer)</label>
+                <input type="text" id="input-paperfooter" placeholder="أدخل رقم الصفحة أو التذييل..." value="1/1">
             </div>
 
-
-            <!-- =================================================
-                 FOOTER
-            ================================================== -->
-
-            <div class="form-group">
-
-                <label for="input-paperfooter">
-                    تذييل الصفحة
-                </label>
-
-                <input
-                    type="text"
-                    id="input-paperfooter"
-                    placeholder="أدخل رقم الصفحة أو التذييل..."
-                    value="1/1"
-                >
-
-            </div>
-
-
-            <!-- =================================================
-                 ACTION BUTTONS
-            ================================================== -->
-
-            <div class="action-buttons">
-
-                <button
-                    type="button"
-                    class="print-btn"
-                    onclick="downloadAsImage()">
-                    تحميل كصورة (PNG)
-                </button>
-
-                <button
-                    type="button"
-                    class="reset-btn"
-                    onclick="resetNewsletter()">
-                    إعادة ضبط البيانات
-                </button>
-
-            </div>
-
+            <button class="print-btn" onclick="downloadAsImage()">↧ تحميل كصورة (PNG)</button>
+            <button class="reset-btn" onclick="resetAllData()">↺ مسح جميع البيانات (Reset)</button>
         </div>
 
-
-        <!-- =====================================================
-             PAPER
-        ====================================================== -->
-
+        <!-- ===== PAPER ===== -->
         <div class="paper-container">
-
-            <div
-                class="paper"
-                id="paper-to-print">
-
-
-                <!-- =================================================
-                     PAPER HEADER
-                ================================================== -->
+            <div class="paper" id="paper-to-print">
 
                 <div class="paper-header">
-
                     <div class="sundaydetails">
-
-                        <div
-                            class="title"
-                            id="display-title">
-                            ‎‏‏‎
-                        </div>
-
-                        <div
-                            class="date"
-                            id="display-3adad">
-                        </div>
-
-                        <div
-                            class="date"
-                            id="display-date">
-                            ‎‏‏‎
-                        </div>
-
+                        <div class="title" id="display-title">‎‏‏‎</div>
+                        <div class="date" id="display-3adad"></div>
+                        <div class="date" id="display-date">‎‏‏‎</div>
                     </div>
-
 
                     <div class="risele">
-
-                        <img
-                            src="title.png"
-                            alt="title">
-
+                        <img src="title.png" alt="title">
                     </div>
-
-
                     <div class="logo">
-
-                        <img
-                            src="saint_george_assia.png"
-                            alt="saint george">
-
+                        <img src="saint_george_assia.png" alt="saint george">
                     </div>
-
                 </div>
 
-
                 <hr>
-
-
-                <!-- =================================================
-                     PARISH INFORMATION
-                ================================================== -->
 
                 <div class="ra3awe">
-
-                    <p class="details">
-                        رعية مار جرجس أسيا
-                    </p>
-
-                    <p class="details">
-                        الخوري يوسف الرامي فاضل: 71/371853
-                    </p>
-
+                    <p class="details">رعية مار جرجس أسيا</p>
+                    <p class="details">الخوري يوسف الرامي فاضل: 71/371853</p>
                 </div>
-
 
                 <hr>
 
-
-                <!-- =================================================
-                     BIBLE
-                ================================================== -->
-
                 <div id="wrapper-bible">
-
-                    <div
-                        class="content-box"
-                        id="display-bible">
-                    </div>
-
+                    <div class="content-box" id="display-bible"></div>
                 </div>
 
-
-                <!-- =================================================
-                     WEEKLY PROGRAM
-                ================================================== -->
-
-                <div
-                    id="wrapper-days"
-                    class="is-hidden">
-
-                    <div class="section-title">
-                        برنامج الأسبوع
-                    </div>
-
-
+                <div id="wrapper-days" class="is-hidden">
+                    <div class="section-title">برنامج الأسبوع</div>
                     <div class="days-grid">
-
-
-                        <!-- MONDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-mon">
-
+                        <div class="day-row is-hidden" id="row-mon">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-mon">
-                                    الإثنين:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-mon">
-                                </span>
-
+                                <span class="day-name" id="name-mon">الإثنين:</span>
+                                <span class="day-subtitle" id="display-subtitle-mon"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-mon">
-                            </span>
-
+                            <span class="day-content" id="display-mon"></span>
                         </div>
-
-
-                        <!-- TUESDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-tue">
-
+                        <div class="day-row is-hidden" id="row-tue">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-tue">
-                                    الثلاثاء:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-tue">
-                                </span>
-
+                                <span class="day-name" id="name-tue">الثلاثاء:</span>
+                                <span class="day-subtitle" id="display-subtitle-tue"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-tue">
-                            </span>
-
+                            <span class="day-content" id="display-tue"></span>
                         </div>
-
-
-                        <!-- WEDNESDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-wed">
-
+                        <div class="day-row is-hidden" id="row-wed">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-wed">
-                                    الأربعاء:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-wed">
-                                </span>
-
+                                <span class="day-name" id="name-wed">الأربعاء:</span>
+                                <span class="day-subtitle" id="display-subtitle-wed"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-wed">
-                            </span>
-
+                            <span class="day-content" id="display-wed"></span>
                         </div>
-
-
-                        <!-- THURSDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-thu">
-
+                        <div class="day-row is-hidden" id="row-thu">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-thu">
-                                    الخميس:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-thu">
-                                </span>
-
+                                <span class="day-name" id="name-thu">الخميس:</span>
+                                <span class="day-subtitle" id="display-subtitle-thu"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-thu">
-                            </span>
-
+                            <span class="day-content" id="display-thu"></span>
                         </div>
-
-
-                        <!-- FRIDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-fri">
-
+                        <div class="day-row is-hidden" id="row-fri">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-fri">
-                                    الجمعة:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-fri">
-                                </span>
-
+                                <span class="day-name" id="name-fri">الجمعة:</span>
+                                <span class="day-subtitle" id="display-subtitle-fri"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-fri">
-                            </span>
-
+                            <span class="day-content" id="display-fri"></span>
                         </div>
-
-
-                        <!-- SATURDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-sat">
-
+                        <div class="day-row is-hidden" id="row-sat">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-sat">
-                                    السبت:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-sat">
-                                </span>
-
+                                <span class="day-name" id="name-sat">السبت:</span>
+                                <span class="day-subtitle" id="display-subtitle-sat"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-sat">
-                            </span>
-
+                            <span class="day-content" id="display-sat"></span>
                         </div>
-
-
-                        <!-- SUNDAY -->
-
-                        <div
-                            class="day-row is-hidden"
-                            id="row-sun">
-
+                        <div class="day-row is-hidden" id="row-sun">
                             <div class="day-header-line">
-
-                                <span
-                                    class="day-name"
-                                    id="name-sun">
-                                    الأحد:
-                                </span>
-
-                                <span
-                                    class="day-subtitle"
-                                    id="display-subtitle-sun">
-                                </span>
-
+                                <span class="day-name" id="name-sun">الأحد:</span>
+                                <span class="day-subtitle" id="display-subtitle-sun"></span>
                             </div>
-
-                            <span
-                                class="day-content"
-                                id="display-sun">
-                            </span>
-
+                            <span class="day-content" id="display-sun"></span>
                         </div>
-
                     </div>
-
                 </div>
 
-
-                <!-- =================================================
-                     NEWS
-                ================================================== -->
-
-                <div
-                    id="wrapper-news"
-                    class="is-hidden">
-
-                    <div class="section-title">
-                        أخبار الرعية
-                    </div>
-
-                    <div
-                        class="news-grid"
-                        id="display-news-grid">
-                    </div>
-
+                <div id="wrapper-news" class="is-hidden">
+                    <div class="section-title">أخبار الرعية</div>
+                    <div class="news-grid" id="display-news-grid"></div>
                 </div>
 
-
-                <!-- =================================================
-                     RECOMMENDATIONS
-                ================================================== -->
-
-                <div
-                    id="wrapper-recommendations"
-                    class="is-hidden">
-
-                    <div class="section-title">
-                        توصيات عامة
-                    </div>
-
-                    <div
-                        class="content-box"
-                        id="display-recommendations">
-                    </div>
-
+                <div id="wrapper-recommendations" class="is-hidden">
+                    <div class="section-title">توصيات عامة</div>
+                    <div class="content-box" id="display-recommendations"></div>
                 </div>
 
-
-                <!-- PAPER FOOTER -->
-
-                <div class="paperfooter">
-                    1/1
-                </div>
-
+                <div class="paperfooter">1/1</div>
             </div>
-
         </div>
 
     </div>
 
-
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
-
     <script>
-
-        const STORAGE_KEY =
-            'saintGeorgeAssiaParishNewsletter';
-
-
-        /* =====================================================
-           MONTHS
-        ====================================================== */
-
+        // ============================================================
+        // 1. CONSTANTS & HELPERS
+        // ============================================================
         const levantMonths = [
-            "كانون الثاني",
-            "شباط",
-            "آذار",
-            "نيسان",
-            "أيار",
-            "حزيران",
-            "تموز",
-            "آب",
-            "أيلول",
-            "تشرين الأول",
-            "تشرين الثاني",
-            "كانون الأول"
+            "كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران",
+            "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"
         ];
 
-
-        /* =====================================================
-           DAYS
-        ====================================================== */
-
         const dayNames = {
-
             mon: "✸ الإثنين",
-
             tue: "✸ الثلاثاء",
-
             wed: "✸ الأربعاء",
-
             thu: "✸ الخميس",
-
             fri: "✸ الجمعة",
-
             sat: "✸ السبت",
-
             sun: "✸ الأحد"
-
         };
 
+        const dayOffsets = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
+        const dayKeys = Object.keys(dayOffsets);
 
-        const dayOffsets = {
-
-            mon: 0,
-
-            tue: 1,
-
-            wed: 2,
-
-            thu: 3,
-
-            fri: 4,
-
-            sat: 5,
-
-            sun: 6
-
+        // LocalStorage keys
+        const LS_PREFIX = 'nashra_';
+        const LS_KEYS = {
+            title: LS_PREFIX + 'title',
+            aadad: LS_PREFIX + 'aadad',
+            date: LS_PREFIX + 'date',
+            bible: LS_PREFIX + 'bible',
+            recommendations: LS_PREFIX + 'recommendations',
+            paperfooter: LS_PREFIX + 'paperfooter',
+            daySubtitles: LS_PREFIX + 'daySubtitles',
+            dayEvents: LS_PREFIX + 'dayEvents',
+            newsItems: LS_PREFIX + 'newsItems'
         };
 
-
-        /* =====================================================
-           GET MONDAY
-        ====================================================== */
-
+        // ============================================================
+        // 2. DATE FUNCTIONS
+        // ============================================================
         function getWeekMonday() {
-
-            const now =
-                new Date();
-
-            const currentDay =
-                now.getDay();
-
-            const diffToMonday =
-                currentDay === 0
-                    ? 1
-                    : 1 - currentDay;
-
-            const monday =
-                new Date(now);
-
-            monday.setDate(
-                now.getDate() +
-                diffToMonday
-            );
-
+            const now = new Date();
+            const currentDay = now.getDay();
+            const diffToMonday = currentDay === 0 ? 1 : 1 - currentDay;
+            const monday = new Date(now);
+            monday.setDate(now.getDate() + diffToMonday);
             return monday;
         }
 
-
-        /* =====================================================
-           INITIALIZE DAY DATES
-        ====================================================== */
-
         function initDates() {
-
-            const monday =
-                getWeekMonday();
-
-            Object.keys(dayOffsets)
-                .forEach(dayKey => {
-
-                    const targetDate =
-                        new Date(monday);
-
-                    targetDate.setDate(
-                        monday.getDate() +
-                        dayOffsets[dayKey]
-                    );
-
-                    const dayNum =
-                        targetDate.getDate();
-
-                    const monthName =
-                        levantMonths[
-                            targetDate.getMonth()
-                        ];
-
-                    const yearNum =
-                        targetDate.getFullYear();
-
-                    const formattedLabel =
-                        `${dayNames[dayKey]} ${dayNum} ${monthName} ${yearNum}`;
-
-                    const labelEl =
-                        document.getElementById(
-                            `label-${dayKey}`
-                        );
-
-                    const nameEl =
-                        document.getElementById(
-                            `name-${dayKey}`
-                        );
-
-                    if (labelEl) {
-
-                        labelEl.textContent =
-                            formattedLabel;
-
-                    }
-
-                    if (nameEl) {
-
-                        nameEl.textContent =
-                            `${formattedLabel}:`;
-
-                    }
-
-                });
+            const monday = getWeekMonday();
+            dayKeys.forEach(dayKey => {
+                const targetDate = new Date(monday);
+                targetDate.setDate(monday.getDate() + dayOffsets[dayKey]);
+                const dayNum = targetDate.getDate();
+                const monthName = levantMonths[targetDate.getMonth()];
+                const yearNum = targetDate.getFullYear();
+                const formattedLabel = `${dayNames[dayKey]} ${dayNum} ${monthName} ${yearNum}`;
+                const labelEl = document.getElementById(`label-${dayKey}`);
+                const nameEl = document.getElementById(`name-${dayKey}`);
+                if (labelEl) labelEl.textContent = formattedLabel;
+                if (nameEl) nameEl.textContent = `${formattedLabel}:`;
+            });
         }
 
-
-        /* =====================================================
-           FORMAT DATE
-        ====================================================== */
-
         function formatInputDate(dateStr) {
-
-            if (!dateStr) {
-
-                return '';
-
-            }
-
-            const [
-                year,
-                month,
-                day
-            ] =
-                dateStr.split('-');
-
-            if (
-                !year ||
-                !month ||
-                !day
-            ) {
-
-                return dateStr;
-
-            }
-
-            const monthIdx =
-                parseInt(
-                    month,
-                    10
-                ) - 1;
-
-            const monthName =
-                levantMonths[
-                    monthIdx
-                ] || month;
-
+            if (!dateStr) return '‎‏‏‎';
+            const [year, month, day] = dateStr.split('-');
+            if (!year || !month || !day) return dateStr;
+            const monthIdx = parseInt(month, 10) - 1;
+            const monthName = levantMonths[monthIdx] || month;
             return `${parseInt(day, 10)} ${monthName} ${year}`;
         }
 
+        // ============================================================
+        // 3. SAVE / LOAD / RESET STATE
+        // ============================================================
 
-        /* =====================================================
-           ESCAPE HTML
-        ====================================================== */
+        // ---------- SAVE ----------
+        function saveAllData() {
+            // Simple fields
+            localStorage.setItem(LS_KEYS.title, document.getElementById('input-title').value);
+            localStorage.setItem(LS_KEYS.aadad, document.getElementById('input-3adad').value);
+            localStorage.setItem(LS_KEYS.date, document.getElementById('input-date').value);
+            localStorage.setItem(LS_KEYS.bible, document.getElementById('input-bible').value);
+            localStorage.setItem(LS_KEYS.recommendations, document.getElementById('input-recommendations').value);
+            localStorage.setItem(LS_KEYS.paperfooter, document.getElementById('input-paperfooter').value);
 
-        function escapeHtml(value) {
+            // Day subtitles
+            const subtitles = {};
+            dayKeys.forEach(k => {
+                const el = document.getElementById(`subtitle-${k}`);
+                subtitles[k] = el ? el.value : '';
+            });
+            localStorage.setItem(LS_KEYS.daySubtitles, JSON.stringify(subtitles));
 
-            return String(value)
+            // Day events
+            const allEvents = {};
+            dayKeys.forEach(k => {
+                const container = document.getElementById(`container-${k}`);
+                if (!container) return;
+                const rows = container.querySelectorAll('.event-row-input');
+                const evs = [];
+                rows.forEach(row => {
+                    const time = row.querySelector('.day-time-input')?.value || '';
+                    const text = row.querySelector('.day-input')?.value || '';
+                    evs.push({ time, text });
+                });
+                allEvents[k] = evs;
+            });
+            localStorage.setItem(LS_KEYS.dayEvents, JSON.stringify(allEvents));
 
-                .replace(
-                    /&/g,
-                    '&amp;'
-                )
-
-                .replace(
-                    /</g,
-                    '&lt;'
-                )
-
-                .replace(
-                    />/g,
-                    '&gt;'
-                )
-
-                .replace(
-                    /"/g,
-                    '&quot;'
-                )
-
-                .replace(
-                    /'/g,
-                    '&#039;'
-                );
-        }
-
-
-        /* =====================================================
-           FILE TO BASE64
-        ====================================================== */
-
-        function fileToBase64(file) {
-
-            return new Promise(
-                (resolve, reject) => {
-
-                    const reader =
-                        new FileReader();
-
-                    reader.onload =
-                        () =>
-                            resolve(
-                                reader.result
-                            );
-
-                    reader.onerror =
-                        reject;
-
-                    reader.readAsDataURL(
-                        file
-                    );
-
+            // News items
+            const newsContainer = document.getElementById('container-news');
+            const newsRows = newsContainer ? newsContainer.querySelectorAll('.news-row-input') : [];
+            const newsData = [];
+            newsRows.forEach(row => {
+                const title = row.querySelector('.news-title-input')?.value || '';
+                const imgInput = row.querySelector('.news-img-input');
+                let imgData = '';
+                // We can't save file objects, so we only save the title & a flag for image presence
+                // If an image was previously loaded from storage, we keep a placeholder
+                if (imgInput && imgInput.files && imgInput.files.length > 0) {
+                    // If user picked a new file, we don't save the binary (too large) – we'll only
+                    // save the fact that there IS an image, but after reload it will show default logo.
+                    // To preserve the image, we could convert to dataURL, but that's heavy.
+                    // We'll save a flag and the title.
+                    imgData = 'HAS_IMAGE'; // just a flag
+                } else {
+                    // Check if there's an existing image preview (from previous load)
+                    const previewImg = row.querySelector('.news-item-img-preview');
+                    if (previewImg && previewImg.src && previewImg.src.startsWith('data:image')) {
+                        imgData = 'HAS_IMAGE';
+                    } else if (previewImg && previewImg.src && !previewImg.src.includes('saint_george_assia.png')) {
+                        imgData = 'HAS_IMAGE';
+                    }
                 }
-            );
+                newsData.push({ title, imgFlag: imgData });
+            });
+            localStorage.setItem(LS_KEYS.newsItems, JSON.stringify(newsData));
         }
 
+        // ---------- LOAD ----------
+        function loadAllData() {
+            // Simple fields
+            const titleVal = localStorage.getItem(LS_KEYS.title);
+            if (titleVal !== null) document.getElementById('input-title').value = titleVal;
 
-        /* =====================================================
-           SAVE DATA
-        ====================================================== */
+            const aadadVal = localStorage.getItem(LS_KEYS.aadad);
+            if (aadadVal !== null) document.getElementById('input-3adad').value = aadadVal;
 
-        function saveData() {
+            const dateVal = localStorage.getItem(LS_KEYS.date);
+            if (dateVal !== null) document.getElementById('input-date').value = dateVal;
 
-            const data = {
+            const bibleVal = localStorage.getItem(LS_KEYS.bible);
+            if (bibleVal !== null) document.getElementById('input-bible').value = bibleVal;
 
-                title:
-                    document.getElementById(
-                        'input-title'
-                    ).value,
+            const recVal = localStorage.getItem(LS_KEYS.recommendations);
+            if (recVal !== null) document.getElementById('input-recommendations').value = recVal;
 
-                aadad:
-                    document.getElementById(
-                        'input-3adad'
-                    ).value,
+            const footerVal = localStorage.getItem(LS_KEYS.paperfooter);
+            if (footerVal !== null) document.getElementById('input-paperfooter').value = footerVal;
 
-                date:
-                    document.getElementById(
-                        'input-date'
-                    ).value,
-
-                bible:
-                    document.getElementById(
-                        'input-bible'
-                    ).value,
-
-                recommendations:
-                    document.getElementById(
-                        'input-recommendations'
-                    ).value,
-
-                footer:
-                    document.getElementById(
-                        'input-paperfooter'
-                    ).value,
-
-                days: {},
-
-                news: []
-
-            };
-
-
-            /* ===============================================
-               SAVE DAYS
-            ================================================ */
-
-            Object.keys(dayOffsets)
-                .forEach(dayKey => {
-
-                    const container =
-                        document.getElementById(
-                            `container-${dayKey}`
-                        );
-
-                    const subtitle =
-                        document.getElementById(
-                            `subtitle-${dayKey}`
-                        );
-
-                    const events = [];
-
-                    container
-                        .querySelectorAll(
-                            '.event-row-input'
-                        )
-                        .forEach(row => {
-
-                            const time =
-                                row.querySelector(
-                                    '.day-time-input'
-                                )?.value || '';
-
-                            const text =
-                                row.querySelector(
-                                    '.day-input'
-                                )?.value || '';
-
-                            events.push({
-
-                                time: time,
-
-                                text: text
-
-                            });
-
-                        });
-
-
-                    data.days[dayKey] = {
-
-                        subtitle:
-                            subtitle
-                                ? subtitle.value
-                                : '',
-
-                        events:
-                            events
-
-                    };
-
-                });
-
-
-            /* ===============================================
-               SAVE NEWS
-            ================================================ */
-
-            document
-                .querySelectorAll(
-                    '.news-row-input'
-                )
-                .forEach(row => {
-
-                    const titleInput =
-                        row.querySelector(
-                            '.news-title-input'
-                        );
-
-                    const preview =
-                        row.querySelector(
-                            '.news-preview'
-                        );
-
-                    data.news.push({
-
-                        title:
-                            titleInput
-                                ? titleInput.value
-                                : '',
-
-                        image:
-                            preview?.src || ''
-
+            // Day subtitles
+            const savedSubtitles = localStorage.getItem(LS_KEYS.daySubtitles);
+            if (savedSubtitles) {
+                try {
+                    const subs = JSON.parse(savedSubtitles);
+                    dayKeys.forEach(k => {
+                        const el = document.getElementById(`subtitle-${k}`);
+                        if (el && subs[k] !== undefined) el.value = subs[k];
                     });
-
-                });
-
-
-            try {
-
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    JSON.stringify(data)
-                );
-
-            } catch (error) {
-
-                console.error(
-                    'Could not save data:',
-                    error
-                );
-
-                alert(
-                    'تعذّر حفظ البيانات. قد تكون صور الأخبار كبيرة جدًا بالنسبة لمساحة التخزين المحلية للمتصفح.'
-                );
-            }
-        }
-
-
-        /* =====================================================
-           LOAD DATA
-        ====================================================== */
-
-        function loadData() {
-
-            const saved =
-                localStorage.getItem(
-                    STORAGE_KEY
-                );
-
-            if (!saved) {
-
-                return false;
-
+                } catch (e) { /* ignore */ }
             }
 
-
-            try {
-
-                const data =
-                    JSON.parse(saved);
-
-
-                /* ===========================================
-                   GENERAL INPUTS
-                ============================================ */
-
-                document.getElementById(
-                    'input-title'
-                ).value =
-                    data.title || '';
-
-
-                document.getElementById(
-                    'input-3adad'
-                ).value =
-                    data.aadad ||
-                    'العدد ';
-
-
-                document.getElementById(
-                    'input-date'
-                ).value =
-                    data.date || '';
-
-
-                document.getElementById(
-                    'input-bible'
-                ).value =
-                    data.bible || '';
-
-
-                document.getElementById(
-                    'input-recommendations'
-                ).value =
-                    data.recommendations || '';
-
-
-                document.getElementById(
-                    'input-paperfooter'
-                ).value =
-                    data.footer ||
-                    '1/1';
-
-
-                /* ===========================================
-                   DAYS
-                ============================================ */
-
-                Object.keys(dayOffsets)
-                    .forEach(dayKey => {
-
-                        const container =
-                            document.getElementById(
-                                `container-${dayKey}`
-                            );
-
-                        const subtitle =
-                            document.getElementById(
-                                `subtitle-${dayKey}`
-                            );
-
+            // Day events
+            const savedEvents = localStorage.getItem(LS_KEYS.dayEvents);
+            if (savedEvents) {
+                try {
+                    const evs = JSON.parse(savedEvents);
+                    dayKeys.forEach(k => {
+                        const container = document.getElementById(`container-${k}`);
+                        if (!container) return;
+                        // Clear existing rows (but keep the add button handler)
                         container.innerHTML = '';
-
-
-                        const dayData =
-                            data.days?.[dayKey];
-
-
-                        if (!dayData) {
-
-                            createEventRow(
-                                dayKey
-                            );
-
-                            return;
-
-                        }
-
-
-                        if (subtitle) {
-
-                            subtitle.value =
-                                dayData.subtitle ||
-                                '';
-
-                        }
-
-
-                        (
-                            dayData.events ||
-                            []
-                        )
-                            .forEach(event => {
-
-                                createEventRow(
-                                    dayKey,
-                                    event.time || '',
-                                    event.text || ''
-                                );
-
-                            });
-
-
-                        if (
-                            !dayData.events ||
-                            dayData.events.length === 0
-                        ) {
-
-                            createEventRow(
-                                dayKey
-                            );
-
-                        }
-
-
-                        updateDayOutput(
-                            dayKey
-                        );
-
+                        const dayEvents = evs[k] || [];
+                        dayEvents.forEach(ev => {
+                            addEventRowWithData(k, ev.time, ev.text);
+                        });
                     });
-
-
-                /* ===========================================
-                   NEWS
-                ============================================ */
-
-                const newsContainer =
-                    document.getElementById(
-                        'container-news'
-                    );
-
-                newsContainer.innerHTML =
-                    '';
-
-
-                (
-                    data.news || []
-                )
-                    .forEach(news => {
-
-                        createNewsRow(
-                            news.title || '',
-                            news.image || ''
-                        );
-
-                    });
-
-
-                if (
-                    !data.news ||
-                    data.news.length === 0
-                ) {
-
-                    createNewsRow();
-
-                }
-
-
-                updateNewsOutput();
-
-                updateGeneralDisplay();
-
-                return true;
-
-
-            } catch (error) {
-
-                console.error(
-                    'Could not load saved data:',
-                    error
-                );
-
-                return false;
-
+                } catch (e) { /* ignore */ }
             }
+
+            // News items
+            const savedNews = localStorage.getItem(LS_KEYS.newsItems);
+            if (savedNews) {
+                try {
+                    const news = JSON.parse(savedNews);
+                    const container = document.getElementById('container-news');
+                    if (container) container.innerHTML = '';
+                    news.forEach(item => {
+                        addNewsRowWithData(item.title, item.imgFlag);
+                    });
+                } catch (e) { /* ignore */ }
+            }
+
+            // After loading, refresh all displays
+            refreshAllDisplays();
         }
 
+        // ---------- RESET ----------
+        function resetAllData() {
+            if (!confirm('هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع.')) return;
 
-        /* =====================================================
-           CREATE EVENT ROW
-        ====================================================== */
+            // Clear localStorage
+            Object.values(LS_KEYS).forEach(key => localStorage.removeItem(key));
 
-        function createEventRow(
-            dayKey,
-            timeValue = '',
-            textValue = ''
-        ) {
+            // Reset simple inputs
+            document.getElementById('input-title').value = '';
+            document.getElementById('input-3adad').value = 'العدد ';
+            document.getElementById('input-date').value = '';
+            document.getElementById('input-bible').value = '';
+            document.getElementById('input-recommendations').value = '';
+            document.getElementById('input-paperfooter').value = '1/1';
 
-            const container =
-                document.getElementById(
-                    `container-${dayKey}`
-                );
+            // Reset day subtitles
+            dayKeys.forEach(k => {
+                const el = document.getElementById(`subtitle-${k}`);
+                if (el) el.value = '';
+            });
 
-            const eventDiv =
-                document.createElement(
-                    'div'
-                );
+            // Reset day event containers (clear all rows, then add one empty row per day)
+            dayKeys.forEach(k => {
+                const container = document.getElementById(`container-${k}`);
+                if (container) container.innerHTML = '';
+                addEventRow(k);
+            });
 
-            eventDiv.className =
-                'event-row-input';
+            // Reset news container
+            const newsContainer = document.getElementById('container-news');
+            if (newsContainer) newsContainer.innerHTML = '';
+            addNewsRow();
 
-
-            const timeInput =
-                document.createElement(
-                    'input'
-                );
-
-            timeInput.type =
-                'time';
-
-            timeInput.className =
-                'day-time-input';
-
-            timeInput.value =
-                timeValue;
-
-
-            const textInput =
-                document.createElement(
-                    'textarea'
-                );
-
-            textInput.className =
-                'day-input';
-
-            textInput.placeholder =
-                'أدخل النشاط...';
-
-            textInput.value =
-                textValue;
-
-
-            const removeButton =
-                document.createElement(
-                    'button'
-                );
-
-            removeButton.type =
-                'button';
-
-            removeButton.className =
-                'btn-remove-event';
-
-            removeButton.textContent =
-                '✕';
-
-
-            eventDiv.appendChild(
-                timeInput
-            );
-
-            eventDiv.appendChild(
-                textInput
-            );
-
-            eventDiv.appendChild(
-                removeButton
-            );
-
-            container.appendChild(
-                eventDiv
-            );
-
-
-            timeInput.addEventListener(
-                'input',
-                () => {
-
-                    updateDayOutput(
-                        dayKey
-                    );
-
-                    saveData();
-
-                }
-            );
-
-
-            textInput.addEventListener(
-                'input',
-                () => {
-
-                    updateDayOutput(
-                        dayKey
-                    );
-
-                    saveData();
-
-                }
-            );
-
-
-            removeButton.addEventListener(
-                'click',
-                () => {
-
-                    eventDiv.remove();
-
-                    updateDayOutput(
-                        dayKey
-                    );
-
-                    saveData();
-
-                }
-            );
-
+            // Refresh displays
+            refreshAllDisplays();
         }
 
+        // ============================================================
+        // 4. REFRESH ALL DISPLAYS (after load / reset)
+        // ============================================================
+        function refreshAllDisplays() {
+            // Title, aadad, date, bible, recommendations, footer
+            const titleInput = document.getElementById('input-title');
+            const aadadInput = document.getElementById('input-3adad');
+            const dateInput = document.getElementById('input-date');
+            const bibleInput = document.getElementById('input-bible');
+            const recInput = document.getElementById('input-recommendations');
+            const footerInput = document.getElementById('input-paperfooter');
 
-        /* =====================================================
-           ADD EVENT
-        ====================================================== */
+            document.getElementById('display-title').textContent = titleInput.value || '‎‏‏‎';
+            document.getElementById('display-3adad').textContent = aadadInput.value || '‎‏‏‎';
+            document.getElementById('display-date').textContent = formatInputDate(dateInput.value);
+            document.getElementById('display-bible').textContent = bibleInput.value;
+            document.getElementById('display-recommendations').textContent = recInput.value;
+            document.querySelector('.paperfooter').textContent = footerInput.value || '1/1';
 
+            // Recommendations wrapper visibility
+            const recVal = recInput.value.trim();
+            const wrapperRecs = document.getElementById('wrapper-recommendations');
+            if (recVal.length > 0) {
+                wrapperRecs.classList.remove('is-hidden');
+            } else {
+                wrapperRecs.classList.add('is-hidden');
+            }
+
+            // Day outputs
+            dayKeys.forEach(k => {
+                updateDayOutput(k);
+            });
+
+            // News output
+            updateNewsOutput();
+        }
+
+        // ============================================================
+        // 5. EVENT ROW FUNCTIONS
+        // ============================================================
         function addEventRow(dayKey) {
+            const container = document.getElementById(`container-${dayKey}`);
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event-row-input';
 
-            createEventRow(
-                dayKey
-            );
+            eventDiv.innerHTML = `
+                <input type="time" class="day-time-input">
+                <textarea class="day-input" placeholder="أدخل النشاط..."></textarea>
+                <button type="button" class="btn-remove-event" onclick="removeEventRow(this, '${dayKey}')">✕</button>
+            `;
 
-            updateDayOutput(
-                dayKey
-            );
+            container.appendChild(eventDiv);
 
-            saveData();
+            const inputs = eventDiv.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    updateDayOutput(dayKey);
+                    saveAllData();
+                });
+            });
 
+            updateDayOutput(dayKey);
         }
 
-
-        /* =====================================================
-           CREATE NEWS ROW
-        ====================================================== */
-
-        function createNewsRow(
-            titleValue = '',
-            imageValue = ''
-        ) {
-
-            const container =
-                document.getElementById(
-                    'container-news'
-                );
-
-            const newsDiv =
-                document.createElement(
-                    'div'
-                );
-
-            newsDiv.className =
-                'news-row-input';
-
-
-            const fields =
-                document.createElement(
-                    'div'
-                );
-
-            fields.className =
-                'news-input-fields';
-
-
-            const imageInput =
-                document.createElement(
-                    'input'
-                );
-
-            imageInput.type =
-                'file';
-
-            imageInput.accept =
-                'image/*';
-
-            imageInput.className =
-                'news-img-input';
-
-
-            const titleInput =
-                document.createElement(
-                    'textarea'
-                );
-
-            titleInput.className =
-                'news-title-input';
-
-            titleInput.placeholder =
-                'عنوان الخبر / المحتوى...';
-
-            titleInput.value =
-                titleValue;
-
-
-            fields.appendChild(
-                imageInput
-            );
-
-            fields.appendChild(
-                titleInput
-            );
-
-
-            const removeButton =
-                document.createElement(
-                    'button'
-                );
-
-            removeButton.type =
-                'button';
-
-            removeButton.className =
-                'btn-remove-event';
-
-            removeButton.textContent =
-                '✕';
-
-
-            const preview =
-                document.createElement(
-                    'img'
-                );
-
-            preview.className =
-                'news-preview';
-
-            preview.style.display =
-                'none';
-
-
-            if (imageValue) {
-
-                preview.src =
-                    imageValue;
-
-            }
-
-
-            newsDiv.appendChild(
-                fields
-            );
-
-            newsDiv.appendChild(
-                removeButton
-            );
-
-            newsDiv.appendChild(
-                preview
-            );
-
-            container.appendChild(
-                newsDiv
-            );
-
-
-            /* ===============================================
-               NEWS TITLE
-            ================================================ */
-
-            titleInput.addEventListener(
-                'input',
-                () => {
-
-                    updateNewsOutput();
-
-                    saveData();
-
-                }
-            );
-
-
-            /* ===============================================
-               NEWS IMAGE
-            ================================================ */
-
-            imageInput.addEventListener(
-                'change',
-                async () => {
-
-                    const file =
-                        imageInput.files?.[0];
-
-                    if (!file) {
-
-                        return;
-
-                    }
-
-
-                    try {
-
-                        const base64 =
-                            await fileToBase64(
-                                file
-                            );
-
-                        preview.src =
-                            base64;
-
-                        updateNewsOutput();
-
-                        saveData();
-
-                    } catch (error) {
-
-                        console.error(
-                            'Image error:',
-                            error
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /* ===============================================
-               REMOVE NEWS
-            ================================================ */
-
-            removeButton.addEventListener(
-                'click',
-                () => {
-
-                    newsDiv.remove();
-
-                    updateNewsOutput();
-
-                    saveData();
-
-                }
-            );
-
+        function addEventRowWithData(dayKey, timeVal, textVal) {
+            const container = document.getElementById(`container-${dayKey}`);
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event-row-input';
+
+            eventDiv.innerHTML = `
+                <input type="time" class="day-time-input" value="${timeVal || ''}">
+                <textarea class="day-input" placeholder="أدخل النشاط...">${textVal || ''}</textarea>
+                <button type="button" class="btn-remove-event" onclick="removeEventRow(this, '${dayKey}')">✕</button>
+            `;
+
+            container.appendChild(eventDiv);
+
+            const inputs = eventDiv.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    updateDayOutput(dayKey);
+                    saveAllData();
+                });
+            });
+
+            updateDayOutput(dayKey);
         }
 
+        function removeEventRow(btn, dayKey) {
+            btn.parentElement.remove();
+            updateDayOutput(dayKey);
+            saveAllData();
+        }
 
-        /* =====================================================
-           ADD NEWS
-        ====================================================== */
-
+        // ============================================================
+        // 6. NEWS ROW FUNCTIONS
+        // ============================================================
         function addNewsRow() {
+            const container = document.getElementById('container-news');
+            const newsDiv = document.createElement('div');
+            newsDiv.className = 'news-row-input';
 
-            createNewsRow();
+            newsDiv.innerHTML = `
+                <div class="news-input-fields">
+                    <input type="file" accept="image/*" class="news-img-input">
+                    <textarea class="news-title-input" placeholder="عنوان الخبر / المحتوى..."></textarea>
+                </div>
+                <button type="button" class="btn-remove-event" onclick="removeNewsRow(this)">✕</button>
+            `;
+
+            container.appendChild(newsDiv);
+
+            const fileInput = newsDiv.querySelector('.news-img-input');
+            const titleInput = newsDiv.querySelector('.news-title-input');
+
+            fileInput.addEventListener('change', () => {
+                updateNewsOutput();
+                saveAllData();
+            });
+            titleInput.addEventListener('input', () => {
+                updateNewsOutput();
+                saveAllData();
+            });
 
             updateNewsOutput();
-
-            saveData();
-
         }
 
+        function addNewsRowWithData(title, imgFlag) {
+            const container = document.getElementById('container-news');
+            const newsDiv = document.createElement('div');
+            newsDiv.className = 'news-row-input';
 
-        /* =====================================================
-           NEWS OUTPUT
-        ====================================================== */
+            // Build a preview image placeholder if imgFlag exists
+            let previewHtml = '';
+            if (imgFlag === 'HAS_IMAGE') {
+                previewHtml = `<div class="news-item-img-preview" style="display:none;"></div>`;
+            }
 
+            newsDiv.innerHTML = `
+                <div class="news-input-fields">
+                    <input type="file" accept="image/*" class="news-img-input">
+                    <textarea class="news-title-input" placeholder="عنوان الخبر / المحتوى...">${title || ''}</textarea>
+                </div>
+                <button type="button" class="btn-remove-event" onclick="removeNewsRow(this)">✕</button>
+                ${previewHtml}
+            `;
+
+            container.appendChild(newsDiv);
+
+            const fileInput = newsDiv.querySelector('.news-img-input');
+            const titleInput = newsDiv.querySelector('.news-title-input');
+            const previewDiv = newsDiv.querySelector('.news-item-img-preview');
+            if (previewDiv) {
+                // Create a fake image element to signal presence
+                const img = document.createElement('img');
+                img.src = 'saint_george_assia.png'; // default
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'fill';
+                previewDiv.appendChild(img);
+            }
+
+            fileInput.addEventListener('change', () => {
+                updateNewsOutput();
+                saveAllData();
+            });
+            titleInput.addEventListener('input', () => {
+                updateNewsOutput();
+                saveAllData();
+            });
+
+            updateNewsOutput();
+        }
+
+        function removeNewsRow(btn) {
+            btn.closest('.news-row-input').remove();
+            updateNewsOutput();
+            saveAllData();
+        }
+
+        // ============================================================
+        // 7. UPDATE OUTPUT FUNCTIONS
+        // ============================================================
         function updateNewsOutput() {
+            const container = document.getElementById('container-news');
+            const rows = container.querySelectorAll('.news-row-input');
+            const gridDisplay = document.getElementById('display-news-grid');
+            const wrapperNews = document.getElementById('wrapper-news');
 
-            const container =
-                document.getElementById(
-                    'container-news'
-                );
-
-            const rows =
-                container.querySelectorAll(
-                    '.news-row-input'
-                );
-
-            const gridDisplay =
-                document.getElementById(
-                    'display-news-grid'
-                );
-
-            const wrapperNews =
-                document.getElementById(
-                    'wrapper-news'
-                );
-
-
-            gridDisplay.innerHTML =
-                '';
-
-
-            let validCount =
-                0;
-
+            gridDisplay.innerHTML = '';
+            let validCount = 0;
 
             rows.forEach(row => {
+                const imgInput = row.querySelector('.news-img-input');
+                const titleInput = row.querySelector('.news-title-input');
+                const previewDiv = row.querySelector('.news-item-img-preview');
 
-                const titleInput =
-                    row.querySelector(
-                        '.news-title-input'
-                    );
+                const titleVal = titleInput ? titleInput.value.trim() : '';
+                const file = imgInput && imgInput.files ? imgInput.files[0] : null;
 
-                const preview =
-                    row.querySelector(
-                        '.news-preview'
-                    );
-
-
-                const titleVal =
-                    titleInput
-                        ? titleInput.value.trim()
-                        : '';
-
-
-                const imageValue =
-                    preview?.src || '';
-
-
-                const file =
-                    row.querySelector(
-                        '.news-img-input'
-                    )?.files?.[0] || null;
-
-
-                if (
-                    titleVal ||
-                    file ||
-                    imageValue
-                ) {
-
-                    validCount++;
-
-
-                    const itemDiv =
-                        document.createElement(
-                            'div'
-                        );
-
-                    itemDiv.className =
-                        'news-item';
-
-
-                    const textDiv =
-                        document.createElement(
-                            'div'
-                        );
-
-                    textDiv.className =
-                        'news-item-text';
-
-                    textDiv.textContent =
-                        titleVal;
-
-
-                    const imgContainer =
-                        document.createElement(
-                            'div'
-                        );
-
-                    imgContainer.className =
-                        'news-item-img';
-
-
-                    const img =
-                        document.createElement(
-                            'img'
-                        );
-
-
-                    if (imageValue) {
-
-                        img.src =
-                            imageValue;
-
-                    } else {
-
-                        img.src =
-                            'saint_george_assia.png';
-
-                    }
-
-
-                    imgContainer.appendChild(
-                        img
-                    );
-
-
-                    itemDiv.appendChild(
-                        imgContainer
-                    );
-
-                    itemDiv.appendChild(
-                        textDiv
-                    );
-
-
-                    gridDisplay.appendChild(
-                        itemDiv
-                    );
-
+                // Check if there's a preview image (loaded from storage)
+                let hasPreviewImage = false;
+                if (previewDiv && previewDiv.querySelector('img')) {
+                    hasPreviewImage = true;
                 }
 
-            });
+                if (titleVal || file || hasPreviewImage) {
+                    validCount++;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'news-item';
 
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'news-item-text';
+                    textDiv.textContent = titleVal;
+
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'news-item-img';
+
+                    const img = document.createElement('img');
+
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (hasPreviewImage && previewDiv) {
+                        // Use the preview image source
+                        const previewImg = previewDiv.querySelector('img');
+                        if (previewImg && previewImg.src) {
+                            img.src = previewImg.src;
+                        } else {
+                            img.src = 'saint_george_assia.png';
+                        }
+                    } else {
+                        img.src = 'saint_george_assia.png';
+                    }
+
+                    imgContainer.appendChild(img);
+                    itemDiv.appendChild(imgContainer);
+                    itemDiv.appendChild(textDiv);
+
+                    gridDisplay.appendChild(itemDiv);
+                }
+            });
 
             if (validCount > 0) {
-
-                wrapperNews.classList.remove(
-                    'is-hidden'
-                );
-
+                wrapperNews.classList.remove('is-hidden');
             } else {
-
-                wrapperNews.classList.add(
-                    'is-hidden'
-                );
-
+                wrapperNews.classList.add('is-hidden');
             }
-
         }
-
-
-        /* =====================================================
-           CHECK DAYS
-        ====================================================== */
 
         function checkDaysHeaderVisibility() {
-
-            const wrapperDays =
-                document.getElementById(
-                    'wrapper-days'
-                );
-
-
-            const visibleRows =
-                document.querySelectorAll(
-                    '.day-row:not(.is-hidden)'
-                );
-
-
-            if (
-                visibleRows.length > 0
-            ) {
-
-                wrapperDays.classList.remove(
-                    'is-hidden'
-                );
-
+            const wrapperDays = document.getElementById('wrapper-days');
+            const visibleRows = document.querySelectorAll('.day-row:not(.is-hidden)');
+            if (visibleRows.length > 0) {
+                wrapperDays.classList.remove('is-hidden');
             } else {
-
-                wrapperDays.classList.add(
-                    'is-hidden'
-                );
-
+                wrapperDays.classList.add('is-hidden');
             }
-
         }
 
+        function updateDayOutput(dayKey) {
+            const container = document.getElementById(`container-${dayKey}`);
+            const eventRows = container.querySelectorAll('.event-row-input');
+            const targetRow = document.getElementById(`row-${dayKey}`);
+            const targetDisplay = document.getElementById(`display-${dayKey}`);
 
-        /* =====================================================
-           UPDATE DAY OUTPUT
-        ====================================================== */
-
-        function updateDayOutput(
-            dayKey
-        ) {
-
-            const container =
-                document.getElementById(
-                    `container-${dayKey}`
-                );
-
-
-            const eventRows =
-                container.querySelectorAll(
-                    '.event-row-input'
-                );
-
-
-            const targetRow =
-                document.getElementById(
-                    `row-${dayKey}`
-                );
-
-
-            const targetDisplay =
-                document.getElementById(
-                    `display-${dayKey}`
-                );
-
-
-            const subtitleInput =
-                document.getElementById(
-                    `subtitle-${dayKey}`
-                );
-
-
-            const subtitleDisplay =
-                document.getElementById(
-                    `display-subtitle-${dayKey}`
-                );
-
-
-            const subtitleVal =
-                subtitleInput
-                    ? subtitleInput.value.trim()
-                    : '';
-
+            const subtitleInput = document.getElementById(`subtitle-${dayKey}`);
+            const subtitleDisplay = document.getElementById(`display-subtitle-${dayKey}`);
+            const subtitleVal = subtitleInput ? subtitleInput.value.trim() : '';
 
             if (subtitleDisplay) {
-
-                subtitleDisplay.textContent =
-                    subtitleVal;
-
+                subtitleDisplay.textContent = subtitleVal;
             }
 
-
-            let combinedHtml =
-                '';
-
-            let hasValidEvents =
-                false;
-
+            let combinedHtml = '';
+            let hasValidEvents = false;
 
             eventRows.forEach(row => {
+                const timeInput = row.querySelector('.day-time-input');
+                const textInput = row.querySelector('.day-input');
 
-                const timeInput =
-                    row.querySelector(
-                        '.day-time-input'
-                    );
+                const timeValue = timeInput ? timeInput.value : '';
+                const textValue = textInput ? textInput.value.trim() : '';
 
-
-                const textInput =
-                    row.querySelector(
-                        '.day-input'
-                    );
-
-
-                const timeValue =
-                    timeInput
-                        ? timeInput.value
-                        : '';
-
-
-                const textValue =
-                    textInput
-                        ? textInput.value.trim()
-                        : '';
-
-
-                if (
-                    timeValue ||
-                    textValue
-                ) {
-
-                    hasValidEvents =
-                        true;
-
-
-                    let formattedTime =
-                        '';
-
-
+                if (timeValue || textValue) {
+                    hasValidEvents = true;
+                    let formattedTime = '';
                     if (timeValue) {
-
-                        const [
-                            hours,
-                            minutes
-                        ] =
-                            timeValue.split(':');
-
-
-                        const hourNum =
-                            parseInt(
-                                hours,
-                                10
-                            );
-
-
-                        const period =
-                            hourNum >= 12
-                                ? 'م'
-                                : 'ص';
-
-
-                        const displayHour =
-                            hourNum % 12 || 12;
-
-
-                        formattedTime =
-                            `${displayHour}:${minutes} ${period} `;
-
+                        const [hours, minutes] = timeValue.split(':');
+                        const hourNum = parseInt(hours, 10);
+                        const period = hourNum >= 12 ? 'م' : 'ص';
+                        const displayHour = hourNum % 12 || 12;
+                        formattedTime = `${displayHour}:${minutes} ${period} `;
                     }
-
-
-                    combinedHtml += `
-
-                        <div class="event-item-display">
-
-                            <span class="day-time-tag">
-                                ${formattedTime}
-                            </span>
-
-                            ${escapeHtml(
-                                textValue
-                            )}
-
-                        </div>
-
-                    `;
-
+                    combinedHtml += `<div class="event-item-display"><span class="day-time-tag">${formattedTime}</span>${textValue}</div>`;
                 }
-
             });
 
-
-            if (
-                hasValidEvents ||
-                subtitleVal.length > 0
-            ) {
-
-                targetDisplay.innerHTML =
-                    combinedHtml;
-
-
-                targetRow.classList.remove(
-                    'is-hidden'
-                );
-
+            if (hasValidEvents || subtitleVal.length > 0) {
+                targetDisplay.innerHTML = combinedHtml;
+                targetRow.classList.remove('is-hidden');
             } else {
-
-                targetDisplay.innerHTML =
-                    '';
-
-
-                targetRow.classList.add(
-                    'is-hidden'
-                );
-
+                targetDisplay.innerHTML = '';
+                targetRow.classList.add('is-hidden');
             }
-
 
             checkDaysHeaderVisibility();
-
         }
 
-
-        /* =====================================================
-           UPDATE GENERAL DISPLAY
-        ====================================================== */
-
-        function updateGeneralDisplay() {
-
-            const titleInput =
-                document.getElementById(
-                    'input-title'
-                );
-
-
-            const aadadInput =
-                document.getElementById(
-                    'input-3adad'
-                );
-
-
-            const dateInput =
-                document.getElementById(
-                    'input-date'
-                );
-
-
-            const bibleInput =
-                document.getElementById(
-                    'input-bible'
-                );
-
-
-            const recInput =
-                document.getElementById(
-                    'input-recommendations'
-                );
-
-
-            const footerInput =
-                document.getElementById(
-                    'input-paperfooter'
-                );
-
-
-            const titleDisplay =
-                document.getElementById(
-                    'display-title'
-                );
-
-
-            const aadadDisplay =
-                document.getElementById(
-                    'display-3adad'
-                );
-
-
-            const titleDate =
-                document.getElementById(
-                    'display-date'
-                );
-
-
-            const bibleDisplay =
-                document.getElementById(
-                    'display-bible'
-                );
-
-
-            const recDisplay =
-                document.getElementById(
-                    'display-recommendations'
-                );
-
-
-            const wrapperRecs =
-                document.getElementById(
-                    'wrapper-recommendations'
-                );
-
-
-            const footerDisplay =
-                document.querySelector(
-                    '.paperfooter'
-                );
-
-
-            titleDisplay.textContent =
-                titleInput.value ||
-                '‎‏‏ ‎‏‏‎';
-
-
-            aadadDisplay.textContent =
-                aadadInput.value ||
-                '‎‏‏ ‎‏‏‎';
-
-
-            titleDate.textContent =
-                formatInputDate(
-                    dateInput.value
-                );
-
-
-            bibleDisplay.textContent =
-                bibleInput.value;
-
-
-            const recValue =
-                recInput.value.trim();
-
-
-            recDisplay.textContent =
-                recValue;
-
-
-            if (
-                recValue.length > 0
-            ) {
-
-                wrapperRecs.classList.remove(
-                    'is-hidden'
-                );
-
-            } else {
-
-                wrapperRecs.classList.add(
-                    'is-hidden'
-                );
-
-            }
-
-
-            footerDisplay.textContent =
-                footerInput.value ||
-                '1/1';
-
-        }
-
-
-        /* =====================================================
-           INPUT LISTENERS
-        ====================================================== */
-
-        const titleInput =
-            document.getElementById(
-                'input-title'
-            );
-
-
-        const aadadInput =
-            document.getElementById(
-                'input-3adad'
-            );
-
-
-        const dateInput =
-            document.getElementById(
-                'input-date'
-            );
-
-
-        const bibleInput =
-            document.getElementById(
-                'input-bible'
-            );
-
-
-        const recInput =
-            document.getElementById(
-                'input-recommendations'
-            );
-
-
-        const footerInput =
-            document.getElementById(
-                'input-paperfooter'
-            );
-
-
-        [
-            titleInput,
-            aadadInput,
-            dateInput,
-            bibleInput,
-            recInput,
-            footerInput
-        ]
-            .forEach(input => {
-
-                input.addEventListener(
-                    'input',
-                    () => {
-
-                        updateGeneralDisplay();
-
-                        saveData();
-
-                    }
-                );
-
-
-                input.addEventListener(
-                    'change',
-                    () => {
-
-                        updateGeneralDisplay();
-
-                        saveData();
-
-                    }
-                );
-
+        // ============================================================
+        // 8. LISTENERS FOR SIMPLE FIELDS + AUTO-SAVE
+        // ============================================================
+        function attachSimpleListeners() {
+            const titleInput = document.getElementById('input-title');
+            const aadadInput = document.getElementById('input-3adad');
+            const dateInput = document.getElementById('input-date');
+            const bibleInput = document.getElementById('input-bible');
+            const recInput = document.getElementById('input-recommendations');
+            const footerInput = document.getElementById('input-paperfooter');
+
+            const titleDisplay = document.getElementById('display-title');
+            const aadadDisplay = document.getElementById('display-3adad');
+            const titleDate = document.getElementById('display-date');
+            const bibleDisplay = document.getElementById('display-bible');
+            const recDisplay = document.getElementById('display-recommendations');
+            const wrapperRecs = document.getElementById('wrapper-recommendations');
+            const footerDisplay = document.querySelector('.paperfooter');
+
+            titleInput.addEventListener('input', (e) => {
+                titleDisplay.textContent = e.target.value || '‎‏‏‎';
+                saveAllData();
             });
 
+            aadadInput.addEventListener('input', (e) => {
+                aadadDisplay.textContent = e.target.value || '‎‏‏‎';
+                saveAllData();
+            });
 
-        /* =====================================================
-           SUBTITLE LISTENERS
-        ====================================================== */
+            dateInput.addEventListener('input', (e) => {
+                titleDate.textContent = formatInputDate(e.target.value);
+                saveAllData();
+            });
 
-        Object.keys(dayOffsets)
-            .forEach(dayKey => {
+            bibleInput.addEventListener('input', (e) => {
+                bibleDisplay.textContent = e.target.value;
+                saveAllData();
+            });
 
-                const subtitle =
-                    document.getElementById(
-                        `subtitle-${dayKey}`
-                    );
-
-
-                if (subtitle) {
-
-                    subtitle.addEventListener(
-                        'input',
-                        () => {
-
-                            updateDayOutput(
-                                dayKey
-                            );
-
-                            saveData();
-
-                        }
-                    );
-
+            recInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                recDisplay.textContent = val;
+                if (val.length > 0) {
+                    wrapperRecs.classList.remove('is-hidden');
+                } else {
+                    wrapperRecs.classList.add('is-hidden');
                 }
-
+                saveAllData();
             });
 
+            footerInput.addEventListener('input', (e) => {
+                footerDisplay.textContent = e.target.value || '1/1';
+                saveAllData();
+            });
 
-        /* =====================================================
-           RESET NEWSLETTER
-        ====================================================== */
-
-        function resetNewsletter() {
-
-            const confirmed =
-                confirm(
-                    'هل أنت متأكد أنك تريد حذف جميع البيانات المحفوظة؟\n\nلا يمكن التراجع عن هذه العملية.'
-                );
-
-
-            if (!confirmed) {
-
-                return;
-
-            }
-
-
-            /* Remove LocalStorage */
-
-            localStorage.removeItem(
-                STORAGE_KEY
-            );
-
-
-            /* ===============================================
-               CLEAR GENERAL INPUTS
-            ================================================ */
-
-            document.getElementById(
-                'input-title'
-            ).value = '';
-
-
-            document.getElementById(
-                'input-3adad'
-            ).value =
-                'العدد ';
-
-
-            document.getElementById(
-                'input-date'
-            ).value = '';
-
-
-            document.getElementById(
-                'input-bible'
-            ).value = '';
-
-
-            document.getElementById(
-                'input-recommendations'
-            ).value = '';
-
-
-            document.getElementById(
-                'input-paperfooter'
-            ).value =
-                '1/1';
-
-
-            /* ===============================================
-               CLEAR DAYS
-            ================================================ */
-
-            Object.keys(dayOffsets)
-                .forEach(dayKey => {
-
-                    const container =
-                        document.getElementById(
-                            `container-${dayKey}`
-                        );
-
-
-                    const subtitle =
-                        document.getElementById(
-                            `subtitle-${dayKey}`
-                        );
-
-
-                    container.innerHTML =
-                        '';
-
-
-                    if (subtitle) {
-
-                        subtitle.value =
-                            '';
-
-                    }
-
-
-                    updateDayOutput(
-                        dayKey
-                    );
-
-                });
-
-
-            /* ===============================================
-               RECREATE ONE EMPTY EVENT
-               FOR EVERY DAY
-            ================================================ */
-
-            Object.keys(dayOffsets)
-                .forEach(dayKey => {
-
-                    createEventRow(
-                        dayKey
-                    );
-
-                });
-
-
-            /* ===============================================
-               CLEAR NEWS
-            ================================================ */
-
-            document.getElementById(
-                'container-news'
-            ).innerHTML =
-                '';
-
-
-            /* ===============================================
-               CREATE ONE EMPTY NEWS ROW
-            ================================================ */
-
-            createNewsRow();
-
-
-            updateNewsOutput();
-
-            updateGeneralDisplay();
-
-
-            alert(
-                'تم حذف جميع البيانات بنجاح.'
-            );
-
+            // Day subtitle inputs
+            dayKeys.forEach(k => {
+                const el = document.getElementById(`subtitle-${k}`);
+                if (el) {
+                    el.addEventListener('input', () => {
+                        updateDayOutput(k);
+                        saveAllData();
+                    });
+                }
+            });
         }
 
-
-        /* =====================================================
-           DOWNLOAD AS HIGH RESOLUTION PNG
-        ====================================================== */
-
+        // ============================================================
+        // 9. DOWNLOAD AS IMAGE
+        // ============================================================
         async function downloadAsImage() {
+            const paperElement = document.getElementById('paper-to-print');
+            const btn = document.querySelector('.print-btn');
 
-            const paperElement =
-                document.getElementById(
-                    'paper-to-print'
-                );
+            if (btn) btn.disabled = true;
 
+            const origTransform = paperElement.style.transform;
+            const origZoom = paperElement.style.zoom;
 
-            const btn =
-                document.querySelector(
-                    '.print-btn'
-                );
-
-
-            if (btn) {
-
-                btn.disabled =
-                    true;
-
-            }
-
-
-            const origTransform =
-                paperElement.style.transform;
-
-
-            const origZoom =
-                paperElement.style.zoom;
-
-
-            paperElement.style.transform =
-                'none';
-
-
-            paperElement.style.zoom =
-                '1';
-
+            paperElement.style.transform = 'none';
+            paperElement.style.zoom = '1';
 
             try {
-
-                const canvas =
-                    await html2canvas(
-                        paperElement,
-                        {
-
-                            scale: 4,
-
-                            useCORS: true,
-
-                            allowTaint: true,
-
-                            logging: false,
-
-                            windowWidth: 794,
-
-                            windowHeight: 1123
-
-                        }
-                    );
-
-
-                const link =
-                    document.createElement(
-                        'a'
-                    );
-
-
-                link.download =
-                    'saint_george_assia_highres.png';
-
-
-                link.href =
-                    canvas.toDataURL(
-                        'image/png',
-                        1.0
-                    );
-
-
-                document.body.appendChild(
-                    link
-                );
-
-
-                link.click();
-
-
-                document.body.removeChild(
-                    link
-                );
-
-
-            } catch (err) {
-
-                console.error(
-                    'Export Error:',
-                    err
-                );
-
-
-                alert(
-                    'حدث خطأ أثناء تحميل الصورة.'
-                );
-
-            } finally {
-
-                paperElement.style.transform =
-                    origTransform;
-
-
-                paperElement.style.zoom =
-                    origZoom;
-
-
-                if (btn) {
-
-                    btn.disabled =
-                        false;
-
-                }
-
-            }
-
-        }
-
-
-        /* =====================================================
-           INITIALIZATION
-        ====================================================== */
-
-        initDates();
-
-
-        const hasSavedData =
-            loadData();
-
-
-        if (!hasSavedData) {
-
-            /* Create one event row
-               for each day */
-
-            Object.keys(dayOffsets)
-                .forEach(dayKey => {
-
-                    createEventRow(
-                        dayKey
-                    );
-
+                const canvas = await html2canvas(paperElement, {
+                    scale: 4,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    windowWidth: 794,
+                    windowHeight: 1123
                 });
 
+                const link = document.createElement('a');
+                link.download = 'saint_george_assia_highres.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-            /* Create one empty
-               news row */
-
-            createNewsRow();
-
+            } catch (err) {
+                console.error("Export Error:", err);
+            } finally {
+                paperElement.style.transform = origTransform;
+                paperElement.style.zoom = origZoom;
+                if (btn) btn.disabled = false;
+            }
         }
 
+        // ============================================================
+        // 10. INIT
+        // ============================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            // Ensure the html2canvas library is loaded (from CDN in head)
+            // Initialize date labels
+            initDates();
 
-        /* Final display refresh */
+            // Attach listeners to simple fields
+            attachSimpleListeners();
 
-        updateGeneralDisplay();
+            // Load saved data (this will populate inputs and add event/news rows)
+            loadAllData();
 
-
-        Object.keys(dayOffsets)
-            .forEach(dayKey => {
-
-                updateDayOutput(
-                    dayKey
-                );
-
+            // If no saved data, the form is empty; we need to add default empty rows for days & news
+            // Check if day containers are empty -> add one row each
+            dayKeys.forEach(k => {
+                const container = document.getElementById(`container-${k}`);
+                if (container && container.children.length === 0) {
+                    addEventRow(k);
+                }
             });
 
+            // Check news container
+            const newsContainer = document.getElementById('container-news');
+            if (newsContainer && newsContainer.children.length === 0) {
+                addNewsRow();
+            }
 
-        updateNewsOutput();
+            // Refresh displays after all rows are set
+            refreshAllDisplays();
+
+            // Add beforeunload save (extra safety)
+            window.addEventListener('beforeunload', () => {
+                saveAllData();
+            });
+
+            // Also save on any input change globally (backup)
+            document.addEventListener('input', (e) => {
+                if (e.target.closest('.form-container')) {
+                    saveAllData();
+                }
+            });
+        });
 
     </script>
+
+    <!-- html2canvas from CDN (in case not loaded in head) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </body>
 
