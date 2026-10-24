@@ -13,7 +13,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Audiowide&family=Cairo:wght@200..1000&family=Dancing+Script:wght@400..700&family=Dynalight&family=Lateef:wght@200;300;400;500;600;700;800&family=Manufacturing+Consent&family=Noto+Sans+Syriac+Western:wght@100..900&family=Oleo+Script:wght@400;700&family=Orbitron:wght@400..900&family=Press+Start+2P&family=Rubik+Mono+One&display=swap"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -219,16 +219,6 @@
           ></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="input-paperfooter">تذييل الصفحة (Paper Footer)</label>
-          <input
-            type="text"
-            id="input-paperfooter"
-            placeholder="أدخل رقم الصفحة أو التذييل..."
-            value="1/1"
-          />
-        </div>
-
         <button class="print-btn" onclick="downloadAsImage()">
           ↧ تحميل كصورة (PNG)
         </button>
@@ -239,7 +229,8 @@
 
       <!-- ===== PAPER ===== -->
       <div class="paper-container">
-        <div class="paper" id="paper-to-print">
+        <!-- Hidden source: single source of truth for all content -->
+        <div class="paper paper-source" id="paper-source" aria-hidden="true">
           <div class="paper-header">
             <div class="sundaydetails">
               <div class="title" id="display-title">‎‏‏‎</div>
@@ -335,6 +326,9 @@
 
           <div class="paperfooter">1/1</div>
         </div>
+
+        <!-- Generated pages (one .paper per page) -->
+        <div class="paper-pages" id="paper-to-print"></div>
       </div>
     </div>
 
@@ -386,11 +380,15 @@
         date: LS_PREFIX + "date",
         bible: LS_PREFIX + "bible",
         recommendations: LS_PREFIX + "recommendations",
-        paperfooter: LS_PREFIX + "paperfooter",
         daySubtitles: LS_PREFIX + "daySubtitles",
         dayEvents: LS_PREFIX + "dayEvents",
         newsItems: LS_PREFIX + "newsItems",
       };
+
+      // Pagination settings (keep in sync with .paper-content gap in CSS)
+      const PAGE_GAP = 12;
+      const FOOTER_RESERVE = 30;
+      let paginateTimer = null;
 
       // ============================================================
       // 2. DATE FUNCTIONS
@@ -432,10 +430,7 @@
       // ============================================================
       // 3. SAVE / LOAD / RESET STATE
       // ============================================================
-
-      // ---------- SAVE ----------
       function saveAllData() {
-        // Simple fields
         localStorage.setItem(
           LS_KEYS.title,
           document.getElementById("input-title").value,
@@ -455,10 +450,6 @@
         localStorage.setItem(
           LS_KEYS.recommendations,
           document.getElementById("input-recommendations").value,
-        );
-        localStorage.setItem(
-          LS_KEYS.paperfooter,
-          document.getElementById("input-paperfooter").value,
         );
 
         // Day subtitles
@@ -495,16 +486,9 @@
           const title = row.querySelector(".news-title-input")?.value || "";
           const imgInput = row.querySelector(".news-img-input");
           let imgData = "";
-          // We can't save file objects, so we only save the title & a flag for image presence
-          // If an image was previously loaded from storage, we keep a placeholder
           if (imgInput && imgInput.files && imgInput.files.length > 0) {
-            // If user picked a new file, we don't save the binary (too large) – we'll only
-            // save the fact that there IS an image, but after reload it will show default logo.
-            // To preserve the image, we could convert to dataURL, but that's heavy.
-            // We'll save a flag and the title.
-            imgData = "HAS_IMAGE"; // just a flag
+            imgData = "HAS_IMAGE";
           } else {
-            // Check if there's an existing image preview (from previous load)
             const previewImg = row.querySelector(".news-item-img-preview");
             if (
               previewImg &&
@@ -523,11 +507,12 @@
           newsData.push({ title, imgFlag: imgData });
         });
         localStorage.setItem(LS_KEYS.newsItems, JSON.stringify(newsData));
+
+        // Rebuild pages whenever data changes
+        schedulePaginate();
       }
 
-      // ---------- LOAD ----------
       function loadAllData() {
-        // Simple fields
         const titleVal = localStorage.getItem(LS_KEYS.title);
         if (titleVal !== null)
           document.getElementById("input-title").value = titleVal;
@@ -547,10 +532,6 @@
         const recVal = localStorage.getItem(LS_KEYS.recommendations);
         if (recVal !== null)
           document.getElementById("input-recommendations").value = recVal;
-
-        const footerVal = localStorage.getItem(LS_KEYS.paperfooter);
-        if (footerVal !== null)
-          document.getElementById("input-paperfooter").value = footerVal;
 
         // Day subtitles
         const savedSubtitles = localStorage.getItem(LS_KEYS.daySubtitles);
@@ -574,7 +555,6 @@
             dayKeys.forEach((k) => {
               const container = document.getElementById(`container-${k}`);
               if (!container) return;
-              // Clear existing rows (but keep the add button handler)
               container.innerHTML = "";
               const dayEvents = evs[k] || [];
               dayEvents.forEach((ev) => {
@@ -601,59 +581,48 @@
           }
         }
 
-        // After loading, refresh all displays
         refreshAllDisplays();
       }
 
-      // ---------- RESET ----------
       function resetAllData() {
         if (!confirm("هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع."))
           return;
 
-        // Clear localStorage
         Object.values(LS_KEYS).forEach((key) => localStorage.removeItem(key));
 
-        // Reset simple inputs
         document.getElementById("input-title").value = "";
         document.getElementById("input-3adad").value = "العدد ";
         document.getElementById("input-date").value = "";
         document.getElementById("input-bible").value = "";
         document.getElementById("input-recommendations").value = "";
-        document.getElementById("input-paperfooter").value = "1/1";
 
-        // Reset day subtitles
         dayKeys.forEach((k) => {
           const el = document.getElementById(`subtitle-${k}`);
           if (el) el.value = "";
         });
 
-        // Reset day event containers (clear all rows, then add one empty row per day)
         dayKeys.forEach((k) => {
           const container = document.getElementById(`container-${k}`);
           if (container) container.innerHTML = "";
           addEventRow(k);
         });
 
-        // Reset news container
         const newsContainer = document.getElementById("container-news");
         if (newsContainer) newsContainer.innerHTML = "";
         addNewsRow();
 
-        // Refresh displays
         refreshAllDisplays();
       }
 
       // ============================================================
-      // 4. REFRESH ALL DISPLAYS (after load / reset)
+      // 4. REFRESH ALL DISPLAYS
       // ============================================================
       function refreshAllDisplays() {
-        // Title, aadad, date, bible, recommendations, footer
         const titleInput = document.getElementById("input-title");
         const aadadInput = document.getElementById("input-3adad");
         const dateInput = document.getElementById("input-date");
         const bibleInput = document.getElementById("input-bible");
         const recInput = document.getElementById("input-recommendations");
-        const footerInput = document.getElementById("input-paperfooter");
 
         document.getElementById("display-title").textContent =
           titleInput.value || "‎‏‏‎";
@@ -665,10 +634,7 @@
         document.getElementById("display-bible").textContent = bibleInput.value;
         document.getElementById("display-recommendations").textContent =
           recInput.value;
-        document.querySelector(".paperfooter").textContent =
-          footerInput.value || "1/1";
 
-        // Recommendations wrapper visibility
         const recVal = recInput.value.trim();
         const wrapperRecs = document.getElementById("wrapper-recommendations");
         if (recVal.length > 0) {
@@ -677,13 +643,12 @@
           wrapperRecs.classList.add("is-hidden");
         }
 
-        // Day outputs
         dayKeys.forEach((k) => {
           updateDayOutput(k);
         });
 
-        // News output
         updateNewsOutput();
+        schedulePaginate();
       }
 
       // ============================================================
@@ -781,7 +746,6 @@
         const newsDiv = document.createElement("div");
         newsDiv.className = "news-row-input";
 
-        // Build a preview image placeholder if imgFlag exists
         let previewHtml = "";
         if (imgFlag === "HAS_IMAGE") {
           previewHtml = `<div class="news-item-img-preview" style="display:none;"></div>`;
@@ -802,9 +766,8 @@
         const titleInput = newsDiv.querySelector(".news-title-input");
         const previewDiv = newsDiv.querySelector(".news-item-img-preview");
         if (previewDiv) {
-          // Create a fake image element to signal presence
           const img = document.createElement("img");
-          img.src = "saint_george_assia.png"; // default
+          img.src = "saint_george_assia.png";
           img.style.width = "100%";
           img.style.height = "100%";
           img.style.objectFit = "fill";
@@ -849,7 +812,6 @@
           const titleVal = titleInput ? titleInput.value.trim() : "";
           const file = imgInput && imgInput.files ? imgInput.files[0] : null;
 
-          // Check if there's a preview image (loaded from storage)
           let hasPreviewImage = false;
           if (previewDiv && previewDiv.querySelector("img")) {
             hasPreviewImage = true;
@@ -868,6 +830,7 @@
             imgContainer.className = "news-item-img";
 
             const img = document.createElement("img");
+            img.addEventListener("load", () => schedulePaginate());
 
             if (file) {
               const reader = new FileReader();
@@ -876,7 +839,6 @@
               };
               reader.readAsDataURL(file);
             } else if (hasPreviewImage && previewDiv) {
-              // Use the preview image source
               const previewImg = previewDiv.querySelector("img");
               if (previewImg && previewImg.src) {
                 img.src = previewImg.src;
@@ -974,7 +936,6 @@
         const dateInput = document.getElementById("input-date");
         const bibleInput = document.getElementById("input-bible");
         const recInput = document.getElementById("input-recommendations");
-        const footerInput = document.getElementById("input-paperfooter");
 
         const titleDisplay = document.getElementById("display-title");
         const aadadDisplay = document.getElementById("display-3adad");
@@ -982,7 +943,6 @@
         const bibleDisplay = document.getElementById("display-bible");
         const recDisplay = document.getElementById("display-recommendations");
         const wrapperRecs = document.getElementById("wrapper-recommendations");
-        const footerDisplay = document.querySelector(".paperfooter");
 
         titleInput.addEventListener("input", (e) => {
           titleDisplay.textContent = e.target.value || "‎‏‏‎";
@@ -1015,12 +975,6 @@
           saveAllData();
         });
 
-        footerInput.addEventListener("input", (e) => {
-          footerDisplay.textContent = e.target.value || "1/1";
-          saveAllData();
-        });
-
-        // Day subtitle inputs
         dayKeys.forEach((k) => {
           const el = document.getElementById(`subtitle-${k}`);
           if (el) {
@@ -1033,61 +987,386 @@
       }
 
       // ============================================================
-      // 9. DOWNLOAD AS IMAGE
+      // 9. PAGINATION ENGINE
+      // ============================================================
+      let measureBox = null;
+
+      function getMeasureBox(width) {
+        if (!measureBox) {
+          measureBox = document.createElement("div");
+          measureBox.id = "measure-box";
+          measureBox.style.cssText =
+            "position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none;";
+          document.body.appendChild(measureBox);
+        }
+        measureBox.style.width = Math.floor(width) + "px";
+        return measureBox;
+      }
+
+      function measureElementHeight(el, contentWidth) {
+        const box = getMeasureBox(contentWidth);
+        box.appendChild(el);
+        const cs = getComputedStyle(el);
+        const h =
+          el.getBoundingClientRect().height +
+          (parseFloat(cs.marginTop) || 0) +
+          (parseFloat(cs.marginBottom) || 0);
+        box.removeChild(el);
+        return h;
+      }
+
+      function createTextMeasurer(className, contentWidth) {
+        const box = getMeasureBox(contentWidth);
+        const probe = document.createElement("div");
+        probe.className = className;
+        box.appendChild(probe);
+        return {
+          measure(text) {
+            probe.textContent = text;
+            return probe.getBoundingClientRect().height;
+          },
+          dispose() {
+            if (probe.parentNode) probe.parentNode.removeChild(probe);
+          },
+        };
+      }
+
+      function stripIds(node) {
+        if (!node || node.nodeType !== 1) return node;
+        if (node.id) node.removeAttribute("id");
+        node.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+        return node;
+      }
+
+      function schedulePaginate() {
+        if (paginateTimer) clearTimeout(paginateTimer);
+        paginateTimer = setTimeout(() => {
+          paginateTimer = null;
+          paginate();
+        }, 250);
+      }
+
+      function computePageMetrics() {
+        const src = document.getElementById("paper-source");
+        const cs = getComputedStyle(src);
+        const rect = src.getBoundingClientRect();
+        const padTop = parseFloat(cs.paddingTop) || 0;
+        const padBottom = parseFloat(cs.paddingBottom) || 0;
+        const padLeft = parseFloat(cs.paddingLeft) || 0;
+        const padRight = parseFloat(cs.paddingRight) || 0;
+        const contentWidth = rect.width - padLeft - padRight;
+        const usableHeight = rect.height - padTop - padBottom - FOOTER_RESERVE;
+        return { contentWidth, usableHeight };
+      }
+
+      function splitTextIntoChunks(text, maxHeight, measureFn) {
+        const chunks = [];
+        if (!text) return chunks;
+        const lines = text.split("\n");
+        let current = "";
+        const flush = () => {
+          if (current !== "") chunks.push(current);
+          current = "";
+        };
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          const candidate = current === "" ? line : current + "\n" + line;
+          if (measureFn(candidate) <= maxHeight) {
+            current = candidate;
+            continue;
+          }
+
+          flush();
+
+          if (measureFn(line) <= maxHeight) {
+            current = line;
+            continue;
+          }
+
+          // Very long single line: split by words
+          const words = line.split(" ");
+          let buf = "";
+          for (let j = 0; j < words.length; j++) {
+            const cand = buf === "" ? words[j] : buf + " " + words[j];
+            if (measureFn(cand) <= maxHeight) {
+              buf = cand;
+            } else {
+              if (buf !== "") chunks.push(buf);
+              buf = words[j];
+            }
+          }
+          current = buf;
+        }
+        flush();
+        return chunks;
+      }
+
+      function pushBlock(blocks, el, type, metrics) {
+        const clone = stripIds(el.cloneNode(true));
+        const h = measureElementHeight(clone, metrics.contentWidth);
+        blocks.push({ el: clone, h, type });
+      }
+
+      function pushTextBlocks(blocks, text, className, metrics, maxHeight) {
+        if (!text || !text.trim()) return;
+        const measurer = createTextMeasurer(className, metrics.contentWidth);
+        const limit = Math.max(120, maxHeight - 5); // small safety margin
+        const chunks = splitTextIntoChunks(text, limit, measurer.measure);
+        measurer.dispose();
+
+        chunks.forEach((chunk) => {
+          const div = document.createElement("div");
+          div.className = className;
+          div.textContent = chunk;
+          const h = measureElementHeight(div, metrics.contentWidth);
+          blocks.push({ el: div, h, type: "text" });
+        });
+      }
+
+      // Build the reusable header (paper-header + hr + ra3awe + hr)
+      function buildHeaderTemplate(source) {
+        const template = document.createElement("div");
+        template.className = "paper-header-group";
+        source
+          .querySelectorAll(
+            ":scope > .paper-header, :scope > hr, :scope > .ra3awe",
+          )
+          .forEach((part) => {
+            template.appendChild(stripIds(part.cloneNode(true)));
+          });
+        return template;
+      }
+
+      function buildBlocks(metrics) {
+        const source = document.getElementById("paper-source");
+
+        // ---- Header template (cloned into every page) ----
+        const headerTemplate = buildHeaderTemplate(source);
+        const headerHeight = measureElementHeight(
+          headerTemplate.cloneNode(true),
+          metrics.contentWidth,
+        );
+        const headerCost = headerHeight + PAGE_GAP;
+
+        // Text must be able to fit in the *first* slot of a page (after header)
+        const textMaxHeight = metrics.usableHeight - headerCost;
+
+        const blocks = [];
+
+        // ---- Bible / reading ----
+        const bibleWrapper = source.querySelector("#wrapper-bible");
+        if (bibleWrapper && !bibleWrapper.classList.contains("is-hidden")) {
+          const bibleEl = bibleWrapper.querySelector("#display-bible");
+          if (bibleEl) {
+            pushTextBlocks(
+              blocks,
+              bibleEl.textContent || "",
+              "content-box",
+              metrics,
+              textMaxHeight,
+            );
+          }
+        }
+
+        // ---- Weekly programme ----
+        const daysWrapper = source.querySelector("#wrapper-days");
+        if (daysWrapper && !daysWrapper.classList.contains("is-hidden")) {
+          const titleEl = daysWrapper.querySelector(".section-title");
+          if (titleEl) pushBlock(blocks, titleEl, "title", metrics);
+          daysWrapper.querySelectorAll(".day-row").forEach((row) => {
+            if (!row.classList.contains("is-hidden")) {
+              pushBlock(blocks, row, "day", metrics);
+            }
+          });
+        }
+
+        // ---- News ----
+        const newsWrapper = source.querySelector("#wrapper-news");
+        if (newsWrapper && !newsWrapper.classList.contains("is-hidden")) {
+          const titleEl = newsWrapper.querySelector(".section-title");
+          if (titleEl) pushBlock(blocks, titleEl, "title", metrics);
+          newsWrapper.querySelectorAll(".news-item").forEach((item) => {
+            pushBlock(blocks, item, "news", metrics);
+          });
+        }
+
+        // ---- Recommendations ----
+        const recWrapper = source.querySelector("#wrapper-recommendations");
+        if (recWrapper && !recWrapper.classList.contains("is-hidden")) {
+          const titleEl = recWrapper.querySelector(".section-title");
+          if (titleEl) pushBlock(blocks, titleEl, "title", metrics);
+          const recEl = recWrapper.querySelector("#display-recommendations");
+          if (recEl) {
+            pushTextBlocks(
+              blocks,
+              recEl.textContent || "",
+              "content-box",
+              metrics,
+              textMaxHeight,
+            );
+          }
+        }
+
+        return { blocks, headerTemplate, headerHeight };
+      }
+
+      function distributeBlocks(blocks, metrics, headerCost) {
+        const pages = [];
+        const usable = metrics.usableHeight;
+
+        // Every page (including the first) starts with the header
+        let current = { blocks: [], height: headerCost };
+
+        const startNewPage = () => {
+          pages.push(current);
+          current = { blocks: [], height: headerCost };
+        };
+
+        for (let i = 0; i < blocks.length; i++) {
+          const block = blocks[i];
+          const gapBefore = current.blocks.length > 0 ? PAGE_GAP : 0;
+          let required = gapBefore + block.h;
+
+          // Keep a section title together with the block that follows it
+          if (block.type === "title" && i + 1 < blocks.length) {
+            const next = blocks[i + 1];
+            const togetherHeight = gapBefore + block.h + PAGE_GAP + next.h;
+            if (
+              current.height + togetherHeight > usable &&
+              current.blocks.length > 0
+            ) {
+              startNewPage();
+              required = block.h;
+            }
+          }
+
+          if (current.height + required > usable && current.blocks.length > 0) {
+            startNewPage();
+            required = block.h;
+          }
+
+          current.blocks.push(block);
+          current.height += required;
+        }
+
+        if (current.blocks.length > 0 || pages.length === 0) {
+          pages.push(current);
+        }
+        return pages;
+      }
+
+      function renderPages(pages, headerTemplate) {
+        const container = document.getElementById("paper-to-print");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const total = pages.length;
+
+        pages.forEach((page, index) => {
+          const pageEl = document.createElement("div");
+          pageEl.className = "paper";
+          pageEl.setAttribute("data-page", String(index + 1));
+
+          const contentEl = document.createElement("div");
+          contentEl.className = "paper-content";
+
+          // Header on EVERY page
+          if (headerTemplate) {
+            contentEl.appendChild(headerTemplate.cloneNode(true));
+          }
+
+          page.blocks.forEach((b) => contentEl.appendChild(b.el));
+
+          const footer = document.createElement("div");
+          footer.className = "paperfooter";
+          footer.textContent = `${index + 1}/${total}`;
+
+          pageEl.appendChild(contentEl);
+          pageEl.appendChild(footer);
+          container.appendChild(pageEl);
+        });
+      }
+
+      function paginate() {
+        const source = document.getElementById("paper-source");
+        if (!source) return;
+        try {
+          const metrics = computePageMetrics();
+          if (metrics.contentWidth <= 0 || metrics.usableHeight <= 0) return;
+
+          const { blocks, headerTemplate, headerHeight } =
+            buildBlocks(metrics);
+          const headerCost = headerHeight + PAGE_GAP;
+
+          const pages = distributeBlocks(blocks, metrics, headerCost);
+          renderPages(pages, headerTemplate);
+        } catch (err) {
+          console.error("Pagination error:", err);
+        }
+      }
+
+      // ============================================================
+      // 10. DOWNLOAD AS IMAGE (one PNG per page)
       // ============================================================
       async function downloadAsImage() {
-        const paperElement = document.getElementById("paper-to-print");
-        const btn = document.querySelector(".print-btn");
+        const pages = Array.from(
+          document.querySelectorAll("#paper-to-print .paper"),
+        );
+        if (pages.length === 0) return;
 
+        const btn = document.querySelector(".print-btn");
         if (btn) btn.disabled = true;
 
-        const origTransform = paperElement.style.transform;
-        const origZoom = paperElement.style.zoom;
-
-        paperElement.style.transform = "none";
-        paperElement.style.zoom = "1";
+        const pagesWrap = document.getElementById("paper-to-print");
+        const prevZoom = pagesWrap.style.zoom;
+        pagesWrap.style.zoom = "1";
 
         try {
-          const canvas = await html2canvas(paperElement, {
-            scale: 4,
-            useCORS: true,
-            allowTaint: true,
-            logging: false,
-            windowWidth: 794,
-            windowHeight: 1123,
-          });
+          for (let i = 0; i < pages.length; i++) {
+            const pageEl = pages[i];
 
-          const link = document.createElement("a");
-          link.download = "saint_george_assia_highres.png";
-          link.href = canvas.toDataURL("image/png", 1.0);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+            const canvas = await html2canvas(pageEl, {
+              scale: 4,
+              useCORS: true,
+              allowTaint: true,
+              logging: false,
+              backgroundColor: "#ffffff",
+              windowWidth: 1200,
+              windowHeight: 1600,
+            });
+
+            const link = document.createElement("a");
+            if (pages.length === 1) {
+              link.download = "saint_george_assia_highres.png";
+            } else {
+              link.download = `saint_george_assia_page_${i + 1}_of_${pages.length}.png`;
+            }
+            link.href = canvas.toDataURL("image/png", 1.0);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            if (i < pages.length - 1) {
+              await new Promise((r) => setTimeout(r, 400));
+            }
+          }
         } catch (err) {
           console.error("Export Error:", err);
         } finally {
-          paperElement.style.transform = origTransform;
-          paperElement.style.zoom = origZoom;
+          pagesWrap.style.zoom = prevZoom;
           if (btn) btn.disabled = false;
         }
       }
 
       // ============================================================
-      // 10. INIT
+      // 11. INIT
       // ============================================================
       window.addEventListener("DOMContentLoaded", () => {
-        // Ensure the html2canvas library is loaded (from CDN in head)
-        // Initialize date labels
         initDates();
-
-        // Attach listeners to simple fields
         attachSimpleListeners();
-
-        // Load saved data (this will populate inputs and add event/news rows)
         loadAllData();
 
-        // If no saved data, the form is empty; we need to add default empty rows for days & news
-        // Check if day containers are empty -> add one row each
         dayKeys.forEach((k) => {
           const container = document.getElementById(`container-${k}`);
           if (container && container.children.length === 0) {
@@ -1095,21 +1374,22 @@
           }
         });
 
-        // Check news container
         const newsContainer = document.getElementById("container-news");
         if (newsContainer && newsContainer.children.length === 0) {
           addNewsRow();
         }
 
-        // Refresh displays after all rows are set
         refreshAllDisplays();
 
-        // Add beforeunload save (extra safety)
+        // Re-measure once web fonts are ready (text heights can change)
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => paginate());
+        }
+
         window.addEventListener("beforeunload", () => {
           saveAllData();
         });
 
-        // Also save on any input change globally (backup)
         document.addEventListener("input", (e) => {
           if (e.target.closest(".form-container")) {
             saveAllData();
@@ -1118,7 +1398,7 @@
       });
     </script>
 
-    <!-- html2canvas from CDN (in case not loaded in head) -->
+    <!-- html2canvas from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </body>
 </html>
