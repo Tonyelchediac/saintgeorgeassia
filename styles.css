@@ -448,8 +448,8 @@ body {
 }
 
 .news-item-img {
-  width: 100px;
-  height: 60px;
+  width: 140px;
+  height: 80px;
   flex-shrink: 0;
   border-radius: 4px;
   overflow: hidden;
