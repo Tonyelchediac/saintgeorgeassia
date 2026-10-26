@@ -1,0 +1,1265 @@
+// ============================================================
+// 1. CONSTANTS & HELPERS
+// ============================================================
+const levantMonths = [
+  "كانون الثاني",
+  "شباط",
+  "آذار",
+  "نيسان",
+  "أيار",
+  "حزيران",
+  "تموز",
+  "آب",
+  "أيلول",
+  "تشرين الأول",
+  "تشرين الثاني",
+  "كانون الأول",
+];
+
+const dayNames = {
+  mon: "✸ الإثنين",
+  tue: "✸ الثلاثاء",
+  wed: "✸ الأربعاء",
+  thu: "✸ الخميس",
+  fri: "✸ الجمعة",
+  sat: "✸ السبت",
+  sun: "✸ الأحد",
+};
+
+const dayOffsets = {
+  mon: 0,
+  tue: 1,
+  wed: 2,
+  thu: 3,
+  fri: 4,
+  sat: 5,
+  sun: 6,
+};
+const dayKeys = Object.keys(dayOffsets);
+
+const LS_PREFIX = "nashra_";
+const LS_KEYS = {
+  title: LS_PREFIX + "title",
+  aadad: LS_PREFIX + "aadad",
+  date: LS_PREFIX + "date",
+  bible: LS_PREFIX + "bible",
+  recommendations: LS_PREFIX + "recommendations",
+  daySubtitles: LS_PREFIX + "daySubtitles",
+  dayEvents: LS_PREFIX + "dayEvents",
+  newsItems: LS_PREFIX + "newsItems",
+  gaps: LS_PREFIX + "gaps",
+  lineHeight: LS_PREFIX + "lineHeight",
+};
+
+// Pagination settings
+const PAGE_GAP = 12;
+const FOOTER_RESERVE = 30;
+let paginateTimer = null;
+
+// ---- Spacing helpers ----
+function parseGapValue(id) {
+  const el = document.getElementById(id);
+  if (!el) return PAGE_GAP;
+  const v = parseFloat(el.value);
+  return isNaN(v) || v < 0 ? PAGE_GAP : v;
+}
+
+function getSectionGaps() {
+  return {
+    bible: parseGapValue("input-gap-bible"),
+    days: parseGapValue("input-gap-days"),
+    news: parseGapValue("input-gap-news"),
+    recs: parseGapValue("input-gap-recs"),
+  };
+}
+
+function applyLineHeight() {
+  const el = document.getElementById("input-line-height");
+  if (!el) return;
+  const v = parseFloat(el.value);
+  if (!isNaN(v) && v > 0) {
+    document.documentElement.style.setProperty(
+      "--content-paper-line-height",
+      v,
+    );
+  }
+}
+
+// ============================================================
+// 2. DATE FUNCTIONS
+// ============================================================
+function getWeekMonday() {
+  const now = new Date();
+  const currentDay = now.getDay();
+  const diffToMonday = currentDay === 0 ? 1 : 1 - currentDay;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMonday);
+  return monday;
+}
+
+function initDates() {
+  const monday = getWeekMonday();
+  dayKeys.forEach((dayKey) => {
+    const targetDate = new Date(monday);
+    targetDate.setDate(monday.getDate() + dayOffsets[dayKey]);
+    const dayNum = targetDate.getDate();
+    const monthName = levantMonths[targetDate.getMonth()];
+    const yearNum = targetDate.getFullYear();
+    const formattedLabel = `${dayNames[dayKey]} ${dayNum} ${monthName} ${yearNum}`;
+    const labelEl = document.getElementById(`label-${dayKey}`);
+    const nameEl = document.getElementById(`name-${dayKey}`);
+    if (labelEl) labelEl.textContent = formattedLabel;
+    if (nameEl) nameEl.textContent = `${formattedLabel}:`;
+  });
+}
+
+function formatInputDate(dateStr) {
+  if (!dateStr) return "‎‏‏‎";
+  const [year, month, day] = dateStr.split("-");
+  if (!year || !month || !day) return dateStr;
+  const monthIdx = parseInt(month, 10) - 1;
+  const monthName = levantMonths[monthIdx] || month;
+  return `${parseInt(day, 10)} ${monthName} ${year}`;
+}
+
+// ============================================================
+// 3. SAVE / LOAD / RESET STATE
+// ============================================================
+function saveAllData() {
+  localStorage.setItem(
+    LS_KEYS.title,
+    document.getElementById("input-title").value,
+  );
+  localStorage.setItem(
+    LS_KEYS.aadad,
+    document.getElementById("input-3adad").value,
+  );
+  localStorage.setItem(
+    LS_KEYS.date,
+    document.getElementById("input-date").value,
+  );
+  localStorage.setItem(
+    LS_KEYS.bible,
+    document.getElementById("input-bible").value,
+  );
+  localStorage.setItem(
+    LS_KEYS.recommendations,
+    document.getElementById("input-recommendations").value,
+  );
+
+  // Day subtitles
+  const subtitles = {};
+  dayKeys.forEach((k) => {
+    const el = document.getElementById(`subtitle-${k}`);
+    subtitles[k] = el ? el.value : "";
+  });
+  localStorage.setItem(LS_KEYS.daySubtitles, JSON.stringify(subtitles));
+
+  // Day events
+  const allEvents = {};
+  dayKeys.forEach((k) => {
+    const container = document.getElementById(`container-${k}`);
+    if (!container) return;
+    const rows = container.querySelectorAll(".event-row-input");
+    const evs = [];
+    rows.forEach((row) => {
+      const time = row.querySelector(".day-time-input")?.value || "";
+      const text = row.querySelector(".day-input")?.value || "";
+      evs.push({ time, text });
+    });
+    allEvents[k] = evs;
+  });
+  localStorage.setItem(LS_KEYS.dayEvents, JSON.stringify(allEvents));
+
+  // News items
+  const newsContainer = document.getElementById("container-news");
+  const newsRows = newsContainer
+    ? newsContainer.querySelectorAll(".news-row-input")
+    : [];
+  const newsData = [];
+  newsRows.forEach((row) => {
+    const title = row.querySelector(".news-title-input")?.value || "";
+    const imgInput = row.querySelector(".news-img-input");
+    let imgData = "";
+    if (imgInput && imgInput.files && imgInput.files.length > 0) {
+      imgData = "HAS_IMAGE";
+    } else {
+      const previewImg = row.querySelector(".news-item-img-preview");
+      if (
+        previewImg &&
+        previewImg.src &&
+        previewImg.src.startsWith("data:image")
+      ) {
+        imgData = "HAS_IMAGE";
+      } else if (
+        previewImg &&
+        previewImg.src &&
+        !previewImg.src.includes("saint_george_assia.png")
+      ) {
+        imgData = "HAS_IMAGE";
+      }
+    }
+    newsData.push({ title, imgFlag: imgData });
+  });
+  localStorage.setItem(LS_KEYS.newsItems, JSON.stringify(newsData));
+
+  // Gaps
+  localStorage.setItem(
+    LS_KEYS.gaps,
+    JSON.stringify({
+      bible: document.getElementById("input-gap-bible").value,
+      days: document.getElementById("input-gap-days").value,
+      news: document.getElementById("input-gap-news").value,
+      recs: document.getElementById("input-gap-recs").value,
+    }),
+  );
+
+  // Line height
+  localStorage.setItem(
+    LS_KEYS.lineHeight,
+    document.getElementById("input-line-height").value,
+  );
+
+  schedulePaginate();
+}
+
+function loadAllData() {
+  const titleVal = localStorage.getItem(LS_KEYS.title);
+  if (titleVal !== null)
+    document.getElementById("input-title").value = titleVal;
+
+  const aadadVal = localStorage.getItem(LS_KEYS.aadad);
+  if (aadadVal !== null)
+    document.getElementById("input-3adad").value = aadadVal;
+
+  const dateVal = localStorage.getItem(LS_KEYS.date);
+  if (dateVal !== null) document.getElementById("input-date").value = dateVal;
+
+  const bibleVal = localStorage.getItem(LS_KEYS.bible);
+  if (bibleVal !== null)
+    document.getElementById("input-bible").value = bibleVal;
+
+  const recVal = localStorage.getItem(LS_KEYS.recommendations);
+  if (recVal !== null)
+    document.getElementById("input-recommendations").value = recVal;
+
+  const savedGaps = localStorage.getItem(LS_KEYS.gaps);
+  if (savedGaps) {
+    try {
+      const g = JSON.parse(savedGaps);
+      if (g.bible !== undefined)
+        document.getElementById("input-gap-bible").value = g.bible;
+      if (g.days !== undefined)
+        document.getElementById("input-gap-days").value = g.days;
+      if (g.news !== undefined)
+        document.getElementById("input-gap-news").value = g.news;
+      if (g.recs !== undefined)
+        document.getElementById("input-gap-recs").value = g.recs;
+    } catch (e) {}
+  }
+
+  const savedLH = localStorage.getItem(LS_KEYS.lineHeight);
+  if (savedLH !== null) {
+    document.getElementById("input-line-height").value = savedLH;
+  }
+  applyLineHeight();
+
+  const savedSubtitles = localStorage.getItem(LS_KEYS.daySubtitles);
+  if (savedSubtitles) {
+    try {
+      const subs = JSON.parse(savedSubtitles);
+      dayKeys.forEach((k) => {
+        const el = document.getElementById(`subtitle-${k}`);
+        if (el && subs[k] !== undefined) el.value = subs[k];
+      });
+    } catch (e) {}
+  }
+
+  const savedEvents = localStorage.getItem(LS_KEYS.dayEvents);
+  if (savedEvents) {
+    try {
+      const evs = JSON.parse(savedEvents);
+      dayKeys.forEach((k) => {
+        const container = document.getElementById(`container-${k}`);
+        if (!container) return;
+        container.innerHTML = "";
+        const dayEvents = evs[k] || [];
+        dayEvents.forEach((ev) => {
+          addEventRowWithData(k, ev.time, ev.text);
+        });
+        // Show the container if the day has saved events
+        if (dayEvents.length > 0) {
+          container.style.display = "flex";
+        }
+      });
+    } catch (e) {}
+  }
+
+  const savedNews = localStorage.getItem(LS_KEYS.newsItems);
+  if (savedNews) {
+    try {
+      const news = JSON.parse(savedNews);
+      const container = document.getElementById("container-news");
+      if (container) container.innerHTML = "";
+      news.forEach((item) => {
+        addNewsRowWithData(item.title, item.imgFlag);
+      });
+    } catch (e) {}
+  }
+
+  refreshAllDisplays();
+}
+
+function resetAllData() {
+  if (!confirm("هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع.")) return;
+
+  Object.values(LS_KEYS).forEach((key) => localStorage.removeItem(key));
+
+  document.getElementById("input-title").value = "";
+  document.getElementById("input-3adad").value = "العدد ";
+  document.getElementById("input-date").value = "";
+  document.getElementById("input-bible").value = "";
+  document.getElementById("input-recommendations").value = "";
+
+  document.getElementById("input-line-height").value = "1.4";
+  document.getElementById("input-gap-bible").value = "12";
+  document.getElementById("input-gap-days").value = "12";
+  document.getElementById("input-gap-news").value = "12";
+  document.getElementById("input-gap-recs").value = "12";
+  applyLineHeight();
+
+  dayKeys.forEach((k) => {
+    const el = document.getElementById(`subtitle-${k}`);
+    if (el) el.value = "";
+  });
+
+  dayKeys.forEach((k) => {
+    const container = document.getElementById(`container-${k}`);
+    if (container) {
+      container.innerHTML = "";
+      container.style.display = "none";
+    }
+  });
+
+  const newsContainer = document.getElementById("container-news");
+  if (newsContainer) newsContainer.innerHTML = "";
+  addNewsRow();
+
+  refreshAllDisplays();
+}
+
+// ============================================================
+// 4. REFRESH ALL DISPLAYS
+// ============================================================
+function refreshAllDisplays() {
+  const titleInput = document.getElementById("input-title");
+  const aadadInput = document.getElementById("input-3adad");
+  const dateInput = document.getElementById("input-date");
+  const bibleInput = document.getElementById("input-bible");
+  const recInput = document.getElementById("input-recommendations");
+
+  document.getElementById("display-title").textContent =
+    titleInput.value || "‎‏‏‎";
+  document.getElementById("display-3adad").textContent =
+    aadadInput.value || "‎‏‏‎";
+  document.getElementById("display-date").textContent = formatInputDate(
+    dateInput.value,
+  );
+  document.getElementById("display-bible").textContent = bibleInput.value;
+  document.getElementById("display-recommendations").textContent =
+    recInput.value;
+
+  const recVal = recInput.value.trim();
+  const wrapperRecs = document.getElementById("wrapper-recommendations");
+  if (recVal.length > 0) {
+    wrapperRecs.classList.remove("is-hidden");
+  } else {
+    wrapperRecs.classList.add("is-hidden");
+  }
+
+  dayKeys.forEach((k) => {
+    updateDayOutput(k);
+  });
+
+  updateNewsOutput();
+  schedulePaginate();
+}
+
+// ============================================================
+// 5. EVENT ROW FUNCTIONS
+// ============================================================
+function toggleDayEvents(dayKey) {
+  const container = document.getElementById(`container-${dayKey}`);
+  if (!container) return;
+  // Always make the container visible when adding a new event
+  container.style.display = "flex";
+  // Always append a new event row
+  addEventRow(dayKey);
+}
+
+function addEventRow(dayKey) {
+  const container = document.getElementById(`container-${dayKey}`);
+  const eventDiv = document.createElement("div");
+  eventDiv.className = "event-row-input";
+
+  eventDiv.innerHTML = `
+                <input type="time" class="day-time-input">
+                <textarea class="day-input" placeholder="أدخل النشاط..."></textarea>
+                <button type="button" class="btn-remove-event" onclick="removeEventRow(this, '${dayKey}')">✕</button>
+            `;
+
+  container.appendChild(eventDiv);
+
+  const inputs = eventDiv.querySelectorAll("input, textarea");
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      updateDayOutput(dayKey);
+      saveAllData();
+    });
+  });
+
+  updateDayOutput(dayKey);
+}
+
+function addEventRowWithData(dayKey, timeVal, textVal) {
+  const container = document.getElementById(`container-${dayKey}`);
+  const eventDiv = document.createElement("div");
+  eventDiv.className = "event-row-input";
+
+  eventDiv.innerHTML = `
+                <input type="time" class="day-time-input" value="${timeVal || ""}">
+                <textarea class="day-input" placeholder="أدخل النشاط...">${textVal || ""}</textarea>
+                <button type="button" class="btn-remove-event" onclick="removeEventRow(this, '${dayKey}')">✕</button>
+            `;
+
+  container.appendChild(eventDiv);
+
+  const inputs = eventDiv.querySelectorAll("input, textarea");
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      updateDayOutput(dayKey);
+      saveAllData();
+    });
+  });
+
+  updateDayOutput(dayKey);
+}
+
+function removeEventRow(btn, dayKey) {
+  btn.parentElement.remove();
+  updateDayOutput(dayKey);
+  saveAllData();
+}
+
+// ============================================================
+// 6. NEWS ROW FUNCTIONS
+// ============================================================
+function addNewsRow() {
+  const container = document.getElementById("container-news");
+  const newsDiv = document.createElement("div");
+  newsDiv.className = "news-row-input";
+
+  newsDiv.innerHTML = `
+                <div class="news-input-fields">
+                    <input type="file" accept="image/*" class="news-img-input">
+                    <textarea class="news-title-input" placeholder="عنوان الخبر / المحتوى..."></textarea>
+                </div>
+                <button type="button" class="btn-remove-event" onclick="removeNewsRow(this)">✕</button>
+            `;
+
+  container.appendChild(newsDiv);
+
+  const fileInput = newsDiv.querySelector(".news-img-input");
+  const titleInput = newsDiv.querySelector(".news-title-input");
+
+  fileInput.addEventListener("change", () => {
+    updateNewsOutput();
+    saveAllData();
+  });
+  titleInput.addEventListener("input", () => {
+    updateNewsOutput();
+    saveAllData();
+  });
+
+  updateNewsOutput();
+}
+
+function addNewsRowWithData(title, imgFlag) {
+  const container = document.getElementById("container-news");
+  const newsDiv = document.createElement("div");
+  newsDiv.className = "news-row-input";
+
+  let previewHtml = "";
+  if (imgFlag === "HAS_IMAGE") {
+    previewHtml = `<div class="news-item-img-preview" style="display:none;"></div>`;
+  }
+
+  newsDiv.innerHTML = `
+                <div class="news-input-fields">
+                    <input type="file" accept="image/*" class="news-img-input">
+                    <textarea class="news-title-input" placeholder="عنوان الخبر / المحتوى...">${title || ""}</textarea>
+                </div>
+                <button type="button" class="btn-remove-event" onclick="removeNewsRow(this)">✕</button>
+                ${previewHtml}
+            `;
+
+  container.appendChild(newsDiv);
+
+  const fileInput = newsDiv.querySelector(".news-img-input");
+  const titleInput = newsDiv.querySelector(".news-title-input");
+  const previewDiv = newsDiv.querySelector(".news-item-img-preview");
+  if (previewDiv) {
+    const img = document.createElement("img");
+    img.src = "saint_george_assia.png";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "fill";
+    previewDiv.appendChild(img);
+  }
+
+  fileInput.addEventListener("change", () => {
+    updateNewsOutput();
+    saveAllData();
+  });
+  titleInput.addEventListener("input", () => {
+    updateNewsOutput();
+    saveAllData();
+  });
+
+  updateNewsOutput();
+}
+
+function removeNewsRow(btn) {
+  btn.closest(".news-row-input").remove();
+  updateNewsOutput();
+  saveAllData();
+}
+
+// ============================================================
+// 7. UPDATE OUTPUT FUNCTIONS
+// ============================================================
+function updateNewsOutput() {
+  const container = document.getElementById("container-news");
+  const rows = container.querySelectorAll(".news-row-input");
+  const gridDisplay = document.getElementById("display-news-grid");
+  const wrapperNews = document.getElementById("wrapper-news");
+
+  gridDisplay.innerHTML = "";
+  let validCount = 0;
+
+  rows.forEach((row) => {
+    const imgInput = row.querySelector(".news-img-input");
+    const titleInput = row.querySelector(".news-title-input");
+    const previewDiv = row.querySelector(".news-item-img-preview");
+
+    const titleVal = titleInput ? titleInput.value.trim() : "";
+    const file = imgInput && imgInput.files ? imgInput.files[0] : null;
+
+    let hasPreviewImage = false;
+    if (previewDiv && previewDiv.querySelector("img")) {
+      hasPreviewImage = true;
+    }
+
+    if (titleVal || file || hasPreviewImage) {
+      validCount++;
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "news-item";
+
+      const textDiv = document.createElement("div");
+      textDiv.className = "news-item-text";
+      textDiv.textContent = titleVal;
+
+      const imgContainer = document.createElement("div");
+      imgContainer.className = "news-item-img";
+
+      const img = document.createElement("img");
+      img.addEventListener("load", () => schedulePaginate());
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else if (hasPreviewImage && previewDiv) {
+        const previewImg = previewDiv.querySelector("img");
+        if (previewImg && previewImg.src) {
+          img.src = previewImg.src;
+        } else {
+          img.src = "saint_george_assia.png";
+        }
+      } else {
+        img.src = "saint_george_assia.png";
+      }
+
+      imgContainer.appendChild(img);
+      itemDiv.appendChild(imgContainer);
+      itemDiv.appendChild(textDiv);
+
+      gridDisplay.appendChild(itemDiv);
+    }
+  });
+
+  if (validCount > 0) {
+    wrapperNews.classList.remove("is-hidden");
+  } else {
+    wrapperNews.classList.add("is-hidden");
+  }
+}
+
+function checkDaysHeaderVisibility() {
+  const wrapperDays = document.getElementById("wrapper-days");
+  const visibleRows = document.querySelectorAll(".day-row:not(.is-hidden)");
+  if (visibleRows.length > 0) {
+    wrapperDays.classList.remove("is-hidden");
+  } else {
+    wrapperDays.classList.add("is-hidden");
+  }
+}
+
+function updateDayOutput(dayKey) {
+  const container = document.getElementById(`container-${dayKey}`);
+  const eventRows = container.querySelectorAll(".event-row-input");
+  const targetRow = document.getElementById(`row-${dayKey}`);
+  const targetDisplay = document.getElementById(`display-${dayKey}`);
+
+  const subtitleInput = document.getElementById(`subtitle-${dayKey}`);
+  const subtitleDisplay = document.getElementById(`display-subtitle-${dayKey}`);
+  const subtitleVal = subtitleInput ? subtitleInput.value.trim() : "";
+
+  if (subtitleDisplay) {
+    subtitleDisplay.textContent = subtitleVal;
+  }
+
+  let combinedHtml = "";
+  let hasValidEvents = false;
+
+  eventRows.forEach((row) => {
+    const timeInput = row.querySelector(".day-time-input");
+    const textInput = row.querySelector(".day-input");
+
+    const timeValue = timeInput ? timeInput.value : "";
+    const textValue = textInput ? textInput.value.trim() : "";
+
+    if (timeValue || textValue) {
+      hasValidEvents = true;
+      let formattedTime = "";
+      if (timeValue) {
+        const [hours, minutes] = timeValue.split(":");
+        const hourNum = parseInt(hours, 10);
+        const period = hourNum >= 12 ? "م" : "ص";
+        const displayHour = hourNum % 12 || 12;
+        formattedTime = `${displayHour}:${minutes} ${period} `;
+      }
+      combinedHtml += `<div class="event-item-display"><span class="day-time-tag">${formattedTime}</span>${textValue}</div>`;
+    }
+  });
+
+  if (hasValidEvents || subtitleVal.length > 0) {
+    targetDisplay.innerHTML = combinedHtml;
+    targetRow.classList.remove("is-hidden");
+  } else {
+    targetDisplay.innerHTML = "";
+    targetRow.classList.add("is-hidden");
+  }
+
+  checkDaysHeaderVisibility();
+}
+
+// ============================================================
+// 8. LISTENERS FOR SIMPLE FIELDS + AUTO-SAVE
+// ============================================================
+function attachSimpleListeners() {
+  const titleInput = document.getElementById("input-title");
+  const aadadInput = document.getElementById("input-3adad");
+  const dateInput = document.getElementById("input-date");
+  const bibleInput = document.getElementById("input-bible");
+  const recInput = document.getElementById("input-recommendations");
+
+  const titleDisplay = document.getElementById("display-title");
+  const aadadDisplay = document.getElementById("display-3adad");
+  const titleDate = document.getElementById("display-date");
+  const bibleDisplay = document.getElementById("display-bible");
+  const recDisplay = document.getElementById("display-recommendations");
+  const wrapperRecs = document.getElementById("wrapper-recommendations");
+
+  titleInput.addEventListener("input", (e) => {
+    titleDisplay.textContent = e.target.value || "‎‏‏‎";
+    saveAllData();
+  });
+
+  aadadInput.addEventListener("input", (e) => {
+    aadadDisplay.textContent = e.target.value || "‎‏‏‎";
+    saveAllData();
+  });
+
+  dateInput.addEventListener("input", (e) => {
+    titleDate.textContent = formatInputDate(e.target.value);
+    saveAllData();
+  });
+
+  bibleInput.addEventListener("input", (e) => {
+    bibleDisplay.textContent = e.target.value;
+    saveAllData();
+  });
+
+  recInput.addEventListener("input", (e) => {
+    const val = e.target.value.trim();
+    recDisplay.textContent = val;
+    if (val.length > 0) {
+      wrapperRecs.classList.remove("is-hidden");
+    } else {
+      wrapperRecs.classList.add("is-hidden");
+    }
+    saveAllData();
+  });
+
+  dayKeys.forEach((k) => {
+    const el = document.getElementById(`subtitle-${k}`);
+    if (el) {
+      el.addEventListener("input", () => {
+        updateDayOutput(k);
+        saveAllData();
+      });
+    }
+  });
+
+  [
+    "input-gap-bible",
+    "input-gap-days",
+    "input-gap-news",
+    "input-gap-recs",
+  ].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", () => saveAllData());
+  });
+
+  const lhInput = document.getElementById("input-line-height");
+  if (lhInput) {
+    lhInput.addEventListener("input", () => {
+      applyLineHeight();
+      saveAllData();
+    });
+  }
+}
+
+// ============================================================
+// 9. PAGINATION ENGINE
+// ============================================================
+let measureBox = null;
+
+function getMeasureBox(width) {
+  if (!measureBox) {
+    measureBox = document.createElement("div");
+    measureBox.id = "measure-box";
+    measureBox.style.cssText =
+      "position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none;";
+    document.body.appendChild(measureBox);
+  }
+  measureBox.style.width = Math.floor(width) + "px";
+  return measureBox;
+}
+
+function measureElementHeight(el, contentWidth) {
+  const box = getMeasureBox(contentWidth);
+  box.appendChild(el);
+  const cs = getComputedStyle(el);
+  const h =
+    el.getBoundingClientRect().height +
+    (parseFloat(cs.marginTop) || 0) +
+    (parseFloat(cs.marginBottom) || 0);
+  box.removeChild(el);
+  return h;
+}
+
+function createTextMeasurer(className, contentWidth) {
+  const box = getMeasureBox(contentWidth);
+  const probe = document.createElement("div");
+  probe.className = className;
+  box.appendChild(probe);
+  return {
+    measure(text) {
+      probe.textContent = text;
+      return probe.getBoundingClientRect().height;
+    },
+    dispose() {
+      if (probe.parentNode) probe.parentNode.removeChild(probe);
+    },
+  };
+}
+
+function stripIds(node) {
+  if (!node || node.nodeType !== 1) return node;
+  if (node.id) node.removeAttribute("id");
+  node.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+  return node;
+}
+
+function schedulePaginate() {
+  if (paginateTimer) clearTimeout(paginateTimer);
+  paginateTimer = setTimeout(() => {
+    paginateTimer = null;
+    paginate();
+  }, 250);
+}
+
+function computePageMetrics() {
+  const src = document.getElementById("paper-source");
+  const cs = getComputedStyle(src);
+  const rect = src.getBoundingClientRect();
+  const padTop = parseFloat(cs.paddingTop) || 0;
+  const padBottom = parseFloat(cs.paddingBottom) || 0;
+  const padLeft = parseFloat(cs.paddingLeft) || 0;
+  const padRight = parseFloat(cs.paddingRight) || 0;
+  const contentWidth = rect.width - padLeft - padRight;
+  const usableHeight = rect.height - padTop - padBottom - FOOTER_RESERVE;
+  return { contentWidth, usableHeight };
+}
+
+function splitTextIntoChunks(text, maxHeight, measureFn) {
+  const chunks = [];
+  if (!text) return chunks;
+  const lines = text.split("\n");
+  let current = "";
+  const flush = () => {
+    if (current !== "") chunks.push(current);
+    current = "";
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const candidate = current === "" ? line : current + "\n" + line;
+    if (measureFn(candidate) <= maxHeight) {
+      current = candidate;
+      continue;
+    }
+
+    flush();
+
+    if (measureFn(line) <= maxHeight) {
+      current = line;
+      continue;
+    }
+
+    const words = line.split(" ");
+    let buf = "";
+    for (let j = 0; j < words.length; j++) {
+      const cand = buf === "" ? words[j] : buf + " " + words[j];
+      if (measureFn(cand) <= maxHeight) {
+        buf = cand;
+      } else {
+        if (buf !== "") chunks.push(buf);
+        buf = words[j];
+      }
+    }
+    current = buf;
+  }
+  flush();
+  return chunks;
+}
+
+function pushBlock(blocks, el, type, metrics, section) {
+  const clone = stripIds(el.cloneNode(true));
+  const h = measureElementHeight(clone, metrics.contentWidth);
+  blocks.push({ el: clone, h, type, section });
+}
+
+function pushTextBlocks(blocks, text, className, metrics, maxHeight, section) {
+  if (!text || !text.trim()) return;
+  const measurer = createTextMeasurer(className, metrics.contentWidth);
+  const limit = Math.max(120, maxHeight - 5);
+  const chunks = splitTextIntoChunks(text, limit, measurer.measure);
+  measurer.dispose();
+
+  chunks.forEach((chunk) => {
+    const div = document.createElement("div");
+    div.className = className;
+    div.textContent = chunk;
+    const h = measureElementHeight(div, metrics.contentWidth);
+    blocks.push({ el: div, h, type: "text", section });
+  });
+}
+
+// ---- First page header (built from source) ----
+function buildFirstHeaderTemplate(source) {
+  const template = document.createElement("div");
+  template.className = "paper-header-group";
+  source
+    .querySelectorAll(":scope > .paper-header, :scope > hr, :scope > .ra3awe")
+    .forEach((part) => {
+      template.appendChild(stripIds(part.cloneNode(true)));
+    });
+  return template;
+}
+
+// ---- Continuation header (pages 2+) ----
+function buildContinuationHeaderTemplate() {
+  const template = document.createElement("div");
+  template.className = "paper-header-group";
+
+  const header = document.createElement("div");
+  header.className = "paper-header-cont";
+
+  // Right: risele
+  const risele = document.createElement("div");
+  risele.className = "cont-risele";
+  const riseleImg = document.createElement("img");
+  riseleImg.src = "title.png";
+  riseleImg.alt = "title";
+  risele.appendChild(riseleImg);
+
+  // Center: 3adad - date
+  const center = document.createElement("div");
+  center.className = "cont-center";
+
+  const aadadEl = document.createElement("div");
+  aadadEl.className = "date";
+  aadadEl.textContent = document.getElementById("input-3adad").value || "";
+
+  const separatorEl = document.createElement("div");
+  separatorEl.className = "date";
+  separatorEl.textContent = "-";
+
+  const dateEl = document.createElement("div");
+  dateEl.className = "date";
+  dateEl.textContent = formatInputDate(
+    document.getElementById("input-date").value,
+  );
+
+  center.appendChild(aadadEl);
+  center.appendChild(separatorEl);
+  center.appendChild(dateEl);
+
+  // Left: logo
+  const logo = document.createElement("div");
+  logo.className = "cont-logo";
+  const logoImg = document.createElement("img");
+  logoImg.src = "saint_george_assia.png";
+  logoImg.alt = "saint george";
+  logo.appendChild(logoImg);
+
+  header.appendChild(risele); // rightmost
+  header.appendChild(center);
+  header.appendChild(logo); // leftmost
+  template.appendChild(header);
+
+  const hr = document.createElement("hr");
+  template.appendChild(hr);
+
+  return template;
+}
+
+function buildBlocks(metrics, sectionGaps) {
+  const source = document.getElementById("paper-source");
+
+  const firstHeaderTemplate = buildFirstHeaderTemplate(source);
+  const contHeaderTemplate = buildContinuationHeaderTemplate();
+
+  const firstHeaderHeight = measureElementHeight(
+    firstHeaderTemplate.cloneNode(true),
+    metrics.contentWidth,
+  );
+  const contHeaderHeight = measureElementHeight(
+    contHeaderTemplate.cloneNode(true),
+    metrics.contentWidth,
+  );
+
+  const maxHeaderHeight = Math.max(firstHeaderHeight, contHeaderHeight);
+  const textMaxForSection = (gap) =>
+    metrics.usableHeight - maxHeaderHeight - Math.max(PAGE_GAP, gap);
+
+  const blocks = [];
+
+  // ---- Bible / reading ----
+  const bibleWrapper = source.querySelector("#wrapper-bible");
+  if (bibleWrapper && !bibleWrapper.classList.contains("is-hidden")) {
+    const bibleEl = bibleWrapper.querySelector("#display-bible");
+    if (bibleEl) {
+      pushTextBlocks(
+        blocks,
+        bibleEl.textContent || "",
+        "content-box",
+        metrics,
+        textMaxForSection(sectionGaps.bible),
+        "bible",
+      );
+    }
+  }
+
+  // ---- Weekly programme ----
+  const daysWrapper = source.querySelector("#wrapper-days");
+  if (daysWrapper && !daysWrapper.classList.contains("is-hidden")) {
+    const titleEl = daysWrapper.querySelector(".section-title");
+    if (titleEl) pushBlock(blocks, titleEl, "title", metrics, "days");
+    daysWrapper.querySelectorAll(".day-row").forEach((row) => {
+      if (!row.classList.contains("is-hidden")) {
+        pushBlock(blocks, row, "day", metrics, "days");
+      }
+    });
+  }
+
+  // ---- News ----
+  const newsWrapper = source.querySelector("#wrapper-news");
+  if (newsWrapper && !newsWrapper.classList.contains("is-hidden")) {
+    const titleEl = newsWrapper.querySelector(".section-title");
+    if (titleEl) pushBlock(blocks, titleEl, "title", metrics, "news");
+    newsWrapper.querySelectorAll(".news-item").forEach((item) => {
+      pushBlock(blocks, item, "news", metrics, "news");
+    });
+  }
+
+  // ---- Recommendations ----
+  const recWrapper = source.querySelector("#wrapper-recommendations");
+  if (recWrapper && !recWrapper.classList.contains("is-hidden")) {
+    const titleEl = recWrapper.querySelector(".section-title");
+    if (titleEl) pushBlock(blocks, titleEl, "title", metrics, "recs");
+    const recEl = recWrapper.querySelector("#display-recommendations");
+    if (recEl) {
+      pushTextBlocks(
+        blocks,
+        recEl.textContent || "",
+        "content-box",
+        metrics,
+        textMaxForSection(sectionGaps.recs),
+        "recs",
+      );
+    }
+  }
+
+  // Mark first block of each section
+  let prevSection = null;
+  blocks.forEach((b) => {
+    b.isSectionStart = b.section !== prevSection;
+    prevSection = b.section;
+  });
+
+  return {
+    blocks,
+    firstHeaderTemplate,
+    contHeaderTemplate,
+    firstHeaderHeight,
+    contHeaderHeight,
+  };
+}
+
+function distributeBlocks(
+  blocks,
+  metrics,
+  firstHeaderHeight,
+  contHeaderHeight,
+  sectionGaps,
+) {
+  const pages = [];
+  const usable = metrics.usableHeight;
+
+  let current = { blocks: [], height: firstHeaderHeight };
+
+  const startNewPage = () => {
+    pages.push(current);
+    current = { blocks: [], height: contHeaderHeight };
+  };
+
+  const computeGap = (block) => {
+    if (block.isSectionStart) {
+      const v = sectionGaps[block.section];
+      return typeof v === "number" && !isNaN(v) ? v : PAGE_GAP;
+    }
+    return PAGE_GAP;
+  };
+
+  const capGapForPage = (gap, block) => {
+    if (current.blocks.length !== 0) return gap;
+    const maxGap = Math.max(0, usable - current.height - block.h);
+    return Math.min(gap, maxGap);
+  };
+
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    let gap = capGapForPage(computeGap(block), block);
+
+    if (block.type === "title" && i + 1 < blocks.length) {
+      const next = blocks[i + 1];
+      const togetherHeight = gap + block.h + PAGE_GAP + next.h;
+      if (
+        current.height + togetherHeight > usable &&
+        current.blocks.length > 0
+      ) {
+        startNewPage();
+        gap = capGapForPage(computeGap(block), block);
+      }
+    }
+
+    if (current.height + gap + block.h > usable && current.blocks.length > 0) {
+      startNewPage();
+      gap = capGapForPage(computeGap(block), block);
+    }
+
+    block.gapBefore = gap;
+    current.blocks.push(block);
+    current.height += gap + block.h;
+  }
+
+  if (current.blocks.length > 0 || pages.length === 0) {
+    pages.push(current);
+  }
+  return pages;
+}
+
+function renderPages(pages, firstHeaderTemplate, contHeaderTemplate) {
+  const container = document.getElementById("paper-to-print");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const total = pages.length;
+
+  pages.forEach((page, index) => {
+    const pageEl = document.createElement("div");
+    pageEl.className = "paper";
+    pageEl.setAttribute("data-page", String(index + 1));
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "paper-content";
+
+    const headerTpl = index === 0 ? firstHeaderTemplate : contHeaderTemplate;
+    if (headerTpl) {
+      contentEl.appendChild(headerTpl.cloneNode(true));
+    }
+
+    page.blocks.forEach((b) => {
+      const gap = b.gapBefore != null ? b.gapBefore : PAGE_GAP;
+      b.el.style.marginTop = gap + "px";
+      contentEl.appendChild(b.el);
+    });
+
+    const footer = document.createElement("div");
+    footer.className = "paperfooter";
+    footer.textContent = `${index + 1}/${total}`;
+
+    pageEl.appendChild(contentEl);
+    pageEl.appendChild(footer);
+    container.appendChild(pageEl);
+  });
+}
+
+function paginate() {
+  const source = document.getElementById("paper-source");
+  if (!source) return;
+  try {
+    const metrics = computePageMetrics();
+    if (metrics.contentWidth <= 0 || metrics.usableHeight <= 0) return;
+
+    const sectionGaps = getSectionGaps();
+    const {
+      blocks,
+      firstHeaderTemplate,
+      contHeaderTemplate,
+      firstHeaderHeight,
+      contHeaderHeight,
+    } = buildBlocks(metrics, sectionGaps);
+
+    const pages = distributeBlocks(
+      blocks,
+      metrics,
+      firstHeaderHeight,
+      contHeaderHeight,
+      sectionGaps,
+    );
+
+    renderPages(pages, firstHeaderTemplate, contHeaderTemplate);
+  } catch (err) {
+    console.error("Pagination error:", err);
+  }
+}
+
+// ============================================================
+// 10. DOWNLOAD AS IMAGE
+// ============================================================
+async function downloadAsImage() {
+  const pages = Array.from(document.querySelectorAll("#paper-to-print .paper"));
+  if (pages.length === 0) return;
+
+  const btn = document.querySelector(".print-btn");
+  if (btn) btn.disabled = true;
+
+  const pagesWrap = document.getElementById("paper-to-print");
+  const prevZoom = pagesWrap.style.zoom;
+  pagesWrap.style.zoom = "1";
+
+  try {
+    for (let i = 0; i < pages.length; i++) {
+      const pageEl = pages[i];
+
+      const canvas = await html2canvas(pageEl, {
+        scale: 4,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        windowWidth: 1200,
+        windowHeight: 1600,
+      });
+
+      const link = document.createElement("a");
+      if (pages.length === 1) {
+        link.download = "saint_george_assia_highres.png";
+      } else {
+        link.download = `saint_george_assia_page_${i + 1}_of_${pages.length}.png`;
+      }
+      link.href = canvas.toDataURL("image/png", 1.0);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      if (i < pages.length - 1) {
+        await new Promise((r) => setTimeout(r, 400));
+      }
+    }
+  } catch (err) {
+    console.error("Export Error:", err);
+  } finally {
+    pagesWrap.style.zoom = prevZoom;
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ============================================================
+// 11. INIT
+// ============================================================
+window.addEventListener("DOMContentLoaded", () => {
+  initDates();
+  attachSimpleListeners();
+  loadAllData();
+
+  // Ensure each day container is visible if it already has rows
+  dayKeys.forEach((k) => {
+    const container = document.getElementById(`container-${k}`);
+    if (container) {
+      if (container.children.length > 0) {
+        container.style.display = "flex";
+      } else {
+        container.style.display = "none";
+      }
+    }
+  });
+
+  const newsContainer = document.getElementById("container-news");
+  if (newsContainer && newsContainer.children.length === 0) {
+    addNewsRow();
+  }
+
+  refreshAllDisplays();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => paginate());
+  }
+
+  window.addEventListener("beforeunload", () => {
+    saveAllData();
+  });
+
+  document.addEventListener("input", (e) => {
+    if (e.target.closest(".form-container")) {
+      saveAllData();
+    }
+  });
+});
