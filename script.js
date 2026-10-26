@@ -52,7 +52,8 @@ const LS_KEYS = {
 };
 
 // Pagination settings
-const PAGE_GAP = 12;
+let PAGE_GAP = 12; // mutable so download can override it temporarily
+const DEFAULT_PAGE_GAP = 12;
 const FOOTER_RESERVE = 30;
 let paginateTimer = null;
 
@@ -287,7 +288,6 @@ function loadAllData() {
         dayEvents.forEach((ev) => {
           addEventRowWithData(k, ev.time, ev.text);
         });
-        // Show the container if the day has saved events
         if (dayEvents.length > 0) {
           container.style.display = "flex";
         }
@@ -391,9 +391,7 @@ function refreshAllDisplays() {
 function toggleDayEvents(dayKey) {
   const container = document.getElementById(`container-${dayKey}`);
   if (!container) return;
-  // Always make the container visible when adding a new event
   container.style.display = "flex";
-  // Always append a new event row
   addEventRow(dayKey);
 }
 
@@ -938,9 +936,9 @@ function buildContinuationHeaderTemplate() {
   logoImg.alt = "saint george";
   logo.appendChild(logoImg);
 
-  header.appendChild(risele); // rightmost
+  header.appendChild(risele);
   header.appendChild(center);
-  header.appendChild(logo); // leftmost
+  header.appendChild(logo);
   template.appendChild(header);
 
   const hr = document.createElement("hr");
@@ -1141,9 +1139,15 @@ function renderPages(pages, firstHeaderTemplate, contHeaderTemplate) {
   });
 }
 
-function paginate() {
+function paginate(overrideGap) {
   const source = document.getElementById("paper-source");
   if (!source) return;
+
+  const prevGap = PAGE_GAP;
+  if (typeof overrideGap === "number" && !isNaN(overrideGap)) {
+    PAGE_GAP = overrideGap;
+  }
+
   try {
     const metrics = computePageMetrics();
     if (metrics.contentWidth <= 0 || metrics.usableHeight <= 0) return;
@@ -1168,6 +1172,8 @@ function paginate() {
     renderPages(pages, firstHeaderTemplate, contHeaderTemplate);
   } catch (err) {
     console.error("Pagination error:", err);
+  } finally {
+    PAGE_GAP = prevGap;
   }
 }
 
@@ -1175,21 +1181,65 @@ function paginate() {
 // 10. DOWNLOAD AS IMAGE
 // ============================================================
 async function downloadAsImage() {
-  const pages = Array.from(document.querySelectorAll("#paper-to-print .paper"));
-  if (pages.length === 0) return;
+  const pagesWrap = document.getElementById("paper-to-print");
+  if (!pagesWrap) return;
 
   const btn = document.querySelector(".print-btn");
   if (btn) btn.disabled = true;
 
-  const pagesWrap = document.getElementById("paper-to-print");
   const prevZoom = pagesWrap.style.zoom;
+  const DOWNLOAD_PAGE_GAP = 4;
+
+  // --- save + override section gaps ---
+  const gapIds = [
+    "input-gap-bible",
+    "input-gap-days",
+    "input-gap-news",
+    "input-gap-recs",
+  ];
+  const savedGaps = gapIds.map((id) => {
+    const el = document.getElementById(id);
+    return { id, value: el ? el.value : null };
+  });
+  savedGaps.forEach(({ id }) => {
+    const el = document.getElementById(id);
+    if (el) el.value = String(DOWNLOAD_PAGE_GAP);
+  });
+
+  paginate(DOWNLOAD_PAGE_GAP);
   pagesWrap.style.zoom = "1";
+
+  // --- force the mobile .date offset inline for the capture ---
+  const dateEls = pagesWrap.querySelectorAll(
+    ".sundaydetails .date, .cont-center .date",
+  );
+  const savedDateMargins = [];
+  dateEls.forEach((el) => {
+    savedDateMargins.push([el, el.style.marginTop]);
+    el.style.marginTop = "-8px";
+  });
+
+  // re-paginate once more so the header height used by the engine
+  // reflects the tightened date block
+  paginate(DOWNLOAD_PAGE_GAP);
+
+  const pages = Array.from(pagesWrap.querySelectorAll(".paper"));
+  if (pages.length === 0) {
+    // restore + bail
+    pagesWrap.style.zoom = prevZoom;
+    savedDateMargins.forEach(([el, v]) => (el.style.marginTop = v));
+    savedGaps.forEach(({ id, value }) => {
+      const el = document.getElementById(id);
+      if (el && value !== null) el.value = value;
+    });
+    paginate();
+    if (btn) btn.disabled = false;
+    return;
+  }
 
   try {
     for (let i = 0; i < pages.length; i++) {
-      const pageEl = pages[i];
-
-      const canvas = await html2canvas(pageEl, {
+      const canvas = await html2canvas(pages[i], {
         scale: 4,
         useCORS: true,
         allowTaint: true,
@@ -1200,11 +1250,10 @@ async function downloadAsImage() {
       });
 
       const link = document.createElement("a");
-      if (pages.length === 1) {
-        link.download = "saint_george_assia_highres.png";
-      } else {
-        link.download = `saint_george_assia_page_${i + 1}_of_${pages.length}.png`;
-      }
+      link.download =
+        pages.length === 1
+          ? "saint_george_assia_highres.png"
+          : `saint_george_assia_page_${i + 1}_of_${pages.length}.png`;
       link.href = canvas.toDataURL("image/png", 1.0);
       document.body.appendChild(link);
       link.click();
@@ -1217,11 +1266,18 @@ async function downloadAsImage() {
   } catch (err) {
     console.error("Export Error:", err);
   } finally {
+    // restore inline date margins
+    savedDateMargins.forEach(([el, v]) => (el.style.marginTop = v));
+    // restore zoom + gaps
     pagesWrap.style.zoom = prevZoom;
+    savedGaps.forEach(({ id, value }) => {
+      const el = document.getElementById(id);
+      if (el && value !== null) el.value = value;
+    });
+    paginate();
     if (btn) btn.disabled = false;
   }
 }
-
 // ============================================================
 // 11. INIT
 // ============================================================
@@ -1230,7 +1286,6 @@ window.addEventListener("DOMContentLoaded", () => {
   attachSimpleListeners();
   loadAllData();
 
-  // Ensure each day container is visible if it already has rows
   dayKeys.forEach((k) => {
     const container = document.getElementById(`container-${k}`);
     if (container) {

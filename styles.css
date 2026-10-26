@@ -297,7 +297,7 @@ body {
 .sundaydetails {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0px;
 }
 
 .title {
@@ -314,7 +314,7 @@ body {
 }
 
 .logo .risele {
-  height: 85px;
+  height: 86px;
   position: absolute;
   right: 10px;
   bottom: 25px;
@@ -337,6 +337,7 @@ body {
 }
 
 .date {
+  margin-top: -6px;
   font-size: 18px;
   font-weight: bold;
   word-break: break-word;
