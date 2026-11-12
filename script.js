@@ -17,23 +17,23 @@ const levantMonths = [
 ];
 
 const dayNames = {
-  mon: "✸ الإثنين",
   tue: "✸ الثلاثاء",
   wed: "✸ الأربعاء",
   thu: "✸ الخميس",
   fri: "✸ الجمعة",
   sat: "✸ السبت",
   sun: "✸ الأحد",
+  mon: "✸ الإثنين",
 };
 
 const dayOffsets = {
-  mon: 0,
-  tue: 1,
-  wed: 2,
-  thu: 3,
-  fri: 4,
-  sat: 5,
-  sun: 6,
+  tue: 0,
+  wed: 1,
+  thu: 2,
+  fri: 3,
+  sat: 4,
+  sun: 5,
+  mon: 6,
 };
 const dayKeys = Object.keys(dayOffsets);
 
@@ -87,22 +87,29 @@ function applyLineHeight() {
 }
 
 // ============================================================
-// 2. DATE FUNCTIONS
+// 2. DATE FUNCTIONS (Updated to start on Tuesday at 12:00 AM)
 // ============================================================
-function getWeekMonday() {
+function getWeekTuesday() {
   const now = new Date();
-  const currentDay = now.getDay();
-  const diffToMonday = currentDay === 0 ? 1 : 1 - currentDay;
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + diffToMonday);
-  return monday;
+  const currentDay = now.getDay(); // Sunday = 0, Monday = 1, Tuesday = 2, etc.
+  
+  // Calculate difference back to the most recent Tuesday
+  let diffToTuesday = currentDay - 2;
+  if (diffToTuesday < 0) {
+    diffToTuesday += 7;
+  }
+  
+  const tuesday = new Date(now);
+  tuesday.setDate(now.getDate() - diffToTuesday);
+  tuesday.setHours(0, 0, 0, 0); // Sets time to 12:00 AM midnight
+  return tuesday;
 }
 
 function initDates() {
-  const monday = getWeekMonday();
+  const tuesday = getWeekTuesday();
   dayKeys.forEach((dayKey) => {
-    const targetDate = new Date(monday);
-    targetDate.setDate(monday.getDate() + dayOffsets[dayKey]);
+    const targetDate = new Date(tuesday);
+    targetDate.setDate(tuesday.getDate() + dayOffsets[dayKey]);
     const dayNum = targetDate.getDate();
     const monthName = levantMonths[targetDate.getMonth()];
     const yearNum = targetDate.getFullYear();
@@ -115,7 +122,7 @@ function initDates() {
 }
 
 function formatInputDate(dateStr) {
-  if (!dateStr) return "‎‏‏‎";
+  if (!dateStr) return "";
   const [year, month, day] = dateStr.split("-");
   if (!year || !month || !day) return dateStr;
   const monthIdx = parseInt(month, 10) - 1;
@@ -359,9 +366,9 @@ function refreshAllDisplays() {
   const recInput = document.getElementById("input-recommendations");
 
   document.getElementById("display-title").textContent =
-    titleInput.value || "‎‏‏‎";
+    titleInput.value || "";
   document.getElementById("display-3adad").textContent =
-    aadadInput.value || "‎‏‏‎";
+    aadadInput.value || "";
   document.getElementById("display-date").textContent = formatInputDate(
     dateInput.value,
   );
@@ -682,12 +689,12 @@ function attachSimpleListeners() {
   const wrapperRecs = document.getElementById("wrapper-recommendations");
 
   titleInput.addEventListener("input", (e) => {
-    titleDisplay.textContent = e.target.value || "‎‏‏‎";
+    titleDisplay.textContent = e.target.value || "";
     saveAllData();
   });
 
   aadadInput.addEventListener("input", (e) => {
-    aadadDisplay.textContent = e.target.value || "‎‏‏‎";
+    aadadDisplay.textContent = e.target.value || "";
     saveAllData();
   });
 
