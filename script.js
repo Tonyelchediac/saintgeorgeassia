@@ -17,23 +17,23 @@ const levantMonths = [
 ];
 
 const dayNames = {
+  mon: "✸ الإثنين",
   tue: "✸ الثلاثاء",
   wed: "✸ الأربعاء",
   thu: "✸ الخميس",
   fri: "✸ الجمعة",
   sat: "✸ السبت",
   sun: "✸ الأحد",
-  mon: "✸ الإثنين",
 };
 
 const dayOffsets = {
-  tue: 0,
-  wed: 1,
-  thu: 2,
-  fri: 3,
-  sat: 4,
-  sun: 5,
-  mon: 6,
+  mon: 0,
+  tue: 1,
+  wed: 2,
+  thu: 3,
+  fri: 4,
+  sat: 5,
+  sun: 6,
 };
 const dayKeys = Object.keys(dayOffsets);
 
@@ -52,7 +52,7 @@ const LS_KEYS = {
 };
 
 // Pagination settings
-let PAGE_GAP = 12; // mutable so download can override it temporarily
+let PAGE_GAP = 12;
 const DEFAULT_PAGE_GAP = 12;
 const FOOTER_RESERVE = 30;
 let paginateTimer = null;
@@ -87,29 +87,44 @@ function applyLineHeight() {
 }
 
 // ============================================================
-// 2. DATE FUNCTIONS (Updated to start on Tuesday at 12:00 AM)
+// 2. DATE FUNCTIONS
 // ============================================================
-function getWeekTuesday() {
+
+// Returns the Monday of the displayed week.
+//
+// Rule:
+//   - The displayed week advances by 7 days at TUESDAY 00:00 (local time).
+//   - The displayed week is always the week AFTER the week containing
+//     the most recent rollover Tuesday.
+//
+// Example (today = Fri 13 Nov 2026):
+//   most recent Tuesday = Tue 10 Nov 2026
+//   displayed Monday    = Tue 10 Nov + 6 days = Mon 16 Nov 2026
+//   displayed Friday    = Fri 20 Nov 2026   <-- 7 days ahead of today
+function getWeekMonday() {
   const now = new Date();
-  const currentDay = now.getDay(); // Sunday = 0, Monday = 1, Tuesday = 2, etc.
-  
-  // Calculate difference back to the most recent Tuesday
-  let diffToTuesday = currentDay - 2;
-  if (diffToTuesday < 0) {
-    diffToTuesday += 7;
-  }
-  
-  const tuesday = new Date(now);
-  tuesday.setDate(now.getDate() - diffToTuesday);
-  tuesday.setHours(0, 0, 0, 0); // Sets time to 12:00 AM midnight
-  return tuesday;
+  const currentDay = now.getDay(); // Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
+
+  // Days elapsed since the most recent Tuesday (0 if today is Tuesday):
+  const daysSinceTuesday = (currentDay - 2 + 7) % 7;
+
+  // Most recent rollover Tuesday at 00:00 local time:
+  const mostRecentTuesday = new Date(now);
+  mostRecentTuesday.setHours(0, 0, 0, 0);
+  mostRecentTuesday.setDate(now.getDate() - daysSinceTuesday);
+
+  // Displayed week's Monday = the Monday AFTER that Tuesday (+6 days)
+  const monday = new Date(mostRecentTuesday);
+  monday.setDate(mostRecentTuesday.getDate() + 6);
+  monday.setHours(0, 0, 0, 0);
+  return monday;
 }
 
 function initDates() {
-  const tuesday = getWeekTuesday();
+  const monday = getWeekMonday();
   dayKeys.forEach((dayKey) => {
-    const targetDate = new Date(tuesday);
-    targetDate.setDate(tuesday.getDate() + dayOffsets[dayKey]);
+    const targetDate = new Date(monday);
+    targetDate.setDate(monday.getDate() + dayOffsets[dayKey]);
     const dayNum = targetDate.getDate();
     const monthName = levantMonths[targetDate.getMonth()];
     const yearNum = targetDate.getFullYear();
@@ -121,8 +136,20 @@ function initDates() {
   });
 }
 
+let lastWeekKey = null;
+
+function checkWeekRollover() {
+  const monday = getWeekMonday();
+  const key = monday.toDateString();
+  if (lastWeekKey !== null && key !== lastWeekKey) {
+    initDates();
+    schedulePaginate();
+  }
+  lastWeekKey = key;
+}
+
 function formatInputDate(dateStr) {
-  if (!dateStr) return "";
+  if (!dateStr) return "‎‏‏‎";
   const [year, month, day] = dateStr.split("-");
   if (!year || !month || !day) return dateStr;
   const monthIdx = parseInt(month, 10) - 1;
@@ -155,7 +182,6 @@ function saveAllData() {
     document.getElementById("input-recommendations").value,
   );
 
-  // Day subtitles
   const subtitles = {};
   dayKeys.forEach((k) => {
     const el = document.getElementById(`subtitle-${k}`);
@@ -163,7 +189,6 @@ function saveAllData() {
   });
   localStorage.setItem(LS_KEYS.daySubtitles, JSON.stringify(subtitles));
 
-  // Day events
   const allEvents = {};
   dayKeys.forEach((k) => {
     const container = document.getElementById(`container-${k}`);
@@ -179,7 +204,6 @@ function saveAllData() {
   });
   localStorage.setItem(LS_KEYS.dayEvents, JSON.stringify(allEvents));
 
-  // News items
   const newsContainer = document.getElementById("container-news");
   const newsRows = newsContainer
     ? newsContainer.querySelectorAll(".news-row-input")
@@ -211,7 +235,6 @@ function saveAllData() {
   });
   localStorage.setItem(LS_KEYS.newsItems, JSON.stringify(newsData));
 
-  // Gaps
   localStorage.setItem(
     LS_KEYS.gaps,
     JSON.stringify({
@@ -222,7 +245,6 @@ function saveAllData() {
     }),
   );
 
-  // Line height
   localStorage.setItem(
     LS_KEYS.lineHeight,
     document.getElementById("input-line-height").value,
@@ -366,9 +388,9 @@ function refreshAllDisplays() {
   const recInput = document.getElementById("input-recommendations");
 
   document.getElementById("display-title").textContent =
-    titleInput.value || "";
+    titleInput.value || "‎‏‏‎";
   document.getElementById("display-3adad").textContent =
-    aadadInput.value || "";
+    aadadInput.value || "‎‏‏‎";
   document.getElementById("display-date").textContent = formatInputDate(
     dateInput.value,
   );
@@ -689,12 +711,12 @@ function attachSimpleListeners() {
   const wrapperRecs = document.getElementById("wrapper-recommendations");
 
   titleInput.addEventListener("input", (e) => {
-    titleDisplay.textContent = e.target.value || "";
+    titleDisplay.textContent = e.target.value || "‎‏‏‎";
     saveAllData();
   });
 
   aadadInput.addEventListener("input", (e) => {
-    aadadDisplay.textContent = e.target.value || "";
+    aadadDisplay.textContent = e.target.value || "‎‏‏‎";
     saveAllData();
   });
 
@@ -885,7 +907,6 @@ function pushTextBlocks(blocks, text, className, metrics, maxHeight, section) {
   });
 }
 
-// ---- First page header (built from source) ----
 function buildFirstHeaderTemplate(source) {
   const template = document.createElement("div");
   template.className = "paper-header-group";
@@ -897,7 +918,6 @@ function buildFirstHeaderTemplate(source) {
   return template;
 }
 
-// ---- Continuation header (pages 2+) ----
 function buildContinuationHeaderTemplate() {
   const template = document.createElement("div");
   template.className = "paper-header-group";
@@ -905,7 +925,6 @@ function buildContinuationHeaderTemplate() {
   const header = document.createElement("div");
   header.className = "paper-header-cont";
 
-  // Right: risele
   const risele = document.createElement("div");
   risele.className = "cont-risele";
   const riseleImg = document.createElement("img");
@@ -913,7 +932,6 @@ function buildContinuationHeaderTemplate() {
   riseleImg.alt = "title";
   risele.appendChild(riseleImg);
 
-  // Center: 3adad - date
   const center = document.createElement("div");
   center.className = "cont-center";
 
@@ -935,7 +953,6 @@ function buildContinuationHeaderTemplate() {
   center.appendChild(separatorEl);
   center.appendChild(dateEl);
 
-  // Left: logo
   const logo = document.createElement("div");
   logo.className = "cont-logo";
   const logoImg = document.createElement("img");
@@ -975,7 +992,6 @@ function buildBlocks(metrics, sectionGaps) {
 
   const blocks = [];
 
-  // ---- Bible / reading ----
   const bibleWrapper = source.querySelector("#wrapper-bible");
   if (bibleWrapper && !bibleWrapper.classList.contains("is-hidden")) {
     const bibleEl = bibleWrapper.querySelector("#display-bible");
@@ -991,7 +1007,6 @@ function buildBlocks(metrics, sectionGaps) {
     }
   }
 
-  // ---- Weekly programme ----
   const daysWrapper = source.querySelector("#wrapper-days");
   if (daysWrapper && !daysWrapper.classList.contains("is-hidden")) {
     const titleEl = daysWrapper.querySelector(".section-title");
@@ -1003,7 +1018,6 @@ function buildBlocks(metrics, sectionGaps) {
     });
   }
 
-  // ---- News ----
   const newsWrapper = source.querySelector("#wrapper-news");
   if (newsWrapper && !newsWrapper.classList.contains("is-hidden")) {
     const titleEl = newsWrapper.querySelector(".section-title");
@@ -1013,7 +1027,6 @@ function buildBlocks(metrics, sectionGaps) {
     });
   }
 
-  // ---- Recommendations ----
   const recWrapper = source.querySelector("#wrapper-recommendations");
   if (recWrapper && !recWrapper.classList.contains("is-hidden")) {
     const titleEl = recWrapper.querySelector(".section-title");
@@ -1031,7 +1044,6 @@ function buildBlocks(metrics, sectionGaps) {
     }
   }
 
-  // Mark first block of each section
   let prevSection = null;
   blocks.forEach((b) => {
     b.isSectionStart = b.section !== prevSection;
@@ -1197,7 +1209,6 @@ async function downloadAsImage() {
   const prevZoom = pagesWrap.style.zoom;
   const DOWNLOAD_PAGE_GAP = 4;
 
-  // --- save + override section gaps ---
   const gapIds = [
     "input-gap-bible",
     "input-gap-days",
@@ -1216,7 +1227,6 @@ async function downloadAsImage() {
   paginate(DOWNLOAD_PAGE_GAP);
   pagesWrap.style.zoom = "1";
 
-  // --- force the mobile .date offset inline for the capture ---
   const dateEls = pagesWrap.querySelectorAll(
     ".sundaydetails .date, .cont-center .date",
   );
@@ -1226,13 +1236,10 @@ async function downloadAsImage() {
     el.style.marginTop = "-8px";
   });
 
-  // re-paginate once more so the header height used by the engine
-  // reflects the tightened date block
   paginate(DOWNLOAD_PAGE_GAP);
 
   const pages = Array.from(pagesWrap.querySelectorAll(".paper"));
   if (pages.length === 0) {
-    // restore + bail
     pagesWrap.style.zoom = prevZoom;
     savedDateMargins.forEach(([el, v]) => (el.style.marginTop = v));
     savedGaps.forEach(({ id, value }) => {
@@ -1273,9 +1280,7 @@ async function downloadAsImage() {
   } catch (err) {
     console.error("Export Error:", err);
   } finally {
-    // restore inline date margins
     savedDateMargins.forEach(([el, v]) => (el.style.marginTop = v));
-    // restore zoom + gaps
     pagesWrap.style.zoom = prevZoom;
     savedGaps.forEach(({ id, value }) => {
       const el = document.getElementById(id);
@@ -1285,10 +1290,12 @@ async function downloadAsImage() {
     if (btn) btn.disabled = false;
   }
 }
+
 // ============================================================
 // 11. INIT
 // ============================================================
 window.addEventListener("DOMContentLoaded", () => {
+  checkWeekRollover();
   initDates();
   attachSimpleListeners();
   loadAllData();
@@ -1323,5 +1330,11 @@ window.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest(".form-container")) {
       saveAllData();
     }
+  });
+
+  setInterval(checkWeekRollover, 60 * 1000);
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) checkWeekRollover();
   });
 });
