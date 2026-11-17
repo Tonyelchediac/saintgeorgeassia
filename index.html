@@ -25,6 +25,15 @@
         <h2>إدخال البيانات</h2>
 
         <div class="form-group">
+          <label for="input-icon">رابط الأيقونة (Image URL)</label>
+          <input
+            type="text"
+            id="input-icon"
+            placeholder="أدخل رابط صورة الأيقونة هنا..."
+          />
+        </div>
+
+        <div class="form-group">
           <label for="input-title">عنوان الأحد</label>
           <input
             type="text"
@@ -325,16 +334,22 @@
           <div class="paper-header">
             <div class="logo">
               <img
+                src=""
+                alt="sunday icon"
+                class="sunday-icon is-hidden"
+                id="display-icon"
+              />
+              <img
                 src="saint_george_assia.png"
                 alt="saint geoge"
                 class="saint"
               />
-              <img src="title.png" alt="title" class="risele" />
+              <img src="title-hero.png" alt="title" class="risele" />
             </div>
             <div class="sundaydetails">
-              <div class="title" id="display-title">‎‏‏‎</div>
+              <div class="title" id="display-title"></div>
               <div class="date" id="display-3adad"></div>
-              <div class="date" id="display-date">‎‏‏‎</div>
+              <div class="date" id="display-date"></div>
             </div>
           </div>
 

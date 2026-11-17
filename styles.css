@@ -309,20 +309,28 @@ body {
 .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: flex-start;
 }
 
-.logo .risele {
-  height: 86px;
-  position: absolute;
-  right: 10px;
-  bottom: 25px;
+.logo .sunday-icon {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .logo .saint {
-  width: 130px;
-  margin-right: -27px;
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.logo .risele {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  margin-right: -8px;
 }
 
 .ra3awe {
@@ -368,7 +376,6 @@ body {
 }
 
 .cont-logo {
-  width: 210px;
   flex-shrink: 0;
   display: flex;
   justify-content: end;
@@ -376,7 +383,7 @@ body {
 }
 
 .cont-logo img {
-  height: 100px;
+  height: 70px;
   display: block;
 }
 
@@ -387,13 +394,12 @@ body {
   justify-content: center;
   text-align: center;
   flex: 1;
-  margin-left: 40px;
-  gap: 20px; /* Space between 3adad and date */
+  gap: 20px;
+  margin-right: -100px;
 }
 
 .cont-center .date {
   font-size: 17px;
-  margin-left: -10px;
   white-space: nowrap;
 }
 

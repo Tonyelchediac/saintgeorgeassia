@@ -39,6 +39,7 @@ const dayKeys = Object.keys(dayOffsets);
 
 const LS_PREFIX = "nashra_";
 const LS_KEYS = {
+  icon: LS_PREFIX + "icon",
   title: LS_PREFIX + "title",
   aadad: LS_PREFIX + "aadad",
   date: LS_PREFIX + "date",
@@ -83,6 +84,20 @@ function applyLineHeight() {
       v,
     );
   }
+}
+
+function applyIconDisplay(url) {
+  const iconEls = document.querySelectorAll("#display-icon, .cont-sunday-icon");
+  const trimmed = url ? url.trim() : "";
+  iconEls.forEach((iconEl) => {
+    if (trimmed) {
+      iconEl.src = trimmed;
+      iconEl.classList.remove("is-hidden");
+    } else {
+      iconEl.src = "";
+      iconEl.classList.add("is-hidden");
+    }
+  });
 }
 
 // ============================================================
@@ -142,6 +157,10 @@ function formatInputDate(dateStr) {
 // 3. SAVE / LOAD / RESET STATE
 // ============================================================
 function saveAllData() {
+  localStorage.setItem(
+    LS_KEYS.icon,
+    document.getElementById("input-icon").value,
+  );
   localStorage.setItem(
     LS_KEYS.title,
     document.getElementById("input-title").value,
@@ -235,6 +254,12 @@ function saveAllData() {
 }
 
 function loadAllData() {
+  const iconVal = localStorage.getItem(LS_KEYS.icon);
+  if (iconVal !== null) {
+    document.getElementById("input-icon").value = iconVal;
+    applyIconDisplay(iconVal);
+  }
+
   const titleVal = localStorage.getItem(LS_KEYS.title);
   if (titleVal !== null)
     document.getElementById("input-title").value = titleVal;
@@ -325,6 +350,8 @@ function resetAllData() {
 
   Object.values(LS_KEYS).forEach((key) => localStorage.removeItem(key));
 
+  document.getElementById("input-icon").value = "";
+  applyIconDisplay("");
   document.getElementById("input-title").value = "";
   document.getElementById("input-3adad").value = "العدد ";
   document.getElementById("input-date").value = "";
@@ -676,6 +703,7 @@ function updateDayOutput(dayKey) {
 // 8. LISTENERS FOR SIMPLE FIELDS + AUTO-SAVE
 // ============================================================
 function attachSimpleListeners() {
+  const iconInput = document.getElementById("input-icon");
   const titleInput = document.getElementById("input-title");
   const aadadInput = document.getElementById("input-3adad");
   const dateInput = document.getElementById("input-date");
@@ -688,6 +716,13 @@ function attachSimpleListeners() {
   const bibleDisplay = document.getElementById("display-bible");
   const recDisplay = document.getElementById("display-recommendations");
   const wrapperRecs = document.getElementById("wrapper-recommendations");
+
+  if (iconInput) {
+    iconInput.addEventListener("input", (e) => {
+      applyIconDisplay(e.target.value);
+      saveAllData();
+    });
+  }
 
   titleInput.addEventListener("input", (e) => {
     titleDisplay.textContent = e.target.value || "";
@@ -841,7 +876,6 @@ function takeFittingText(remainingText, maxHeight, measureFn) {
     if (measureFn(testWithLine) <= maxHeight) {
       fittedLines.push(lines[i]);
     } else {
-      // السطر الحالي كله لا يسع -> نقسمه كلمة بكلمة لأخذ أقصى قدر ممكن
       const words = lines[i].split(" ");
       let fittedWords = [];
       for (let j = 0; j < words.length; j++) {
@@ -916,6 +950,16 @@ function buildContinuationHeaderTemplate() {
 
   const logo = document.createElement("div");
   logo.className = "cont-logo";
+
+  const iconVal = document.getElementById("input-icon").value.trim();
+  if (iconVal) {
+    const contIconImg = document.createElement("img");
+    contIconImg.src = iconVal;
+    contIconImg.alt = "icon";
+    contIconImg.className = "cont-sunday-icon";
+    logo.appendChild(contIconImg);
+  }
+
   const logoImg = document.createElement("img");
   logoImg.src = "saint_george_assia.png";
   logoImg.alt = "saint george";
@@ -942,7 +986,6 @@ function buildItems(metrics) {
     items.push({ kind: "fixed", el: clone, h, type, section, isSectionStart });
   };
 
-  // 1. قراءة الأحد (نص مرن يتوزع حسب المساحة المتبقية)
   const bibleWrapper = source.querySelector("#wrapper-bible");
   if (bibleWrapper && !bibleWrapper.classList.contains("is-hidden")) {
     const bibleEl = bibleWrapper.querySelector("#display-bible");
@@ -958,7 +1001,6 @@ function buildItems(metrics) {
     }
   }
 
-  // 2. برنامج الأسبوع
   const daysWrapper = source.querySelector("#wrapper-days");
   if (daysWrapper && !daysWrapper.classList.contains("is-hidden")) {
     let firstInDays = true;
@@ -975,7 +1017,6 @@ function buildItems(metrics) {
     });
   }
 
-  // 3. أخبار الرعية
   const newsWrapper = source.querySelector("#wrapper-news");
   if (newsWrapper && !newsWrapper.classList.contains("is-hidden")) {
     let firstInNews = true;
@@ -990,7 +1031,6 @@ function buildItems(metrics) {
     });
   }
 
-  // 4. توصيات عامة (العنوان ثابت + النص مرن يبدأ تحت القسم السابق ويكمل بصفحة جديدة عند الحاجة)
   const recWrapper = source.querySelector("#wrapper-recommendations");
   if (recWrapper && !recWrapper.classList.contains("is-hidden")) {
     let firstInRecs = true;
@@ -1046,7 +1086,6 @@ function distributeItems(
     if (item.kind === "fixed") {
       let gap = getGap(item.section, item.isSectionStart);
 
-      // إذا كان عنوان قسم (مثل "توصيات عامة")، نتأكد أن العنوان + سطر واحد على الأقل من النص يسعان في هذه الصفحة
       if (item.type === "title" && i + 1 < items.length) {
         const next = items[i + 1];
         let minNextHeight = 0;
@@ -1054,7 +1093,7 @@ function distributeItems(
           minNextHeight = next.h;
         } else if (next.kind === "text") {
           const m = createTextMeasurer(next.className, metrics.contentWidth);
-          minNextHeight = m.measure("أبجد"); // ارتفاع سطر واحد تقريبي
+          minNextHeight = m.measure("أبجد");
           m.dispose();
         }
 
@@ -1091,7 +1130,6 @@ function distributeItems(
           : PAGE_GAP;
         let available = usable - current.height - gap;
 
-        // إذا المساحة المتبقية في الصفحة الحالية لا تكفي حتى لسطر واحد، نفتح صفحة جديدة
         if (available < singleLineHeight && current.blocks.length > 0) {
           startNewPage();
           gap = isFirstChunk
@@ -1225,18 +1263,53 @@ function paginate(overrideGap) {
 // ============================================================
 // 10. DOWNLOAD AS IMAGE
 // ============================================================
+// ============================================================
+// 10. DOWNLOAD AS IMAGE (Fixed CORS & Missing Icons)
+// ============================================================
+
+// Helper: Convert external image URL to Base64 to bypass browser security
+async function convertImageToBase64(url) {
+  if (!url || url.startsWith("data:")) return url; // Already local/base64
+
+  // 1. Try fetching directly (works if the server allows it)
+  try {
+    const response = await fetch(url, { mode: "cors" });
+    const blob = await response.blob();
+    return await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    // 2. If blocked, use a public CORS proxy (images.weserv.nl)
+    try {
+      const cleanUrl = url.replace(/^https?:\/\//i, "");
+      const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&we`;
+      const response = await fetch(proxyUrl);
+      const blob = await response.blob();
+      return await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (proxyError) {
+      console.warn("Could not convert image, using original URL:", url);
+      return url; // Fallback to original URL
+    }
+  }
+}
+
 async function downloadAsImage() {
   const pagesWrap = document.getElementById("paper-to-print");
   if (!pagesWrap) return;
-
   const btn = document.querySelector(".print-btn");
   if (btn) btn.disabled = true;
 
   const prevZoom = pagesWrap.style.zoom;
-
   paginate();
   pagesWrap.style.zoom = "1";
 
+  // Fix date margins for capture
   const dateEls = pagesWrap.querySelectorAll(
     ".sundaydetails .date, .cont-center .date",
   );
@@ -1245,7 +1318,6 @@ async function downloadAsImage() {
     savedDateMargins.push([el, el.style.marginTop]);
     el.style.marginTop = "-8px";
   });
-
   paginate();
 
   const pages = Array.from(pagesWrap.querySelectorAll(".paper"));
@@ -1258,15 +1330,51 @@ async function downloadAsImage() {
   }
 
   try {
+    // STEP 1: Find all images and convert them to Base64 BEFORE capturing
+    const allImages = pagesWrap.querySelectorAll("img");
+    const conversionPromises = Array.from(allImages).map(async (img) => {
+      const originalSrc = img.getAttribute("src") || img.src;
+      const base64Src = await convertImageToBase64(originalSrc);
+      img.src = base64Src; // Replace link with Base64 code
+    });
+
+    // Wait for all images to be converted
+    await Promise.all(conversionPromises);
+
+    // STEP 2: Wait for the new Base64 images to fully load in the DOM
+    const loadPromises = Array.from(allImages).map((img) => {
+      if (img.complete && img.naturalHeight !== 0) return Promise.resolve();
+      return new Promise((resolve) => {
+        img.onload = resolve;
+        img.onerror = resolve;
+        setTimeout(resolve, 3000); // Hard timeout fallback
+      });
+    });
+    await Promise.all(loadPromises);
+
+    // STEP 3: Capture each page
     for (let i = 0; i < pages.length; i++) {
-      const canvas = await html2canvas(pages[i], {
-        scale: 4,
+      const page = pages[i];
+
+      // Scroll into view to ensure browser renders it
+      page.scrollIntoView({ behavior: "instant", block: "start" });
+      await new Promise((r) => setTimeout(r, 100));
+
+      const canvas = await html2canvas(page, {
+        scale: 3, // High resolution
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false, // MUST be false to allow downloading
         logging: false,
         backgroundColor: "#ffffff",
-        windowWidth: 1200,
-        windowHeight: 1600,
+        // Use the ACTUAL dimensions of the paper, not hardcoded numbers
+        width: page.offsetWidth,
+        height: page.offsetHeight,
+        windowWidth: page.offsetWidth,
+        windowHeight: page.offsetHeight,
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
       });
 
       const link = document.createElement("a");
@@ -1280,12 +1388,14 @@ async function downloadAsImage() {
       document.body.removeChild(link);
 
       if (i < pages.length - 1) {
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 500));
       }
     }
   } catch (err) {
     console.error("Export Error:", err);
+    alert("حدث خطأ أثناء تحميل الصور: " + err.message);
   } finally {
+    // Restore original state
     savedDateMargins.forEach(([el, v]) => (el.style.marginTop = v));
     pagesWrap.style.zoom = prevZoom;
     paginate();
